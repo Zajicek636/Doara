@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Doara.Api.Domain.Shared\Doara.Api.Domain.Shared.csproj" />
+    <ProjectReference Include="..\Doara.Modules\Sklady\src\Sklady.Domain\Sklady.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

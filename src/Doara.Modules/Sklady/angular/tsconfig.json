@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.prod.json",
+  "compilerOptions": {
+    "paths": {
+      "@sklady": [
+        "projects/sklady/src/public-api.ts"
+      ],
+      "@sklady/config": [
+        "projects/sklady/config/src/public-api.ts"
+      ],
+      "@proxy": ["projects/sklady/src/lib/proxy/index.ts"],
+      "@proxy/*": ["projects/sklady/src/lib/proxy/*"]
+    }
+  }
+}

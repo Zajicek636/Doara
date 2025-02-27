@@ -37,6 +37,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doara.Api.HttpApi.Client.Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doara.Api.DbMigrator", "src\Doara.Api.DbMigrator\Doara.Api.DbMigrator.csproj", "{AA94D832-1CCC-4715-95A9-A483F23A1A5D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sklady.Application", "src\Doara.Modules\Sklady\src\Sklady.Application\Sklady.Application.csproj", "{78D83AC5-FBB0-4300-A4FF-BEAB27CFF463}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sklady.HttpApi", "src\Doara.Modules\Sklady\src\Sklady.HttpApi\Sklady.HttpApi.csproj", "{24D411E9-E6D5-467B-8EE0-8977ACDFD42B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sklady.Domain", "src\Doara.Modules\Sklady\src\Sklady.Domain\Sklady.Domain.csproj", "{4265CD4E-F05E-4C30-A03A-5546DE9A77F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +109,18 @@ Global
 		{AA94D832-1CCC-4715-95A9-A483F23A1A5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA94D832-1CCC-4715-95A9-A483F23A1A5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA94D832-1CCC-4715-95A9-A483F23A1A5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78D83AC5-FBB0-4300-A4FF-BEAB27CFF463}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78D83AC5-FBB0-4300-A4FF-BEAB27CFF463}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78D83AC5-FBB0-4300-A4FF-BEAB27CFF463}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78D83AC5-FBB0-4300-A4FF-BEAB27CFF463}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24D411E9-E6D5-467B-8EE0-8977ACDFD42B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24D411E9-E6D5-467B-8EE0-8977ACDFD42B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24D411E9-E6D5-467B-8EE0-8977ACDFD42B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24D411E9-E6D5-467B-8EE0-8977ACDFD42B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4265CD4E-F05E-4C30-A03A-5546DE9A77F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4265CD4E-F05E-4C30-A03A-5546DE9A77F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4265CD4E-F05E-4C30-A03A-5546DE9A77F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4265CD4E-F05E-4C30-A03A-5546DE9A77F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
