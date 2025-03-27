@@ -11,6 +11,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Doara.Domain\Doara.Domain.csproj" />
     <ProjectReference Include="..\Doara.Application.Contracts\Doara.Application.Contracts.csproj" />
+    <ProjectReference Include="..\Doara.Modules\Doara.Sklady\src\Doara.Sklady.Application\Doara.Sklady.Application.csproj" />
+    <ProjectReference Include="..\Doara.Modules\Doara.Ucetnictvi\src\Doara.Ucetnictvi.Application\Doara.Ucetnictvi.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

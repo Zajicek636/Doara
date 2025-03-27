@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Doara.Domain.Shared\Doara.Domain.Shared.csproj" />
+    <ProjectReference Include="..\Doara.Modules\Doara.Sklady\src\Doara.Sklady.Domain\Doara.Sklady.Domain.csproj" />
+    <ProjectReference Include="..\Doara.Modules\Doara.Ucetnictvi\src\Doara.Ucetnictvi.Domain\Doara.Ucetnictvi.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

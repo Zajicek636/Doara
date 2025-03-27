@@ -1,0 +1,7 @@
+{
+  "modules": {
+    "Doara.Ucetnictvi": {
+      "path": "Doara.Ucetnictvi.abpmdl"
+    }
+  }
+}

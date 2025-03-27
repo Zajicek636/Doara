@@ -1,0 +1,79 @@
+{
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {},
+      "host": {}
+    }
+  },
+  "packages": {
+    "Doara.Sklady.Domain.Shared": {
+      "path": "src/Doara.Sklady.Domain.Shared/Doara.Sklady.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "Doara.Sklady.Domain": {
+      "path": "src/Doara.Sklady.Domain/Doara.Sklady.Domain.abppkg",
+      "folder": "src"
+    },
+    "Doara.Sklady.Application.Contracts": {
+      "path": "src/Doara.Sklady.Application.Contracts/Doara.Sklady.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "Doara.Sklady.Application": {
+      "path": "src/Doara.Sklady.Application/Doara.Sklady.Application.abppkg",
+      "folder": "src"
+    },
+    "Doara.Sklady.EntityFrameworkCore": {
+      "path": "src/Doara.Sklady.EntityFrameworkCore/Doara.Sklady.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "Doara.Sklady.MongoDB": {
+      "path": "src/Doara.Sklady.MongoDB/Doara.Sklady.MongoDB.abppkg",
+      "folder": "src"
+    },
+    "Doara.Sklady.HttpApi": {
+      "path": "src/Doara.Sklady.HttpApi/Doara.Sklady.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "Doara.Sklady.HttpApi.Client": {
+      "path": "src/Doara.Sklady.HttpApi.Client/Doara.Sklady.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "Doara.Sklady.TestBase": {
+      "path": "test/Doara.Sklady.TestBase/Doara.Sklady.TestBase.abppkg",
+      "folder": "test"
+    },
+    "Doara.Sklady.EntityFrameworkCore.Tests": {
+      "path": "test/Doara.Sklady.EntityFrameworkCore.Tests/Doara.Sklady.EntityFrameworkCore.Tests.abppkg",
+      "folder": "test"
+    },
+    "Doara.Sklady.MongoDB.Tests": {
+      "path": "test/Doara.Sklady.MongoDB.Tests/Doara.Sklady.MongoDB.Tests.abppkg",
+      "folder": "test"
+    },
+    "Doara.Sklady.Domain.Tests": {
+      "path": "test/Doara.Sklady.Domain.Tests/Doara.Sklady.Domain.Tests.abppkg",
+      "folder": "test"
+    },
+    "Doara.Sklady.Application.Tests": {
+      "path": "test/Doara.Sklady.Application.Tests/Doara.Sklady.Application.Tests.abppkg",
+      "folder": "test"
+    },
+    "Doara.Sklady.HttpApi.Host": {
+      "path": "host/Doara.Sklady.HttpApi.Host/Doara.Sklady.HttpApi.Host.abppkg",
+      "folder": "host"
+    },
+    "Doara.Sklady.HttpApi.Client.ConsoleTestApp": {
+      "path": "test/Doara.Sklady.HttpApi.Client.ConsoleTestApp/Doara.Sklady.HttpApi.Client.ConsoleTestApp.abppkg",
+      "folder": "test"
+    },
+    "Doara.Sklady.AuthServer": {
+      "path": "host/Doara.Sklady.AuthServer/Doara.Sklady.AuthServer.abppkg",
+      "folder": "host"
+    },
+    "Doara.Sklady.Host.Shared": {
+      "path": "host/Doara.Sklady.Host.Shared/Doara.Sklady.Host.Shared.abppkg",
+      "folder": "host"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Doara.Sklady</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Doara.Sklady.Domain\Doara.Sklady.Domain.csproj" />
+    <ProjectReference Include="..\Doara.Sklady.TestBase\Doara.Sklady.TestBase.csproj" />
+  </ItemGroup>
+
+
+</Project>

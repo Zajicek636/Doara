@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Doara.Ucetnictvi</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.EntityFrameworkCore" Version="9.1.1" />
+    <ProjectReference Include="..\Doara.Ucetnictvi.Domain\Doara.Ucetnictvi.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

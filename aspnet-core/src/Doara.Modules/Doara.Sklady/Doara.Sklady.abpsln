@@ -1,0 +1,7 @@
+{
+  "modules": {
+    "Doara.Sklady": {
+      "path": "Doara.Sklady.abpmdl"
+    }
+  }
+}

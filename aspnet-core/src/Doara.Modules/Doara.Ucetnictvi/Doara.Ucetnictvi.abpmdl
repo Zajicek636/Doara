@@ -1,0 +1,79 @@
+{
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {},
+      "host": {}
+    }
+  },
+  "packages": {
+    "Doara.Ucetnictvi.Domain.Shared": {
+      "path": "src/Doara.Ucetnictvi.Domain.Shared/Doara.Ucetnictvi.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "Doara.Ucetnictvi.Domain": {
+      "path": "src/Doara.Ucetnictvi.Domain/Doara.Ucetnictvi.Domain.abppkg",
+      "folder": "src"
+    },
+    "Doara.Ucetnictvi.Application.Contracts": {
+      "path": "src/Doara.Ucetnictvi.Application.Contracts/Doara.Ucetnictvi.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "Doara.Ucetnictvi.Application": {
+      "path": "src/Doara.Ucetnictvi.Application/Doara.Ucetnictvi.Application.abppkg",
+      "folder": "src"
+    },
+    "Doara.Ucetnictvi.EntityFrameworkCore": {
+      "path": "src/Doara.Ucetnictvi.EntityFrameworkCore/Doara.Ucetnictvi.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "Doara.Ucetnictvi.MongoDB": {
+      "path": "src/Doara.Ucetnictvi.MongoDB/Doara.Ucetnictvi.MongoDB.abppkg",
+      "folder": "src"
+    },
+    "Doara.Ucetnictvi.HttpApi": {
+      "path": "src/Doara.Ucetnictvi.HttpApi/Doara.Ucetnictvi.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "Doara.Ucetnictvi.HttpApi.Client": {
+      "path": "src/Doara.Ucetnictvi.HttpApi.Client/Doara.Ucetnictvi.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "Doara.Ucetnictvi.TestBase": {
+      "path": "test/Doara.Ucetnictvi.TestBase/Doara.Ucetnictvi.TestBase.abppkg",
+      "folder": "test"
+    },
+    "Doara.Ucetnictvi.EntityFrameworkCore.Tests": {
+      "path": "test/Doara.Ucetnictvi.EntityFrameworkCore.Tests/Doara.Ucetnictvi.EntityFrameworkCore.Tests.abppkg",
+      "folder": "test"
+    },
+    "Doara.Ucetnictvi.MongoDB.Tests": {
+      "path": "test/Doara.Ucetnictvi.MongoDB.Tests/Doara.Ucetnictvi.MongoDB.Tests.abppkg",
+      "folder": "test"
+    },
+    "Doara.Ucetnictvi.Domain.Tests": {
+      "path": "test/Doara.Ucetnictvi.Domain.Tests/Doara.Ucetnictvi.Domain.Tests.abppkg",
+      "folder": "test"
+    },
+    "Doara.Ucetnictvi.Application.Tests": {
+      "path": "test/Doara.Ucetnictvi.Application.Tests/Doara.Ucetnictvi.Application.Tests.abppkg",
+      "folder": "test"
+    },
+    "Doara.Ucetnictvi.HttpApi.Host": {
+      "path": "host/Doara.Ucetnictvi.HttpApi.Host/Doara.Ucetnictvi.HttpApi.Host.abppkg",
+      "folder": "host"
+    },
+    "Doara.Ucetnictvi.HttpApi.Client.ConsoleTestApp": {
+      "path": "test/Doara.Ucetnictvi.HttpApi.Client.ConsoleTestApp/Doara.Ucetnictvi.HttpApi.Client.ConsoleTestApp.abppkg",
+      "folder": "test"
+    },
+    "Doara.Ucetnictvi.AuthServer": {
+      "path": "host/Doara.Ucetnictvi.AuthServer/Doara.Ucetnictvi.AuthServer.abppkg",
+      "folder": "host"
+    },
+    "Doara.Ucetnictvi.Host.Shared": {
+      "path": "host/Doara.Ucetnictvi.Host.Shared/Doara.Ucetnictvi.Host.Shared.abppkg",
+      "folder": "host"
+    }
+  }
+}
