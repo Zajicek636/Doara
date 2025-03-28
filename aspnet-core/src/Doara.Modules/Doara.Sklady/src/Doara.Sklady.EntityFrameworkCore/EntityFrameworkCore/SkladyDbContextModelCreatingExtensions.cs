@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Doara.Sklady.Entities;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 
 namespace Doara.Sklady.EntityFrameworkCore;
 
@@ -10,24 +12,47 @@ public static class SkladyDbContextModelCreatingExtensions
     {
         Check.NotNull(builder, nameof(builder));
 
-        /* Configure all entities here. Example:
-
-        builder.Entity<Question>(b =>
+        builder.Entity<ContainerItem>(b =>
         {
             //Configure table & schema name
-            b.ToTable(SkladyDbProperties.DbTablePrefix + "Questions", SkladyDbProperties.DbSchema);
-
+            b.ToTable(SkladyDbProperties.DbTablePrefix + nameof(ContainerItem), SkladyDbProperties.DbSchema);
             b.ConfigureByConvention();
 
             //Properties
-            b.Property(q => q.Title).IsRequired().HasMaxLength(QuestionConsts.MaxTitleLength);
+            b.Property(ci => ci.Name).IsRequired().HasMaxLength(255);
+            
+            //Indexes
+            b.HasIndex(ci => ci.Id);
+        });
+        
+        builder.Entity<WarehouseWorker>(b =>
+        {
+            //Configure table & schema name
+            b.ToTable(SkladyDbProperties.DbTablePrefix + nameof(WarehouseWorker), SkladyDbProperties.DbSchema);
+            b.ConfigureByConvention();
+
+            //Properties
+            b.Property(ww => ww.Name).IsRequired().HasMaxLength(255);
+            
+            //Indexes
+            b.HasIndex(ww => ww.Id);
+        });
+
+        builder.Entity<Container>(b =>
+        {
+            //Configure table & schema name
+            b.ToTable(SkladyDbProperties.DbTablePrefix + nameof(Container), SkladyDbProperties.DbSchema);
+            b.ConfigureByConvention();
+
+            //Properties
+            b.Property(c => c.Name).IsRequired().HasMaxLength(255);
 
             //Relations
-            b.HasMany(question => question.Tags).WithOne().HasForeignKey(qt => qt.QuestionId);
+            b.HasMany(c => c.WarehouseWorkers).WithOne().HasForeignKey(ww => ww.Id);
+            b.HasMany(c => c.Items).WithOne().HasForeignKey(ci => ci.Id);
 
             //Indexes
-            b.HasIndex(q => q.CreationTime);
+            b.HasIndex(c => c.Id);
         });
-        */
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Doara.Sklady.Entities;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -7,9 +8,9 @@ namespace Doara.Sklady.EntityFrameworkCore;
 [ConnectionStringName(SkladyDbProperties.ConnectionStringName)]
 public class SkladyDbContext : AbpDbContext<SkladyDbContext>, ISkladyDbContext
 {
-    /* Add DbSet for each Aggregate Root here. Example:
-     * public DbSet<Question> Questions { get; set; }
-     */
+    public DbSet<Container> Containers { get; set; }
+    public DbSet<ContainerItem> ContainerItems { get; set; }
+    public DbSet<WarehouseWorker> WarehouseWorkers { get; set; }
 
     public SkladyDbContext(DbContextOptions<SkladyDbContext> options)
         : base(options)
