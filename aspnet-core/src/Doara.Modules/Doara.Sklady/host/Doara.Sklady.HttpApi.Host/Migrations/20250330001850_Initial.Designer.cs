@@ -13,8 +13,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Doara.Sklady.Migrations
 {
     [DbContext(typeof(SkladyHttpApiHostMigrationsDbContext))]
-    [Migration("20250327230246_AddEntities")]
-    partial class AddEntities
+    [Migration("20250330001850_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,7 +80,7 @@ namespace Doara.Sklady.Migrations
 
                     b.HasIndex("Id");
 
-                    b.ToTable("SkladyContainer", (string)null);
+                    b.ToTable("Sklady_Container", (string)null);
                 });
 
             modelBuilder.Entity("Doara.Sklady.Entities.ContainerItem", b =>
@@ -91,16 +91,73 @@ namespace Doara.Sklady.Migrations
                     b.Property<Guid>("ContainerId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("DiscountRate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<decimal>("Markup")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("MarkupRate")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<decimal>("PresentationPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("PurchaseUrl")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<decimal>("RealPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("TenantId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Id");
 
-                    b.ToTable("SkladyContainerItem", (string)null);
+                    b.ToTable("Sklady_ContainerItem", (string)null);
                 });
 
             modelBuilder.Entity("Doara.Sklady.Entities.WarehouseWorker", b =>
@@ -111,16 +168,18 @@ namespace Doara.Sklady.Migrations
                     b.Property<Guid>("ContainerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("TenantId");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Id");
 
-                    b.ToTable("SkladyWarehouseWorker", (string)null);
+                    b.ToTable("Sklady_WarehouseWorker", (string)null);
                 });
 
             modelBuilder.Entity("Doara.Sklady.Entities.ContainerItem", b =>

@@ -1,4 +1,6 @@
-﻿using Doara.Sklady.Entities;
+﻿using System;
+using Doara.Sklady.Entities;
+using Doara.Sklady.Enums;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp;
 using Volo.Abp.EntityFrameworkCore.Modeling;
@@ -15,11 +17,23 @@ public static class SkladyDbContextModelCreatingExtensions
         builder.Entity<ContainerItem>(b =>
         {
             //Configure table & schema name
-            b.ToTable(SkladyDbProperties.DbTablePrefix + nameof(ContainerItem), SkladyDbProperties.DbSchema);
+            b.ToTable(SkladyDbProperties.DbTablePrefix + "_" + nameof(ContainerItem), SkladyDbProperties.DbSchema);
             b.ConfigureByConvention();
 
             //Properties
             b.Property(ci => ci.Name).IsRequired().HasMaxLength(255);
+            b.Property(ci => ci.State).HasConversion(
+                x => (char)x, 
+                x => Enum.Parse<ContainerItemState>(x.ToString()))
+                .IsRequired();
+            b.Property(ci => ci.Description).IsRequired().HasMaxLength(4000);
+            b.Property(ci => ci.PurchaseUrl).HasMaxLength(1000);
+            b.Property(ci => ci.RealPrice);
+            b.Property(ci => ci.PresentationPrice);
+            b.Property(ci => ci.Markup);
+            b.Property(ci => ci.MarkupRate);
+            b.Property(ci => ci.Discount);
+            b.Property(ci => ci.DiscountRate);
             
             //Indexes
             b.HasIndex(ci => ci.Id);
@@ -28,11 +42,8 @@ public static class SkladyDbContextModelCreatingExtensions
         builder.Entity<WarehouseWorker>(b =>
         {
             //Configure table & schema name
-            b.ToTable(SkladyDbProperties.DbTablePrefix + nameof(WarehouseWorker), SkladyDbProperties.DbSchema);
+            b.ToTable(SkladyDbProperties.DbTablePrefix + "_" + nameof(WarehouseWorker), SkladyDbProperties.DbSchema);
             b.ConfigureByConvention();
-
-            //Properties
-            b.Property(ww => ww.Name).IsRequired().HasMaxLength(255);
             
             //Indexes
             b.HasIndex(ww => ww.Id);
@@ -41,7 +52,7 @@ public static class SkladyDbContextModelCreatingExtensions
         builder.Entity<Container>(b =>
         {
             //Configure table & schema name
-            b.ToTable(SkladyDbProperties.DbTablePrefix + nameof(Container), SkladyDbProperties.DbSchema);
+            b.ToTable(SkladyDbProperties.DbTablePrefix + "_" + nameof(Container), SkladyDbProperties.DbSchema);
             b.ConfigureByConvention();
 
             //Properties

@@ -1,24 +1,18 @@
 ﻿using System;
-using Volo.Abp;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.MultiTenancy;
 
 namespace Doara.Sklady.Entities;
 
-public class WarehouseWorker : Entity<Guid>
+public class WarehouseWorker : Entity<Guid>, IMultiTenant
 {
-    public virtual string Name { get; private set; }
+    public virtual Guid? TenantId { get; private set; }
+    public virtual Guid UserId { get; private set; } //IdentityUser
     public virtual Guid ContainerId { get; private set; }
     
-
-    public WarehouseWorker(Guid id, string name) : base(id)
+    public WarehouseWorker(Guid id) : base(id)
     {
-        Name = name;
-    }
-
-    public virtual WarehouseWorker SetTitle(string name)
-    {
-        Name = Check.NotNullOrWhiteSpace(name, nameof(name));
-        return this;
+       
     }
     
 #pragma warning disable CS8618, CS9264
