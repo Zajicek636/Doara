@@ -1,0 +1,27 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.main-container {
+  box-sizing: border-box;
+  display: block;
+  height: 100%;
+  overflow: hidden;
+}
+
+.menu {
+  width: 300px;
+  border-right: solid 1px #27b7e6;
+}
+
+.main-drawer-container {
+  width: 100%;
+  height: 100%;
+}
+
+.content {
+  height: 100%;
+  overflow: hidden;
+}

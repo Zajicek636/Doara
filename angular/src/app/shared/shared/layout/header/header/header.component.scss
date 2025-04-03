@@ -1,0 +1,36 @@
+:host {
+  display: block;
+  box-sizing: border-box;
+  height: 50px;
+  min-height: 50px;
+}
+
+.header {
+  display: flex;
+  height: 50px;
+  align-items: center;
+  box-shadow: grey 0 0 10px 1px!important;
+  background-color: #27b7e6;
+}
+
+.left {
+  padding-right: 10px;
+}
+
+.spacer {
+  display: flex;
+  flex: auto;
+}
+
+.right {
+  display: flex;
+}
+
+.user {
+  line-height: 36px;
+  padding: 0 10px;
+}
+
+.header-title {
+  font-size: 15px;
+}

@@ -1,0 +1,6 @@
+<mat-list>
+  <mat-list-item *ngFor="let item of menuItems" (click)="activate(item)" class="menu-item"  [ngClass]="isSelected(item) ? 'marked':'' ">
+    <!--<span mat-list-icon [ngClass]="['cml-fw', item.icon || '']" [attr.active-color]="isSelected(item) ? 'cml-active-darken-blue' : 'cml-active-grey'"></span>-->
+    <span style="padding-left: 15px;">TEST</span>
+  </mat-list-item>
+</mat-list>
