@@ -8,6 +8,7 @@ import {MatList, MatListItem} from '@angular/material/list';
 import {MainLayoutComponent} from "./main-layout/main-layout.component";
 import {HeaderComponent} from "./header/header.component";
 import {MenuComponent} from "./menu/menu.component";
+import {MatIcon} from "@angular/material/icon";
 
 @NgModule({
     declarations: [
@@ -24,6 +25,7 @@ import {MenuComponent} from "./menu/menu.component";
         MatListItem,
         MatList,
         MatSidenavModule,
+        MatIcon,
     ]
 })
 export class LayoutModule { }

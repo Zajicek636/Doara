@@ -3,12 +3,12 @@
 </app-header>
 <div class="main-container">
   <mat-drawer-container class="mat-drawer-container">
-    <mat-drawer #matDrawer class="menu" mode="side" (opened)="false">
-      <!--<app-menu></app-menu>-->
+    <mat-drawer #matDrawer class="menu" mode="push" opened>
+      <app-menu></app-menu>
     </mat-drawer>
-  </mat-drawer-container>
 
-  <div class="content">
-    <router-outlet></router-outlet>
-  </div>
+  <mat-drawer-content>
+      <router-outlet></router-outlet>
+  </mat-drawer-content>
+  </mat-drawer-container>
 </div>

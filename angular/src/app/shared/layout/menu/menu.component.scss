@@ -1,3 +1,8 @@
+@use '../../../../styles/variables' as *;
 .mat-list-item {
   font-size: 14px;
+}
+
+.menu-item {
+  background-color: $baseWhite
 }
