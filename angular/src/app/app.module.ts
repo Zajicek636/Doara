@@ -2,8 +2,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routes';
-import { SharedModule } from './shared/shared/shared.module';
-import {LayoutModule} from './shared/shared/layout/layout.module';
+import {LayoutModule} from '@angular/cdk/layout';
+import {SharedModule} from './shared/shared.module';
 
 @NgModule({
   declarations: [AppComponent],

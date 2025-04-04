@@ -1,3 +1,4 @@
+@use '../../../../styles/variables' as *;
 :host {
   display: block;
   box-sizing: border-box;
@@ -10,7 +11,7 @@
   height: 50px;
   align-items: center;
   box-shadow: grey 0 0 10px 1px!important;
-  background-color: #27b7e6;
+  background-color: $baseGreen;
 }
 
 .left {

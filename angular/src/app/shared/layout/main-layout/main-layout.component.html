@@ -1,0 +1,14 @@
+<app-header>
+  <button mat-button (click)="matDrawer.toggle()">Menu</button>
+</app-header>
+<div class="main-container">
+  <mat-drawer-container class="mat-drawer-container">
+    <mat-drawer #matDrawer class="menu" mode="side" (opened)="false">
+      <!--<app-menu></app-menu>-->
+    </mat-drawer>
+  </mat-drawer-container>
+
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

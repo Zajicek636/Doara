@@ -1,3 +1,4 @@
+@use '../../../../styles/variables' as *;
 :host {
   display: flex;
   flex-direction: column;
@@ -13,10 +14,12 @@
 
 .menu {
   width: 300px;
-  border-right: solid 1px #27b7e6;
+  background-color: $baseWhite;
+  border-right: solid 1px $baseGreen;
+  border-top-right-radius: unset;
 }
 
-.main-drawer-container {
+.mat-drawer-container {
   width: 100%;
   height: 100%;
 }
