@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Doara.Sklady.EntityFrameworkCore.Base;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
 namespace Doara.Sklady.EntityFrameworkCore;

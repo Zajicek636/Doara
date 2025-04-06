@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Doara.Sklady.Dto;
+using Doara.Sklady.Dto.Container;
 using Doara.Sklady.IAppServices;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp;
@@ -15,6 +16,8 @@ public class ContainerController(IContainerAppService containerAppService)
     : SkladyController, IContainerAppService
 {
     [HttpGet]
+    //[Route("authorized")]
+    //[Authorize]
     public async Task<ContainerDto> GetAsync([Required] Guid id)
     {
         return await containerAppService.GetAsync(id);

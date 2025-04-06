@@ -1,10 +1,12 @@
 ﻿using System;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
 namespace Doara.Sklady.Entities;
 
-public class WarehouseWorker : Entity<Guid>, IMultiTenant
+// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
+public class WarehouseWorker : AuditedEntity<Guid>, IMultiTenant
 {
     public virtual Guid? TenantId { get; private set; }
     public virtual Guid UserId { get; private set; } //IdentityUser

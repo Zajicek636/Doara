@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Doara.Sklady.Dto;
+using Doara.Sklady.Dto.Container;
 using Volo.Abp.Application.Services;
 
 namespace Doara.Sklady.IAppServices;

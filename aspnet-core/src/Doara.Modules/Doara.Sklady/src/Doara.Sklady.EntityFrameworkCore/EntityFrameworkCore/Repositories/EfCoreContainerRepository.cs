@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Doara.Sklady.Entities;
+using Doara.Sklady.EntityFrameworkCore.Base;
 using Doara.Sklady.Repositories;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;

@@ -2,6 +2,7 @@
   "culture": "cs",
   "texts": {
     "MyAccount": "Spravovat profil",
-    "SamplePageMessage": "Ukázková stránka pro modul Sklady"
+    "SamplePageMessage": "Ukázková stránka pro modul Sklady",
+    "Permission:Sklady": "PP"
   }
 }

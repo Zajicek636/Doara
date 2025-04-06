@@ -7,4 +7,6 @@ public class SkladyRemoteServiceConsts
     public const string ModuleName = "sklady";
     
     public const int ContainerMaxNameLength = 255;
+    public const int ContainerItemMaxNameLength = 255;
+    public const int WarehouseWorkerMaxNameLength = 255;
 }

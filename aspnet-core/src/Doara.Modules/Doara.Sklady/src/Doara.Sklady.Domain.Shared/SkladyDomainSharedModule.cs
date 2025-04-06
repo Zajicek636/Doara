@@ -25,7 +25,7 @@ public class SkladyDomainSharedModule : AbpModule
         Configure<AbpLocalizationOptions>(options =>
         {
             options.Resources
-                .Add<SkladyResource>("en")
+                .Add<SkladyResource>("cs")
                 .AddBaseTypes(typeof(AbpValidationResource))
                 .AddVirtualJson("/Localization/Sklady");
         });
