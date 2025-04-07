@@ -1,12 +1,12 @@
-.submenu {
-  padding-left: 20px;
+@use '../../../../../styles/variables' as *;
+.selected-menu-item {
+  border-left: solid 5px;
+  border-left-color: $baseGreen!important;
+  transition: 250ms ease-in-out;
+  background-color:$lightenBaseGreen !important;
 }
 
-.arrow {
-  margin-left: auto;
-  transition: transform 0.2s ease-in-out;
-
-  &.opened {
-    transform: rotate(180deg);
-  }
+.menu-item {
+  border-left: solid 5px;
+  border-left-color: transparent;
 }

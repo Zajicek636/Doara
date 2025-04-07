@@ -5,15 +5,9 @@
 
 -->
 <mat-nav-list>
-  <a mat-list-item (click)="activate(item)" *ngFor="let item of menuItems()" matTooltip="{{ item.name }}" matTooltipPosition="right">
-    <mat-icon matListItemIcon>
-      {{ item.icon }}
-    </mat-icon>
-
-    <span matListItemTitle class="menu-text">
-      {{ item.name }}
-    </span>
-  </a>
+  @for (item of menuItems(); track item.name) {
+    <app-menu-item [item]="item"></app-menu-item>
+  }
 </mat-nav-list>
 
 <!--

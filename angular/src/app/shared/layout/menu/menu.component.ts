@@ -17,7 +17,7 @@ export class MenuComponent implements OnInit {
   @Input() collapsed = false;
 
   menuItems = signal<MenuItem[]>([
-    { name: 'Sklady', link: 'sklady', icon: 'dataset' },
+    { name: 'Sklady', link: 'sklady', icon: 'dataset', items: [{ name: 'Test', link: 'test', icon: 'data_thresholding' },]},
     { name: 'Účetnictví', link: 'ucetnictvi', icon: 'data_thresholding' },
     { name: 'Settings', link: 'nastaveni', icon: 'settings' },
   ]) ;
