@@ -1,0 +1,14 @@
+<div class="menu-group">
+  <!-- Zobrazení hlavní položky menu -->
+  <mat-list-item (click)="toggle()" [ngClass]="{ 'marked': isSelected() }">
+    <mat-icon>{{ item.icon }}</mat-icon>
+    <span>{{ item.name }}</span>
+    <!-- Pokud má položka pod-položky, zobrazí se šipka pro rozbalení -->
+    <mat-icon *ngIf="item.items?.length" class="arrow" [class.opened]="opened">expand_more</mat-icon>
+  </mat-list-item>
+
+  <!-- Zobrazení pod-položek pokud je položka otevřená -->
+  <div *ngIf="opened" class="submenu">
+    <app-menu-item *ngFor="let sub of item.items" [item]="sub"></app-menu-item>
+  </div>
+</div>

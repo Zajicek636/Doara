@@ -1,0 +1,12 @@
+.submenu {
+  padding-left: 20px;
+}
+
+.arrow {
+  margin-left: auto;
+  transition: transform 0.2s ease-in-out;
+
+  &.opened {
+    transform: rotate(180deg);
+  }
+}

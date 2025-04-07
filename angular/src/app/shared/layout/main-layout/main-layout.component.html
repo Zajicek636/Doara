@@ -1,14 +1,32 @@
-<app-header>
-  <button mat-button (click)="matDrawer.toggle()">Menu</button>
+<app-header
+  (toggleLeft)="onLeftDrawerClick($event)"
+>
 </app-header>
 <div class="main-container">
+  <mat-sidenav-container class="mat-drawer-container">
+    <mat-sidenav class="menu" [opened]="true" #leftDrawer position="start" mode="side">
+        <app-menu></app-menu>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  <!--
   <mat-drawer-container class="mat-drawer-container">
-    <mat-drawer #matDrawer class="menu" mode="push" opened>
+
+    <mat-drawer #leftDrawer class="menu" mode="push" position="start" opened>
+
+    </mat-drawer>
+
+    <mat-drawer #rightDrawer class="right-panel" mode="over" position="end">
       <app-menu></app-menu>
     </mat-drawer>
 
-  <mat-drawer-content>
-      <router-outlet></router-outlet>
-  </mat-drawer-content>
-  </mat-drawer-container>
+    <mat-drawer-content>
+
+
+    </mat-drawer-content>
+
+  </mat-drawer-container>-->
 </div>

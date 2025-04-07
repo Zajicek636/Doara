@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Router} from '@angular/router';
 
 @Component({
@@ -8,9 +8,14 @@ import {Router} from '@angular/router';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent implements OnInit {
+  @Output() toggleLeft: EventEmitter<any> = new EventEmitter();
   constructor(private router: Router,) { }
 
   ngOnInit(): void {
+  }
+
+  onLeftToggle() {
+    this.toggleLeft.emit(this.toggleLeft);
   }
 
   navigateHome() {

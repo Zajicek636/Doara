@@ -1,6 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit, signal} from '@angular/core';
 import {Router} from '@angular/router';
 
+export interface  MenuItem {
+  name: string;
+  link: string;
+  icon: string;
+  items?: MenuItem[];
+}
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -8,22 +14,29 @@ import {Router} from '@angular/router';
   styleUrl: './menu.component.scss'
 })
 export class MenuComponent implements OnInit {
-  menuItems: {}[] = [
-    { name: 'Domů', link: 'home', icon: 'cml-home' },
-    { name: 'Účetní jednotky', link: 'ucetni-jednotky', icon: 'cml-cog' },
-    { name: 'Uživatelé', link: 'uzivatele', icon: 'cml-user-replace' },
-    { name: 'Role', link: 'role', icon: 'cml-legal' },
-    { name: 'CRORegistration', link: 'cro-registrace', icon: 'cml-wrench' },
-    { name: 'Přenos účetní jednotky', link: 'prenos-ucetni-jednotky', icon: 'cml-move-transfer-file' },
-    { name: 'Členění pro výkazy', link: 'cleneni-pro-vykazy', icon: 'cml-sitemap' },
-    { name: 'Kontace', link: 'kontace', icon: 'cml-books' },
-  ];
+  @Input() collapsed = false;
+
+  menuItems = signal<MenuItem[]>([
+    { name: 'Sklady', link: 'sklady', icon: 'dataset' },
+    { name: 'Účetnictví', link: 'ucetnictvi', icon: 'data_thresholding' },
+    { name: 'Settings', link: 'nastaveni', icon: 'settings' },
+  ]) ;
 
   constructor(private router: Router) { }
 
   ngOnInit(): void
   {
 
+  }
+
+  openedItem: MenuItem | null = null;
+
+  toggleSubmenu(item: MenuItem): void {
+    if (this.openedItem === item) {
+      this.openedItem = null;
+    } else {
+      this.openedItem = item;
+    }
   }
 
   activate(item: any) {

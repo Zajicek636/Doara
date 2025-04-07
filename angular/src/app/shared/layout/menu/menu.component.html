@@ -1,7 +1,25 @@
+<!--
+<div class="account_header">
+  <img src="" alt="">
+</div>
+
+-->
+<mat-nav-list>
+  <a mat-list-item (click)="activate(item)" *ngFor="let item of menuItems()" matTooltip="{{ item.name }}" matTooltipPosition="right">
+    <mat-icon matListItemIcon>
+      {{ item.icon }}
+    </mat-icon>
+
+    <span matListItemTitle class="menu-text">
+      {{ item.name }}
+    </span>
+  </a>
+</mat-nav-list>
+
+<!--
 <mat-list>
-  <mat-list-item *ngFor="let item of menuItems" (click)="activate(item)" class="menu-item"  [ngClass]="isSelected(item) ? 'marked':'' ">
-    <!--<span mat-list-icon [ngClass]="['cml-fw', item.icon || '']" [attr.active-color]="isSelected(item) ? 'cml-active-darken-blue' : 'cml-active-grey'"></span>-->
-      <mat-icon>voicemail</mat-icon>
-      <span>TOTO JE TEST</span>
-  </mat-list-item>
+  <ng-container *ngFor="let item of menuItems()">
+    <app-menu-item [item]="item"></app-menu-item>
+  </ng-container>
 </mat-list>
+-->
