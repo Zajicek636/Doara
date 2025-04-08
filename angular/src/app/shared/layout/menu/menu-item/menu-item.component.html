@@ -1,28 +1,43 @@
-<a
-  mat-list-item
-  (click)="activate(item)"
-  matTooltip="{{ item.name }}"
-  matTooltipPosition="right"
-  [routerLink]="item.link"
-  class="menu-item"
-  routerLinkActive = "selected-menu-item"
-  #rla = "routerLinkActive"
-  [activated] ="rla.isActive">
+<a mat-list-item
+   (click)="activate(item)"
+   matTooltip="{{ item.name }}"
+   matTooltipPosition="right"
+   class="menu-item"
+   [routerLink]="item.items ? null : [item.link]"
+   routerLinkActive="selected-menu-item"
+   #rla="routerLinkActive"
+   [activated]="rla.isActive">
   <mat-icon matListItemIcon
             [fontSet]="rla.isActive ? 'material-icons' : 'material-icons-outlined'">
     {{ item.icon }}
   </mat-icon>
   <span matListItemTitle class="menu-text">
-      {{ item.name }}
-    </span>
-
-  @if (item.items) {
-    <span matListItemMeta>
-      @if (nestedItemsOpen()) {
-        <mat-icon>expand_less</mat-icon>
-      } @else {
-        <mat-icon>expand_more</mat-icon>
-      }
-    </span>
-  }
+     {{ item.name }}
+   </span>
+  <span matListItemMeta *ngIf="item.items">
+     <mat-icon>{{ nestedItemsOpen() ? 'expand_less' : 'expand_more' }}</mat-icon>
+   </span>
 </a>
+
+<div *ngIf="item.items && nestedItemsOpen()">
+  <div>
+    <a *ngFor="let subitem of item.items"
+       mat-list-item
+       (click)="activate(subitem)"
+       matTooltip="{{ subitem.name }}"
+       matTooltipPosition="right"
+       [routerLink]="[item.link, subitem.link]"
+       class="submenu-item"
+       routerLinkActive="submenu-item-active"
+       #rla="routerLinkActive"
+       [activated]="rla.isActive">
+      <mat-icon matListItemIcon
+                [fontSet]="rla.isActive ? 'material-icons' : 'material-icons-outlined'">
+        {{ subitem.icon }}
+      </mat-icon>
+      <span matListItemTitle class="menu-text">
+        {{ subitem.name }}
+      </span>
+    </a>
+  </div>
+</div>

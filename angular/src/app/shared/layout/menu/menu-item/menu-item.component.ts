@@ -13,13 +13,8 @@ export class MenuItemComponent {
   @Input() collapsed = false;
 
   nestedItemsOpen = signal(false);
-//TODO PRIDAT NESTED MENU REKURZIVNE
-//TODO PRIDAT NESTED MENU REKURZIVNE
-//TODO PRIDAT NESTED MENU REKURZIVNE
-//TODO PRIDAT NESTED MENU REKURZIVNE
-//TODO PRIDAT NESTED MENU REKURZIVNE
-//TODO PRIDAT NESTED MENU REKURZIVNE
-//TODO PRIDAT NESTED MENU REKURZIVNE
+  selectedItem: MenuItem | undefined ;
+
   constructor(private router: Router) {}
 
   // Toggle pro otevření/uzavření pod-položek
@@ -31,17 +26,17 @@ export class MenuItemComponent {
     }
   }*/
 
-  activate(item: any) {
-    if (item.link !== null) {
-      if(item.items) {
-        this.nestedItemsOpen = signal(true);
-      }
-      this.router.navigate([item.link]);
+  activate(item: MenuItem) {
+    this.selectedItem = item
+    if(item.items) {
+      this.nestedItemsOpen.update(prev => !prev);
+    } else if(!item.items) {
     }
+
+    /*if (item.link !== null) {
+      this.router.navigate([item.link]);
+    }*/
   }
 
-  // Zjištění, zda je položka vybraná
-  isSelected(): boolean {
-    return this.router.url.includes(`/${this.item.link}`);
-  }
+
 }

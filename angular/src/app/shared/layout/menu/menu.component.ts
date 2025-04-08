@@ -17,7 +17,7 @@ export class MenuComponent implements OnInit {
   @Input() collapsed = false;
 
   menuItems = signal<MenuItem[]>([
-    { name: 'Sklady', link: 'sklady', icon: 'dataset', items: [{ name: 'Test', link: 'test', icon: 'data_thresholding' },]},
+    { name: 'Sklady', link: 'sklady', icon: 'dataset', items: [{ name: 'Test', link: 'polozky', icon: 'data_thresholding' },{ name: 'Test2', link: 'editace-skladu', icon: 'data_thresholding' }]},
     { name: 'Účetnictví', link: 'ucetnictvi', icon: 'data_thresholding' },
     { name: 'Settings', link: 'nastaveni', icon: 'settings' },
   ]) ;
@@ -26,27 +26,5 @@ export class MenuComponent implements OnInit {
 
   ngOnInit(): void
   {
-
-  }
-
-  openedItem: MenuItem | null = null;
-
-  toggleSubmenu(item: MenuItem): void {
-    if (this.openedItem === item) {
-      this.openedItem = null;
-    } else {
-      this.openedItem = item;
-    }
-  }
-
-  activate(item: any) {
-    if (item.link !== null) {
-      this.router.navigate([item.link]);
-    }
-  }
-
-  public isSelected(item: any)
-  {
-    return this.router.url.includes(`/${item.link}`)
   }
 }

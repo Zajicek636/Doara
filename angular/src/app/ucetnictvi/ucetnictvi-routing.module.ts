@@ -14,11 +14,6 @@ const routes: Routes = [
         component: UcetnictviMainComponent,
         data: { basePath: 'ucetnictvi' }
       },
-     /* {
-        path: 'edit/:id',
-        component: '',
-        data: { basePath: 'ucetnictvi',}
-      },*/
     ]
   },
 ];

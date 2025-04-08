@@ -10,3 +10,15 @@
   border-left: solid 5px;
   border-left-color: transparent;
 }
+
+.submenu-item {
+  border-left: solid 5px;
+  border-left-color: $lightenBaseGreen !important;
+  margin-inline-start: 24px!important;
+}
+
+.submenu-item-active {
+  background-color: #cccccc !important;
+}
+
+
