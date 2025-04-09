@@ -1,4 +1,5 @@
-﻿import {Component, Inject} from '@angular/core';
+﻿import {DefaultDialogComponent} from './default-dialog.component';
+import {Component, Inject} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -6,13 +7,11 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from '@angular/material/dialog';
-import {NgClass} from '@angular/common';
 import {MatButton} from '@angular/material/button';
-import {DefaultDialogComponent} from './default-dialog.component';
-
+import {NgClass} from '@angular/common';
 
 @Component({
-  selector: 'app-alert-dialog',
+  selector: 'app-confirm-dialog',
   template: `
     <div class="dialog-container">
       <div mat-dialog-title class="dialog-header rounded-bottom-5 shadow-sm" [ngClass]="data.type">
@@ -24,27 +23,29 @@ import {DefaultDialogComponent} from './default-dialog.component';
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
-        <button mat-button [ngClass]="data.type" (click)="close()">OK</button>
+        <button mat-button [ngClass]="data.type" (click)="cancel()">Cancel</button>
+        <button mat-button [ngClass]="data.type" (click)="close()">Confirm</button>
       </mat-dialog-actions>
     </div>
   `,
   imports: [
-    NgClass,
-    MatDialogTitle,
-    MatDialogActions,
     MatDialogContent,
+    MatDialogActions,
     MatButton,
+    MatDialogTitle,
+    NgClass
   ],
-  styleUrls: ['./base-dialog.component.scss'],
+  styleUrls: ['base-dialog.component.scss']
 })
-export class AlertDialogComponent extends DefaultDialogComponent {
-
+export class ConfirmDialogComponent extends DefaultDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public override data: any,
-    private dialogRef: MatDialogRef<AlertDialogComponent>
+    private dialogRef: MatDialogRef<ConfirmDialogComponent>
   ) {
     super();
     this.close = this.dialogRef.close.bind(this.dialogRef);
   }
-
+  cancel() {
+    this.dialogRef.close();
+  }
 }

@@ -2,9 +2,9 @@
 import { MatDialog } from '@angular/material/dialog';
 import {AlertDialogComponent} from './components/alert-dialog.component';
 import {DefaultDialogComponent} from './components/default-dialog.component';
-import {AlertDialogParams} from './dialog.interfaces';
-import {BaseDialogComponent} from './base-dialog/base-dialog.component';
-
+import {AlertDialogParams, ConfirmDialogParams, DialogType, FormDialogParams} from './dialog.interfaces';
+import {ConfirmDialogComponent} from './components/confirm-dialog.component';
+import {FormDialogComponent} from './components/form-dialog.component';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
@@ -20,7 +20,7 @@ export class DialogService {
     return dialogRef.afterClosed().toPromise();
   }
 
-  alert(params: AlertDialogParams): Promise<void> {
+  async alert(params: AlertDialogParams): Promise<void> {
     return this.open(AlertDialogComponent, {
       title: params.title,
       message: params.message,
@@ -28,18 +28,19 @@ export class DialogService {
     });
   }
 
-  confirmAsync(message: string, title: string = 'Potvrzení'): Promise<boolean> {
-    return this.open(BaseDialogComponent, {
-      title,
-      message,
-      type: 'alert-success',
-      hasCancelButton: true,
-      cancelButtonText: 'Cancel',
-      confirmButtonText: 'Confirm',
-    }).then(result => !!result);
+  async confirmAsync(params: ConfirmDialogParams): Promise<boolean> {
+    const result = await this.open(ConfirmDialogComponent, {
+      title: params.title,
+      message: params.message,
+      type: DialogType.WARNING,
+    });
+    return result;
   }
 
- /* form<T>(component: new (...args: any[]) => DefaultDialogComponent<any, T>, data?: any): Promise<T | undefined> {
-    return this.open(component, data);
-  }*/
+  async form<T>(params: FormDialogParams): Promise<T | undefined> {
+    return this.open(FormDialogComponent, {
+      fields: params.fields,
+      type: DialogType.ALERT,
+    });
+  }
 }

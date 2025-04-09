@@ -1,0 +1,14 @@
+<div [formGroup]="form">
+  <ng-container *ngFor="let field of fields">
+
+    @if (field.type == formFieldTypes.TEXT || field.type == formFieldTypes.PASSWORD) {
+      <ng-container>
+        <app-text-field [field]="field" [form]="form"></app-text-field>
+      </ng-container>
+    } @else if (field.type == formFieldTypes.NUMBER) {
+      <ng-container>
+        <app-number-field [field]="field" [form]="form"></app-number-field>
+      </ng-container>
+    }
+  </ng-container>
+</div>

@@ -1,0 +1,8 @@
+<mat-form-field appearance="fill" class="full-width">
+  <mat-label>{{ field.label }}</mat-label>
+  <input
+    matInput
+    [formControlName]="field.formControlName"
+    [type]="field.type === FormFieldTypes.PASSWORD ? 'password' : 'text'" />
+  <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
+</mat-form-field>
