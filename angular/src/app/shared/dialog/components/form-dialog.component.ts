@@ -12,6 +12,7 @@ import {SharedModule} from '../../shared.module';
 import {MatButton} from '@angular/material/button';
 import {AnyFormComponent} from '../../forms/any-form/any-form.component';
 import {FormField} from '../../forms/form.interfaces';
+import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-form-dialog',
@@ -21,12 +22,13 @@ import {FormField} from '../../forms/form.interfaces';
         <span>{{ data.title }}</span>
       </div>
       <mat-dialog-content>
-        <app-any-form [fields]="this.fields">
+        <app-any-form [fields]="this.fields" (formChanged)="valueChanged($event)" >
         </app-any-form>
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
         <button mat-button (click)="cancel()">Cancel</button>
+        <button mat-button [disabled]="this.isSubmitDisabled" (click)="submit()">Odeslat</button>
       </mat-dialog-actions>
     </div>
   `,
@@ -50,6 +52,16 @@ export class FormDialogComponent extends DefaultDialogComponent {
   ) {
     super();
     this.fields = this.data.fields;
+  }
+
+  public isSubmitDisabled = true;
+
+  submit(): void {
+
+  }
+
+  valueChanged(form: FormGroup): void {
+    this.isSubmitDisabled = form.invalid
   }
 
   cancel() {

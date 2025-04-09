@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, ValidationErrors} from '@angular/forms';
 import {FormField, FormFieldTypes} from '../form.interfaces';
 import {FormService} from '../form.service';
@@ -21,6 +21,8 @@ import {NumberFieldComponent} from './number-field/number-field.component';
 export class AnyFormComponent implements OnInit {
   @Input() fields!: FormField[];
 
+  @Output() formChanged: EventEmitter<FormGroup> = new EventEmitter();
+
   form!: FormGroup;
   formFieldTypes = FormFieldTypes;
 
@@ -29,6 +31,9 @@ export class AnyFormComponent implements OnInit {
   ngOnInit(): void {
     const res = this.formService.createForm(this.fields);
     this.form = res
+    this.form.valueChanges.subscribe(c => {
+      this.formChanged.emit(this.form);
+    });
   }
 
  /* getErrorMessage(name: string): string {

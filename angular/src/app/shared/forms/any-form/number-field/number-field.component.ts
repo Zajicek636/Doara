@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {FormField, FormFieldTypes} from '../../form.interfaces';
-import {FormGroup} from '@angular/forms';
+import {ControlContainer, FormGroup, FormGroupDirective} from '@angular/forms';
 import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {NgIf} from '@angular/common';
 import {SharedModule} from '../../../shared.module';
@@ -17,7 +17,8 @@ import {SharedModule} from '../../../shared.module';
     MatError
   ],
   templateUrl: './number-field.component.html',
-  styleUrl: './number-field.component.scss'
+  styleUrl: './number-field.component.scss',
+  viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }]
 })
 export class NumberFieldComponent {
   @Input() field!: FormField;
@@ -29,10 +30,10 @@ export class NumberFieldComponent {
         return 'Toto pole je povinné';
       }
       if (control.errors['min']) {
-        return 'Zvýšit';
+        return `Minimum je ${control.errors['min'].min}`;
       }
       if (control.errors['max']) {
-        return 'Zmenšit';
+        return `Maximum je ${control.errors['max'].max}`;
       }
     }
     return '';
