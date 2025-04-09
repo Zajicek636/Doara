@@ -1,8 +1,25 @@
-﻿$baseGreen: #86C232;
+﻿@use "sass:color" as c;
+
+$baseGreen: #86C232;
 $baseDarkGreen: #61892F;
-$lightenBaseGreen: lighten($baseGreen, 30%);
+$lightenBaseGreen: c.adjust($baseGreen, $lightness: 30%);
+
+$lightBlueAlert: #d1ecf1;
+$darkBlueAlert: #0c5460;
+
+$lightRedAlert: #f8d7da;
+$darkRedAlert: #721c24;
+
+$lightOrangeAlert: #fff3cd;
+$darkOrangeAlert: #856404;
+
+$lightGreenAlert: #d4edda;
+$darkGreenAlert: #155724;
+
 
 $baseBlack: #222629;
 $baseGrey: #474B4F;
 $baseLightGrey: #6B6E70;
 $baseWhite: #F2F2F2;
+
+

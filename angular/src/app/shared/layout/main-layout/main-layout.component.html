@@ -9,24 +9,10 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <router-outlet></router-outlet>
+      <app-breadcrumb></app-breadcrumb>
+      <div class="container">
+        <router-outlet></router-outlet>
+      </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
-  <!--
-  <mat-drawer-container class="mat-drawer-container">
-
-    <mat-drawer #leftDrawer class="menu" mode="push" position="start" opened>
-
-    </mat-drawer>
-
-    <mat-drawer #rightDrawer class="right-panel" mode="over" position="end">
-      <app-menu></app-menu>
-    </mat-drawer>
-
-    <mat-drawer-content>
-
-
-    </mat-drawer-content>
-
-  </mat-drawer-container>-->
 </div>

@@ -19,6 +19,7 @@ import {MenuComponent} from "./menu/menu.component";
 import {MatIcon} from "@angular/material/icon";
 import {MenuItemComponent} from './menu/menu-item/menu-item.component';
 import {MatToolbar} from '@angular/material/toolbar';
+import {BreadcrumbComponent} from "../breadcrumb/breadcrumb.component";
 
 @NgModule({
     declarations: [
@@ -27,22 +28,23 @@ import {MatToolbar} from '@angular/material/toolbar';
       MenuComponent,
       MenuItemComponent
     ],
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatTooltipModule,
-    MatSidenavModule,
-    MatButtonModule,
-    MatListItem,
-    MatList,
-    MatSidenavModule,
-    MatIcon,
-    MatToolbar,
-    MatNavList,
-    MatListItemIcon,
-    MatListItemTitle,
-    MatDivider,
-    MatListItemMeta,
-  ]
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatTooltipModule,
+        MatSidenavModule,
+        MatButtonModule,
+        MatListItem,
+        MatList,
+        MatSidenavModule,
+        MatIcon,
+        MatToolbar,
+        MatNavList,
+        MatListItemIcon,
+        MatListItemTitle,
+        MatDivider,
+        MatListItemMeta,
+        BreadcrumbComponent,
+    ]
 })
 export class LayoutModule { }

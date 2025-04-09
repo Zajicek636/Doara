@@ -12,7 +12,7 @@ const routes: Routes = [
       {
         path: '',
         component: UcetnictviMainComponent,
-        data: { basePath: 'ucetnictvi' }
+        data: { basePath: 'ucetnictvi', breadcrumb: 'Účetnictví' }
       },
     ]
   },

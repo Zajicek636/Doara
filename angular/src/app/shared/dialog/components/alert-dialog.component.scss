@@ -1,0 +1,24 @@
+﻿@use '../../../../styles/variables' as *;
+
+.alert-warning {
+  background-color: $lightOrangeAlert;
+  color: $darkOrangeAlert;
+}
+.dialog-header {
+  text-align: center;
+}
+
+.alert-danger {
+  background-color: $lightRedAlert;
+  color: $darkRedAlert;
+}
+
+.alert-alert {
+  background-color: $lightBlueAlert;
+  color: $darkBlueAlert;
+}
+
+.alert-success {
+  background-color: $lightenBaseGreen;
+  color: $baseDarkGreen;
+}

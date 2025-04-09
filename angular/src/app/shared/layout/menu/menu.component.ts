@@ -17,12 +17,12 @@ export class MenuComponent implements OnInit {
   @Input() collapsed = false;
 
   menuItems = signal<MenuItem[]>([
-    { name: 'Sklady', link: 'sklady', icon: 'dataset', items: [{ name: 'Test', link: 'polozky', icon: 'data_thresholding' },{ name: 'Test2', link: 'editace-skladu', icon: 'data_thresholding' }]},
+    { name: 'Sklady', link: 'sklady', icon: 'dataset', items: [{ name: 'Test', link: 'polozky', icon: 'data_thresholding' },{ name: 'Test2', link: 'editace-skladu', icon: 'data_thresholding'}]},
     { name: 'Účetnictví', link: 'ucetnictvi', icon: 'data_thresholding' },
     { name: 'Settings', link: 'nastaveni', icon: 'settings' },
   ]) ;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   ngOnInit(): void
   {

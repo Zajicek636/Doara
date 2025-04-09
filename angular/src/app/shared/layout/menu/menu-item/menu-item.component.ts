@@ -17,14 +17,6 @@ export class MenuItemComponent {
 
   constructor(private router: Router) {}
 
-  // Toggle pro otevření/uzavření pod-položek
- /* toggle(): void {
-    if (this.item.items?.length) {
-      this.opened = !this.opened;
-    } else {
-      this.router.navigate([this.item.link]);  // Přechod na stránku, pokud není pod-položka
-    }
-  }*/
 
   activate(item: MenuItem) {
     this.selectedItem = item
@@ -32,10 +24,6 @@ export class MenuItemComponent {
       this.nestedItemsOpen.update(prev => !prev);
     } else if(!item.items) {
     }
-
-    /*if (item.link !== null) {
-      this.router.navigate([item.link]);
-    }*/
   }
 
 

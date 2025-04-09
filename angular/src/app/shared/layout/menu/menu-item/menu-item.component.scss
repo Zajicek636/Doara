@@ -13,11 +13,12 @@
 
 .submenu-item {
   border-left: solid 5px;
-  border-left-color: $lightenBaseGreen !important;
+  border-left-color: $lightenBaseGreen;
   margin-inline-start: 24px!important;
 }
 
 .submenu-item-active {
+  transition: 250ms ease-in-out;
   background-color: #cccccc !important;
 }
 

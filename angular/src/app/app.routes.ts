@@ -2,8 +2,6 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {MainLayoutComponent} from './shared/layout/main-layout/main-layout.component';
 import {HomeComponent} from './shared/home/home.component';
-import {SkladyMainComponent} from './sklady/sklady-main/sklady-main.component';
-import {UcetnictviMainComponent} from './ucetnictvi/ucetnictvi-main/ucetnictvi-main.component';
 
 const ucetnictviModule = () => import('./ucetnictvi/ucetnictvi.module').then(m => m.UcetnictviModule);
 const skladyModule = () => import('./sklady/sklady.module').then(m => m.SkladyModule);
@@ -21,6 +19,8 @@ export const routes: Routes = [
       {
         path: 'home', //tady nekde jde hodit auth, jestli mas pristup k modulu :-)))
         component: HomeComponent,
+        data: { breadcrumb: "Home" }
+
       },
       {
         path: 'ucetnictvi',

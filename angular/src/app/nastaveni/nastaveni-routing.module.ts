@@ -11,7 +11,7 @@ const routes: Routes = [
       {
         path: '',
         component: NastaveniMainComponent,
-        data: { basePath: 'nastaveni' }
+        data: { basePath: 'nastaveni', breadcrumb: 'Nastaveni' },
       },
       /* {
          path: 'edit/:id',
