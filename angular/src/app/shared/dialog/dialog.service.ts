@@ -13,7 +13,9 @@ export class DialogService {
   open<T extends DefaultDialogComponent>(component: new (...args: any[]) => T, data?: any): Promise<any> {
     const dialogRef = this.dialog.open(component, {
       data,
-      width: '400px',
+      width: '30%',
+      height: 'auto',
+      maxWidth: '100%',
       panelClass: 'custom-dialog',
     });
 

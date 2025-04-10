@@ -18,19 +18,19 @@ const routes: Routes = [
       {
         path: 'polozky',
         component: SkladyPolozkyComponent,
-        data: { basePath: 'sklady', breadcrumb: 'Položky' },
+        data: { basePath: 'sklady', breadcrumb: 'Položky'},
         children: [
           {
             path: 'nastaveni',
             component: SkladyEditaceComponent,
-            data: { basePath: 'sklady',breadcrumb: 'Nastaveni' }
+            data: { basePath: 'sklady', breadcrumb: 'Nastaveni'}
           },
         ]
       },
       {
         path: 'editace-skladu',
         component: SkladyEditaceComponent,
-        data: { basePath: 'sklady',breadcrumb: 'Editace skladu' }
+        data: { basePath: 'sklady', breadcrumb: 'Editace skladu'}
       },
     ]
   },

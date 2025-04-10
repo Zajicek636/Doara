@@ -1,9 +1,9 @@
 ﻿@use '../../../styles/variables' as *;
 
 .breadcrumb-custom {
-  background-color: $baseWhite;
+  background:linear-gradient(to bottom, $baseWhite,$baseWhiteDarker);
   padding: 15px;
-  border-radius: 8px;
+  border-radius: 0px 0px 8px 8px;
 }
 
 .breadcrumb {

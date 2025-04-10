@@ -20,10 +20,16 @@ export interface ValidatorConfig {
   params?: any;
 }
 
+export interface FormSelect {
+  value: any;
+  label: string;
+}
+
 export interface FormField {
   formControlName: string;
+  options?: FormSelect[];
+  defaultValue?: any;
   label: string;
   type: FormFieldTypes;
-  defaultValue?: any;
   validator: ValidatorConfig[];
 }

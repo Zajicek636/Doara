@@ -1,14 +1,9 @@
-<div [formGroup]="form" >
-  <ng-container *ngFor="let field of fields">
 
-    @if (field.type == formFieldTypes.TEXT || field.type == formFieldTypes.PASSWORD) {
-      <ng-container>
-        <app-text-field [field]="field" [form]="form"></app-text-field>
-      </ng-container>
-    } @else if (field.type == formFieldTypes.NUMBER) {
-      <ng-container>
-        <app-number-field [field]="field" [form]="form"></app-number-field>
-      </ng-container>
-    }
+<ng-container [formGroup]="form" *ngFor="let field of fields">
+  <ng-container [ngSwitch]="field.type">
+    <app-text-field *ngSwitchCase="formFieldTypes.TEXT" [field]="field" [form]="form"></app-text-field>
+    <app-text-field *ngSwitchCase="formFieldTypes.PASSWORD" [field]="field" [form]="form"></app-text-field>
+    <app-number-field *ngSwitchCase="formFieldTypes.NUMBER" [field]="field" [form]="form"></app-number-field>
+    <app-lookup-field *ngSwitchCase="formFieldTypes.LOOKUP" [field]="field" [form]="form"></app-lookup-field>
   </ng-container>
-</div>
+</ng-container>

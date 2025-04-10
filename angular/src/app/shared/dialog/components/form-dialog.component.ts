@@ -10,7 +10,7 @@ import { DefaultDialogComponent } from './default-dialog.component';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {SharedModule} from '../../shared.module';
 import {MatButton} from '@angular/material/button';
-import {AnyFormComponent} from '../../forms/any-form/any-form.component';
+import {AnyFormComponent, FormComponentResult} from '../../forms/any-form/any-form.component';
 import {FormField} from '../../forms/form.interfaces';
 import {FormGroup} from '@angular/forms';
 
@@ -18,12 +18,13 @@ import {FormGroup} from '@angular/forms';
   selector: 'app-form-dialog',
   template: `
     <div class="dialog-container">
-      <div mat-dialog-title class="dialog-header rounded-bottom-5 shadow-sm" [ngClass]="data.type">
+      <div mat-dialog-title class="dialog-header shadow-sm" [ngClass]="data.type">
         <span>{{ data.title }}</span>
       </div>
       <mat-dialog-content>
-        <app-any-form [fields]="this.fields" (formChanged)="valueChanged($event)" >
-        </app-any-form>
+        <div class="modal-form">
+          <app-any-form [fields]="this.fields" (formChanged)="valueChanged($event)"></app-any-form>
+        </div>
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
@@ -43,12 +44,15 @@ import {FormGroup} from '@angular/forms';
     AnyFormComponent
   ]
 })
-export class FormDialogComponent extends DefaultDialogComponent {
+export class FormDialogComponent<T> extends DefaultDialogComponent {
   @Input() fields!: FormField[];
+
+  form: FormGroup = new FormGroup({});
+  result: FormComponentResult<T> | null = null;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public override data: any,
-    private dialogRef: MatDialogRef<FormDialogComponent>,
+    private dialogRef: MatDialogRef<FormDialogComponent<T>>,
   ) {
     super();
     this.fields = this.data.fields;
@@ -57,11 +61,15 @@ export class FormDialogComponent extends DefaultDialogComponent {
   public isSubmitDisabled = true;
 
   submit(): void {
-
+    if(this.form && this.form.valid) {
+      this.dialogRef.close(this.result?.data)
+    }
   }
 
-  valueChanged(form: FormGroup): void {
-    this.isSubmitDisabled = form.invalid
+  valueChanged(form: FormComponentResult<T>): void {
+    this.result = form
+    this.form = form.form
+    this.isSubmitDisabled = !form.valid
   }
 
   cancel() {

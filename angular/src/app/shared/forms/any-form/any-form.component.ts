@@ -1,11 +1,29 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  Component,
+  ContentChild,
+  EventEmitter, HostListener,
+  Input,
+  OnInit,
+  Output,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef, ViewEncapsulation
+} from '@angular/core';
 import {FormControl, FormGroup, ValidationErrors} from '@angular/forms';
 import {FormField, FormFieldTypes} from '../form.interfaces';
 import {FormService} from '../form.service';
 import {SharedModule} from '../../shared.module';
-import {NgForOf} from '@angular/common';
+import {NgClass, NgForOf, NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
 import {TextFieldComponent} from './text-field/text-field.component';
 import {NumberFieldComponent} from './number-field/number-field.component';
+import {LookupFieldComponent} from './lookup-field/lookup-field.component';
+
+export interface FormComponentResult<T> {
+  valid: boolean;
+  data: T;
+  modified: boolean;
+  form: FormGroup;
+}
 
 @Component({
   selector: 'app-any-form',
@@ -13,60 +31,65 @@ import {NumberFieldComponent} from './number-field/number-field.component';
     SharedModule,
     NgForOf,
     TextFieldComponent,
-    NumberFieldComponent
+    NumberFieldComponent,
+    NgSwitch,
+    NgSwitchCase,
+    LookupFieldComponent,
   ],
   templateUrl: './any-form.component.html',
-  styleUrl: './any-form.component.scss'
+  styleUrl: './any-form.component.scss',
 })
-export class AnyFormComponent implements OnInit {
+export class AnyFormComponent<T> implements OnInit {
   @Input() fields!: FormField[];
 
-  @Output() formChanged: EventEmitter<FormGroup> = new EventEmitter();
+  @Output() formChanged: EventEmitter<FormComponentResult<T>> = new EventEmitter<FormComponentResult<T>>();
 
+  @Input() defaults: any = {}
+
+  isSmallScreen: boolean = false;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    this.isSmallScreen = event.target.innerWidth < 600;
+  }
+
+  public entity: any = {}
+  modified: boolean = false;
   form!: FormGroup;
   formFieldTypes = FormFieldTypes;
 
   constructor(private formService: FormService) {}
 
   ngOnInit(): void {
-    const res = this.formService.createForm(this.fields);
-    this.form = res
-    this.form.valueChanges.subscribe(c => {
-      this.formChanged.emit(this.form);
-    });
-  }
+    this.form = this.formService.createForm(this.fields);
 
- /* getErrorMessage(name: string): string {
-    const control = this.form.get(name);
-    if(control) {
-      const controlErrors = control.errors;
-      if(controlErrors) {
-        let error: string[] = []
-        Object.keys(controlErrors).forEach(x => {
-          error.push(this.parseErrorMessage(x, controlErrors));
+    this.fields.forEach( f => {
+      const control = this.form.get(f.formControlName)
+      if(control) {
+        control.markAsTouched()
+        control.valueChanges.subscribe( val => {
+          this.triggerOnChange(f.formControlName)
         })
-        return error.join('. ');
       }
-    }
-    return ''
+    })
+    this.modified = false;
+    //this.form.valueChanges.subscribe( x=> this.triggerOnChange(x));
   }
 
-  parseErrorMessage(key: string, errors: ValidationErrors): string {
-    if (key === 'required' && errors['required']) {
-      return 'Toto pole je povinné';
-    }
-    if (key === 'emailInvalid' && errors['emailInvalid']) {
-      return 'Neplatná emailová adresa';
-    }
-    if (key === 'pattern' && errors['pattern']) {
-      return 'Neplatný formát';
-    }
-    if (key === 'min' && errors['min']) {
-      return `Hodnota je příliš nízká, minimálně ${errors['min'].min}`;
-    }
-    if (key === 'max' && errors['max']) {
-      return `Hodnota je příliš vysoká, maximálně ${errors['max'].max}`;
-    }
-    return ''
-  }*/
+  triggerOnChange(control: any) {
+    setTimeout(() => {
+      const FormVal = Object.assign({}, this.entity, this.form.value);
+
+      if(JSON.stringify(this.defaults[control]) !== JSON.stringify(FormVal[control])) {
+        this.modified = true;
+      }
+
+      this.formChanged.emit({
+        valid: this.form.valid,
+        data: FormVal,
+        modified: this.modified,
+        form: this.form
+      })
+    })
+  }
 }

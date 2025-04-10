@@ -1,9 +1,10 @@
-import {Component, Input} from '@angular/core';
-import {FormField, FormFieldTypes} from '../../form.interfaces';
-import {ControlContainer, FormGroup, FormGroupDirective} from '@angular/forms';
+import {Component} from '@angular/core';
+import { FormFieldTypes} from '../../form.interfaces';
+import {ControlContainer, FormGroupDirective} from '@angular/forms';
 import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {NgIf} from '@angular/common';
 import {SharedModule} from '../../../shared.module';
+import {BaseFieldComponent} from '../base-field.component';
 
 @Component({
   selector: 'app-number-field',
@@ -20,24 +21,7 @@ import {SharedModule} from '../../../shared.module';
   styleUrl: './number-field.component.scss',
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }]
 })
-export class NumberFieldComponent {
-  @Input() field!: FormField;
-  @Input() form!: FormGroup;
-  get errorMessage(): string {
-    const control = this.form.get(this.field.formControlName);
-    if (control && control.errors) {
-      if (control.errors['required']) {
-        return 'Toto pole je povinné';
-      }
-      if (control.errors['min']) {
-        return `Minimum je ${control.errors['min'].min}`;
-      }
-      if (control.errors['max']) {
-        return `Maximum je ${control.errors['max'].max}`;
-      }
-    }
-    return '';
-  }
+export class NumberFieldComponent extends BaseFieldComponent{
 
   protected readonly FormFieldTypes = FormFieldTypes;
 }

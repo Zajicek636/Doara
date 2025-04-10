@@ -4,61 +4,56 @@ import {BreadcrumbService} from "../../shared/breadcrumb/breadcrumb.service";
 import {Router} from "@angular/router";
 import {MatButton} from "@angular/material/button";
 import {DialogService} from "../../shared/dialog/dialog.service";
-import {DialogType} from "../../shared/dialog/dialog.interfaces";
-import {FormService} from "../../shared/forms/form.service";
-import {ValidatorService} from "../../shared/forms/validator.service";
 import {CustomValidator, FormField, FormFieldTypes} from "../../shared/forms/form.interfaces";
-
+import {AnyFormComponent, FormComponentResult} from '../../shared/forms/any-form/any-form.component';
+import {FormGroup} from '@angular/forms';
+export interface Res {
+  Test: string,
+  Cislo: string,
+}
 @Component({
   selector: 'app-sklady-polozky',
   imports: [
-    MatButton
+    MatButton,
+    AnyFormComponent
   ],
   templateUrl: './sklady-polozky.component.html',
   styleUrl: './sklady-polozky.component.scss'
 })
 export class SkladyPolozkyComponent implements OnInit {
-  breadcrumbs: Array<{label: string, url: string}> = [];
+  testingFields:FormField[];
+  form: FormGroup;
   constructor(
       private dataService: SkladyPolozkyDataService,
       private breadcrumbService: BreadcrumbService,
       private router: Router,
       private dialogService: DialogService,
-      private formService: FormService,
   ) {
-  }
+    this.form = new FormGroup({});
 
-  ngOnInit() {
-    this.loadData()
-  }
-
-  async loadData() {
-    try {
-      await this.dataService.get("test")
-    } catch (e) {
-      //await this.dialogService.alert({title: "Titulek", message:`${e}`, dialogType: DialogType.ERROR})
-    }
-
-  }
-
-  async route() {
-    const a: FormField[] = [{
-      label: "Test",
-      defaultValue: "TEST",
-      formControlName: "Test",
-      type: FormFieldTypes.TEXT,
-      validator: [{
-        validator: CustomValidator.REQUIRED
-      }]
-    },
+    this.testingFields  = [
       {
-        label: "Cislo",
+        label: "Test",
+        defaultValue: "TEST",
+        formControlName: "Test",
+        type: FormFieldTypes.TEXT,
+        validator: [{
+          validator: CustomValidator.REQUIRED
+        },{
+          validator: CustomValidator.MAX,
+          params: 10
+        },{
+          validator: CustomValidator.MIN,
+          params: 3
+        }]
+      }, {
+        label: "Password",
         formControlName: "Cislo",
-        type: FormFieldTypes.NUMBER,
+        type: FormFieldTypes.PASSWORD,
         validator: [
-            {
-              validator: CustomValidator.REQUIRED
-            },
+          {
+            validator: CustomValidator.REQUIRED
+          },
           {
             validator: CustomValidator.MIN,
             params: 5
@@ -67,9 +62,42 @@ export class SkladyPolozkyComponent implements OnInit {
             validator: CustomValidator.MAX,
             params: 10
           }]
-      }]
+      },
+      {
+        label: "Select me",
+        formControlName: "Select",
+        type: FormFieldTypes.LOOKUP,
+        validator: [
+          {
+            validator: CustomValidator.REQUIRED
+          },],
+        options: [{label: "Select me", value: "TEST"}, {label: "Select me2", value: "TEST"}]
+      }
+    ]
+  }
 
-    await this.dialogService.form({fields: a})
+  ngOnInit() {
+    this.loadData()
+  }
+
+  public handleChange(res: FormComponentResult<Res>) {
+    this.form = res.form
+    console.log(res.data);
+  }
+
+
+  async loadData() {
+    try {
+      await this.dataService.get("test")
+    } catch (e) {
+      //await this.dialogService.alert({title: "Titulek", message:`${e}`, dialogType: DialogType.ERROR})
+    }
+  }
+
+  async route() {
+
+    const tes = await this.dialogService.form<Res>({fields: this.testingFields})
+    console.log(tes)
 
     /*const form: FormGroup = this.formService.createForm([{ name: 'firstName', label: 'First Name', type: 'text' },
       { name: 'lastName', label: 'Last Name', type: 'text' }])

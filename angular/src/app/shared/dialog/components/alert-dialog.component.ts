@@ -15,7 +15,7 @@ import {DefaultDialogComponent} from './default-dialog.component';
   selector: 'app-alert-dialog',
   template: `
     <div class="dialog-container">
-      <div mat-dialog-title class="dialog-header rounded-bottom-5 shadow-sm" [ngClass]="data.type">
+      <div mat-dialog-title class="dialog-header shadow-sm" [ngClass]="data.type">
         <span>{{ data.title }}</span>
       </div>
 

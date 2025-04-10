@@ -1,7 +1,7 @@
 @use '../../../../../styles/variables' as *;
 .selected-menu-item {
   border-left: solid 5px;
-  border-left-color: $baseGreen!important;
+  border-color: $baseGreen!important;
   transition: 250ms ease-in-out;
   background-color:$lightenBaseGreen !important;
 }
@@ -12,8 +12,10 @@
 }
 
 .submenu-item {
+  border-bottom: 2px solid;
   border-left: solid 5px;
   border-left-color: $lightenBaseGreen;
+  border-bottom-color: $lightenBaseGreen;
   margin-inline-start: 24px!important;
 }
 

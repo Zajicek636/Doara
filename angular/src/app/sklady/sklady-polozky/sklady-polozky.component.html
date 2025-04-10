@@ -1,2 +1,4 @@
-<div>sklady-polozky works!</div>
+<div style="width: 200px">
+  <app-any-form style="display: flex; flex-direction: row; gap: 15px; flex-wrap: wrap" [fields]="this.testingFields" (formChanged)="handleChange($event)" ></app-any-form>
+</div>
 <button mat-button (click)="route()">TEST</button>
