@@ -14,7 +14,7 @@ export interface Res {
 }
 @Component({
   selector: 'app-sklady-polozky',
-  imports: [MatButton, AnyFormModule],
+  imports: [AnyFormModule],
   templateUrl: './sklady-polozky.component.html',
   styleUrl: './sklady-polozky.component.scss'
 })

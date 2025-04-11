@@ -2,27 +2,30 @@
 :host {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
+}
+.main-container {
+  box-sizing:border-box;
+  display:block;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 
-.main-container {
-  box-sizing: border-box;
-  display: block;
+.mat-drawer-container {
   height: 100%;
-  overflow: hidden;
+  width: 100%;
 }
 
 .menu {
   width: 300px;
-  height: 100%;
   background-color: $baseWhite;
   border-right: solid 1px $baseGreen;
   border-top-right-radius: unset;
 }
 
-.mat-drawer-container {
-  width: 100%;
-  height: calc(100vh);
+.mat-toolbar {
+  background-color: $baseWhite;
 }
 
 .content {
@@ -30,6 +33,7 @@
   overflow: hidden;
 }
 
-.mat-toolbar {
-  background-color: $baseWhite;
+.content-scroll-wrapper {
+  height: calc(100vh - 150px);
+  overflow: auto;
 }
