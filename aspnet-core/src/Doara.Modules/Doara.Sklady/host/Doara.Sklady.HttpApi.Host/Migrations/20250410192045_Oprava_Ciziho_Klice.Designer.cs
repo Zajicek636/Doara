@@ -4,6 +4,7 @@ using Doara.Sklady.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Doara.Sklady.Migrations
 {
     [DbContext(typeof(SkladyHttpApiHostMigrationsDbContext))]
-    partial class SkladyHttpApiHostMigrationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250410192045_Oprava_Ciziho_Klice")]
+    partial class Oprava_Ciziho_Klice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,12 +136,9 @@ namespace Doara.Sklady.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<decimal>("PresentationPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("PurchaseUrl")
-                        .HasMaxLength(2048)
-                        .HasColumnType("nvarchar(2048)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18,2)");

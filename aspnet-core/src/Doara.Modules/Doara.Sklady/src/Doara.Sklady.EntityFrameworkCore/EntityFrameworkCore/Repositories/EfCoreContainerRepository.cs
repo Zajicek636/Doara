@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Doara.Sklady.Entities;
 using Doara.Sklady.EntityFrameworkCore.Base;
 using Doara.Sklady.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -29,5 +31,11 @@ public class EfCoreContainerRepository(IDbContextProvider<SkladyDbContext> dbCon
     public async Task DeleteAsync(Guid id)
     {
         await base.DeleteAsync(x => x.Id == id);
+    }
+
+    public async Task<bool> AnyAsync(Expression<Func<Container, bool>> predicate)
+    {
+        var query = await GetQueryableAsync();
+        return await query.AnyAsync(predicate);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Doara.Sklady.Constants;
 
 namespace Doara.Sklady.Dto.ContainerItem;
 
@@ -9,6 +10,6 @@ public class ContainerItemUpdateInputDto
     public Guid Id { get; set; }
     
     [Required]
-    [StringLength(SkladyRemoteServiceConsts.ContainerItemMaxNameLength)]
+    [StringLength(ContainerItemConstants.MaxNameLength)]
     public string Name { get; set; } = null!;
 }
