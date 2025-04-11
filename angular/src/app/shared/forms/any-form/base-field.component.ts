@@ -1,11 +1,14 @@
 ﻿import {Directive, Input} from '@angular/core';
-import {FormField} from '../form.interfaces';
+import {FormField, FormFieldTypes} from '../form.interfaces';
 import {FormGroup, ValidationErrors} from '@angular/forms';
 
 @Directive()
 export abstract class BaseFieldComponent {
   @Input() field!: FormField;
   @Input() form!: FormGroup;
+
+
+  protected readonly FormFieldTypes = FormFieldTypes;
 
   protected get control() {
     return this.form.get(this.field.formControlName);

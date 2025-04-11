@@ -7,12 +7,13 @@ import {
   MatDialogTitle
 } from '@angular/material/dialog';
 import { DefaultDialogComponent } from './default-dialog.component';
-import {NgClass, NgForOf, NgIf} from '@angular/common';
+import {NgClass, } from '@angular/common';
 import {SharedModule} from '../../shared.module';
 import {MatButton} from '@angular/material/button';
-import {AnyFormComponent, FormComponentResult} from '../../forms/any-form/any-form.component';
+import { FormComponentResult} from '../../forms/any-form/any-form.component';
 import {FormField} from '../../forms/form.interfaces';
 import {FormGroup} from '@angular/forms';
+import {AnyFormModule} from '../../forms/any-form/any-form.module';
 
 @Component({
   selector: 'app-form-dialog',
@@ -41,7 +42,7 @@ import {FormGroup} from '@angular/forms';
     SharedModule,
     MatDialogActions,
     MatButton,
-    AnyFormComponent
+    AnyFormModule
   ]
 })
 export class FormDialogComponent<T> extends DefaultDialogComponent {

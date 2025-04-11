@@ -1,6 +1,9 @@
 <mat-form-field appearance="fill" class="full-width">
   <mat-label>{{ field.label }}</mat-label>
-  <mat-select [formControlName]="field.formControlName">
+  <mat-select [formControlName]="field.formControlName" [multiple]="field.multipleSelect">
+    @if (canBeNulled) {
+      <mat-option value="null"></mat-option>
+    }
     <mat-option *ngFor="let option of field.options" [value]="option.value">
       {{ option.label }}
     </mat-option>

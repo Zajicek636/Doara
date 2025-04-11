@@ -5,18 +5,16 @@ import {Router} from "@angular/router";
 import {MatButton} from "@angular/material/button";
 import {DialogService} from "../../shared/dialog/dialog.service";
 import {CustomValidator, FormField, FormFieldTypes} from "../../shared/forms/form.interfaces";
-import {AnyFormComponent, FormComponentResult} from '../../shared/forms/any-form/any-form.component';
+import {FormComponentResult} from '../../shared/forms/any-form/any-form.component';
 import {FormGroup} from '@angular/forms';
+import {AnyFormModule} from '../../shared/forms/any-form/any-form.module';
 export interface Res {
   Test: string,
   Cislo: string,
 }
 @Component({
   selector: 'app-sklady-polozky',
-  imports: [
-    MatButton,
-    AnyFormComponent
-  ],
+  imports: [MatButton, AnyFormModule],
   templateUrl: './sklady-polozky.component.html',
   styleUrl: './sklady-polozky.component.scss'
 })
@@ -72,6 +70,32 @@ export class SkladyPolozkyComponent implements OnInit {
             validator: CustomValidator.REQUIRED
           },],
         options: [{label: "Select me", value: "TEST"}, {label: "Select me2", value: "TEST"}]
+      },
+      {
+        label: "Select me",
+        formControlName: "Select",
+        type: FormFieldTypes.LOOKUP,
+        options: [{label: "Select me", value: "TEST"}, {label: "Select me2", value: "TEST"}]
+      },
+      {
+        label: "Multiple select",
+        formControlName: "Select2",
+        multipleSelect: true,
+        type: FormFieldTypes.LOOKUP,
+        validator: [
+          {
+            validator: CustomValidator.REQUIRED
+          },],
+        options: [{label: "Select me", value: "TEST"}, {label: "Select me2", value: "TEST"}]
+      },
+      {
+        label: "tEXTAREA",
+        formControlName: "tEXTAREA",
+        type: FormFieldTypes.TEXTAREA,
+        validator: [
+          {
+            validator: CustomValidator.REQUIRED
+          },],
       }
     ]
   }

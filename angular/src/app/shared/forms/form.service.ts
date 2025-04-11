@@ -22,6 +22,7 @@ export class FormService {
 
   private getValidators(field: FormField): ValidatorFn[] {
     const validators: ValidatorFn[] = [];
+    if(!field.validator) return [];
 
     field.validator.forEach(v => {
       switch (v.validator) {

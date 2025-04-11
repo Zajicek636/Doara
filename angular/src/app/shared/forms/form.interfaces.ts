@@ -5,6 +5,7 @@
   AUTOCOMPLETE = 'autocomplete',
   LOOKUP = 'lookup',
   PASSWORD = 'password',
+  TEXTAREA = 'textarea',
 }
 
 export enum CustomValidator {
@@ -27,9 +28,10 @@ export interface FormSelect {
 
 export interface FormField {
   formControlName: string;
+  multipleSelect?: boolean;
   options?: FormSelect[];
   defaultValue?: any;
   label: string;
   type: FormFieldTypes;
-  validator: ValidatorConfig[];
+  validator?: ValidatorConfig[];
 }

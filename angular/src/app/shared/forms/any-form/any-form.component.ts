@@ -1,22 +1,13 @@
 import {
   Component,
-  ContentChild,
   EventEmitter, HostListener,
   Input,
   OnInit,
   Output,
-  TemplateRef,
-  ViewChild,
-  ViewContainerRef, ViewEncapsulation
 } from '@angular/core';
-import {FormControl, FormGroup, ValidationErrors} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
 import {FormField, FormFieldTypes} from '../form.interfaces';
 import {FormService} from '../form.service';
-import {SharedModule} from '../../shared.module';
-import {NgClass, NgForOf, NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
-import {TextFieldComponent} from './text-field/text-field.component';
-import {NumberFieldComponent} from './number-field/number-field.component';
-import {LookupFieldComponent} from './lookup-field/lookup-field.component';
 
 export interface FormComponentResult<T> {
   valid: boolean;
@@ -27,15 +18,7 @@ export interface FormComponentResult<T> {
 
 @Component({
   selector: 'app-any-form',
-  imports: [
-    SharedModule,
-    NgForOf,
-    TextFieldComponent,
-    NumberFieldComponent,
-    NgSwitch,
-    NgSwitchCase,
-    LookupFieldComponent,
-  ],
+  standalone: false,
   templateUrl: './any-form.component.html',
   styleUrl: './any-form.component.scss',
 })
