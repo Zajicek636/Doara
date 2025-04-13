@@ -14,4 +14,5 @@ public interface IContainerItemRepository
     Task<ContainerItem> CreateAsync(ContainerItem containerItem);
     Task<ContainerItem> UpdateAsync(ContainerItem containerItem);
     Task DeleteAsync(Guid id);
+    Task<bool> AnyAsync(Expression<Func<ContainerItem, bool>> predicate);
 }

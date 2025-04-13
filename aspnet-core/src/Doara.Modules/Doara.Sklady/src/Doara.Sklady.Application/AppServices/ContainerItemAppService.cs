@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Doara.Sklady.Dto.ContainerItem;
 using Doara.Sklady.Entities;
-using Doara.Sklady.Enums;
 using Doara.Sklady.IAppServices;
 using Doara.Sklady.Permissions;
 using Doara.Sklady.Repositories;
@@ -41,8 +40,7 @@ public class ContainerItemAppService(IContainerItemRepository containerItemRepos
         {
             throw new EntityNotFoundException(typeof(Container), input.ContainerId);
         }
-        var container = await containerRepository.GetAsync(input.ContainerId);
-
+        
         var guid = GuidGenerator.Create();
         var containerItem = new ContainerItem(guid, input.Name, input.Description, 
             input.RealPrice, input.Markup ?? 0, input.MarkupRate ?? 0, input.Discount ?? 0, 
@@ -64,7 +62,10 @@ public class ContainerItemAppService(IContainerItemRepository containerItemRepos
     [Authorize(SkladyPermissions.DeleteContainerItemPermission)]
     public async Task DeleteAsync(Guid id)
     {
-        await GetAsync(id);
+        if (!await containerRepository.AnyAsync(x => x.Id == id))
+        {
+            throw new EntityNotFoundException(typeof(ContainerItem), id);
+        }
         await containerItemRepository.DeleteAsync(id);
     }
 

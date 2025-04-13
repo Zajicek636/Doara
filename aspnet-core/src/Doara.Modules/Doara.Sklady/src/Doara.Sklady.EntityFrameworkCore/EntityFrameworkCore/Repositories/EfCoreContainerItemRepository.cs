@@ -10,6 +10,7 @@ using Volo.Abp.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Volo.Abp.Domain.Entities;
 
 namespace Doara.Sklady.EntityFrameworkCore.Repositories;
 
@@ -18,7 +19,13 @@ public class EfCoreContainerItemRepository(IDbContextProvider<SkladyDbContext> d
 {
     public async Task<ContainerItem> GetAsync(Guid id)
     {
-        return await base.GetAsync(x => x.Id == id);
+        var containerItem = await FindAsync(x => x.Id == id);
+        if (containerItem == null)
+        {
+            throw new EntityNotFoundException(typeof(ContainerItem), id);
+        }
+
+        return containerItem;
     }
 
     public async Task<List<ContainerItem>> GetAllAsync(int skip, int take, string sortBy, Expression<Func<ContainerItem, bool>>? filter = null)
@@ -60,5 +67,11 @@ public class EfCoreContainerItemRepository(IDbContextProvider<SkladyDbContext> d
     public async Task DeleteAsync(Guid id)
     {
         await base.DeleteAsync(x => x.Id == id);
+    }
+
+    public async Task<bool> AnyAsync(Expression<Func<ContainerItem, bool>> predicate)
+    {
+        var query = await GetQueryableAsync();
+        return await query.AnyAsync(predicate);
     }
 }
