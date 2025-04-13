@@ -24,6 +24,15 @@ public static class PropertyTester
         yield return [RandomGenerator.RandomAlpNum(maxLength + 1), true]; // Řetězec s délkou > maxLength
     }
     
+    public static IEnumerable<object[]> GetEnumPropertyTestData(Type e)
+    {
+        var values = Enum.GetValues(e);
+        foreach (var value in values)
+        {
+            yield return [value, false];
+        }
+    }
+    
     /// <summary>
     /// Generuje testovací data pro číselné vlastnosti.
     /// </summary>

@@ -63,7 +63,13 @@ public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
         Description = Check.NotNullOrWhiteSpace(description, nameof(Description), ContainerItemConstants.MaxDescriptionLength);
         return this;
     }
-    
+
+    public virtual ContainerItem SetPurchaseUrl(string? purchaseUrl)
+    {
+        PurchaseUrl = Check.Length(purchaseUrl, nameof(PurchaseUrl), ContainerItemConstants.MaxPurchaseUrlLength);
+        return this;
+    }
+
     public virtual ContainerItem SetState(ContainerItemState state)
     {
         State = state;
