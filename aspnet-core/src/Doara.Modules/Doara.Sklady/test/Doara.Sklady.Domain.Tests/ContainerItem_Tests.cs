@@ -1,0 +1,103 @@
+﻿using System;
+using Doara.Sklady.FakeEntities;
+using Doara.Sklady.Generators;
+using Shouldly;
+using TestHelper.Utils;
+using Xunit;
+
+namespace Doara.Sklady;
+
+public class ContainerItem_Tests : SkladyDomainModule
+{
+    private readonly FakeContainerItem _data;
+
+    public ContainerItem_Tests()
+    {
+        _data = RandomFakeEntityGenerator.RandomFakeContainerItem();
+    }
+    
+    [Theory]
+    [MemberData(nameof(PropertyTester.GetStringPropertyTestData), [false, FakeContainerItem.MaxNameLength], MemberType = typeof(PropertyTester))]
+    public void Test_ContainerItem_Name(string name, bool shouldThrow)
+    {
+        _data.Name = name;
+        _data.TestSetProperty<Entities.ContainerItem, ArgumentException>(shouldThrow, nameof(Entities.ContainerItem.Name));
+    }
+    
+    [Theory]
+    [MemberData(nameof(PropertyTester.GetStringPropertyTestData), [false, FakeContainerItem.MaxDescriptionLength], MemberType = typeof(PropertyTester))]
+    public void Test_ContainerItem_Description(string description, bool shouldThrow)
+    {
+        _data.Description = description;
+        _data.TestSetProperty<Entities.ContainerItem, ArgumentException>(shouldThrow, nameof(Entities.ContainerItem.Description));
+    }
+    
+    [Theory]
+    [MemberData(nameof(PropertyTester.GetStringPropertyTestData), [true, FakeContainerItem.MaxPurchaseUrlLength], MemberType = typeof(PropertyTester))]
+    public void Test_ContainerItem_PurchaseUrl(string purchaseUrl, bool shouldThrow)
+    {
+        _data.PurchaseUrl = purchaseUrl;
+        _data.TestSetProperty<Entities.ContainerItem, ArgumentException>(shouldThrow, nameof(Entities.ContainerItem.PurchaseUrl));
+    }
+    
+    [Theory]
+    [MemberData(nameof(PropertyTester.GetDecimalSignTestData), [false, true, true, 2], MemberType = typeof(PropertyTester))]
+    public void Test_ContainerItem_Quantity(decimal quantity, bool shouldThrow)
+    {
+        _data.Quantity = quantity;
+        _data.TestSetProperty<Entities.ContainerItem, ArgumentException>(shouldThrow, nameof(Entities.ContainerItem.Quantity));
+    }
+
+    [Theory]
+    [MemberData(nameof(PropertyTester.GetDecimalSignTestData), [false, true, true, 2], MemberType = typeof(PropertyTester))]
+    public void Test_ContainerItem_RealPrice(decimal realPrice, bool shouldThrow)
+    {
+        _data.RealPrice = realPrice;
+        _data.TestSetProperty<Entities.ContainerItem, ArgumentException>(shouldThrow, nameof(Entities.ContainerItem.RealPrice));
+    }
+
+    [Theory]
+    [MemberData(nameof(PropertyTester.GetDecimalSignTestData), [false, true, true, 2], MemberType = typeof(PropertyTester))]
+    public void Test_ContainerItem_Markup(decimal markup, bool shouldThrow)
+    {
+        _data.Markup = markup;
+        _data.TestSetProperty<Entities.ContainerItem, ArgumentException>(shouldThrow, nameof(Entities.ContainerItem.Markup));
+    }
+
+    [Theory]
+    [MemberData(nameof(PropertyTester.GetDecimalSignTestData), [false, true, true, 2], MemberType = typeof(PropertyTester))]
+    public void Test_ContainerItem_MarkupRate(decimal markupRate, bool shouldThrow)
+    {
+        _data.MarkupRate = markupRate;
+        _data.TestSetProperty<Entities.ContainerItem, ArgumentException>(shouldThrow, nameof(Entities.ContainerItem.MarkupRate));
+    }
+
+    [Theory]
+    [MemberData(nameof(PropertyTester.GetDecimalSignTestData), [false, true, true, 2], MemberType = typeof(PropertyTester))]
+    public void Test_ContainerItem_Discount(decimal discount, bool shouldThrow)
+    {
+        _data.Discount = discount;
+        _data.TestSetProperty<Entities.ContainerItem, ArgumentException>(shouldThrow, nameof(Entities.ContainerItem.Discount));
+    }
+
+    [Theory]
+    [MemberData(nameof(PropertyTester.GetDecimalSignTestData), [false, true, true, 2], MemberType = typeof(PropertyTester))]
+    public void Test_ContainerItem_DiscountRate(decimal discountRate, bool shouldThrow)
+    {
+        _data.DiscountRate = discountRate;
+        _data.TestSetProperty<Entities.ContainerItem, ArgumentException>(shouldThrow, nameof(Entities.ContainerItem.DiscountRate));
+    }
+    
+    [Fact]
+    public void Test_ContainerItem_PresentationPrice()
+    {
+        _data.RealPrice = 100;
+        _data.Markup = 100;
+        _data.MarkupRate = 100;
+        _data.Discount = 50;
+        _data.DiscountRate = 50;
+        var ci = _data.CreateOriginalEntity();
+        _data.CheckIfSame(ci);
+        ci.PresentationPrice.ShouldBe(200); 
+    }
+}

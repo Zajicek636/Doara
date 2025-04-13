@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doara.Ucetnictvi.HttpApi", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doara.Sklady.EntityFrameworkCore", "src\Doara.Modules\Doara.Sklady\src\Doara.Sklady.EntityFrameworkCore\Doara.Sklady.EntityFrameworkCore.csproj", "{C52CCD81-EFB9-4F53-976E-A41AC4B2E356}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doara.Sklady.Domain.Shared", "src\Doara.Modules\Doara.Sklady\src\Doara.Sklady.Domain.Shared\Doara.Sklady.Domain.Shared.csproj", "{35FC80D1-656E-4540-8817-3A4BE3CD55A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -145,6 +147,10 @@ Global
 		{C52CCD81-EFB9-4F53-976E-A41AC4B2E356}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C52CCD81-EFB9-4F53-976E-A41AC4B2E356}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C52CCD81-EFB9-4F53-976E-A41AC4B2E356}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35FC80D1-656E-4540-8817-3A4BE3CD55A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35FC80D1-656E-4540-8817-3A4BE3CD55A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35FC80D1-656E-4540-8817-3A4BE3CD55A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35FC80D1-656E-4540-8817-3A4BE3CD55A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -174,6 +180,7 @@ Global
 		{F00D8874-8133-4E9D-BF57-B541839E546C} = {123897BF-F042-40DF-9A80-74454178A170}
 		{D8592457-43B9-49F7-9421-291BED098442} = {123897BF-F042-40DF-9A80-74454178A170}
 		{C52CCD81-EFB9-4F53-976E-A41AC4B2E356} = {05EBCF70-8717-4BD4-925D-E57A0778C1D8}
+		{35FC80D1-656E-4540-8817-3A4BE3CD55A8} = {05EBCF70-8717-4BD4-925D-E57A0778C1D8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}

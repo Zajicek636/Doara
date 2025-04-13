@@ -1,5 +1,4 @@
-﻿using System;
-using Doara.Sklady.Constants;
+﻿using Doara.Sklady.Constants;
 using Doara.Sklady.Entities;
 using Doara.Sklady.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +21,7 @@ public static class SkladyDbContextModelCreatingExtensions
             b.ConfigureByConvention();
 
             //Properties
-            b.Property(c => c.Name).IsRequired().HasMaxLength(255);
+            b.Property(c => c.Name).IsRequired().HasMaxLength(ContainerConstants.MaxNameLength);
 
             //Relations
             b.HasMany(c => c.WarehouseWorkers).WithOne().HasForeignKey(ww => ww.Id);

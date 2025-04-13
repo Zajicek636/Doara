@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Doara.Sklady.Constants;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
@@ -25,7 +26,7 @@ public class Container : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
 
     public virtual Container SetName(string name)
     {
-        Name = Check.NotNullOrWhiteSpace(name, nameof(name), 255);
+        Name = Check.NotNullOrWhiteSpace(name, nameof(name), ContainerConstants.MaxNameLength);
         return this;
     }
     

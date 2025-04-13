@@ -32,7 +32,7 @@ public class SkladyEntityFrameworkCoreTestModule : AbpModule
         });
     }
 
-    private static SqliteConnection CreateDatabaseAndGetConnection()
+    private static AbpUnitTestSqliteConnection CreateDatabaseAndGetConnection()
     {
         var connection = new AbpUnitTestSqliteConnection("Data Source=:memory:");
         connection.Open();
