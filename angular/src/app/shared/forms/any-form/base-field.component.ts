@@ -17,7 +17,7 @@ export abstract class BaseFieldComponent {
     const errorMessages: { [key: string]: string | ((error: any) => string) } = {
       required: 'Toto pole je povinné',
       min: (error: any) => `Minimum je ${error.min}`,
-      minlength: (error: any) => `Překročeno minimum znaků: ${error.actualLength} / ${error.requiredLength}`,
+      minlength: (error: any) => `Nenaplněno minimum znaků: ${error.actualLength} / ${error.requiredLength}`,
       max: (error: any) => `Maximum je ${error.max}`,
       maxlength: (error: any) => `Překročeno maximum znaků: ${error.actualLength} / ${error.requiredLength}`,
       email: 'Email není ve správném formátu',

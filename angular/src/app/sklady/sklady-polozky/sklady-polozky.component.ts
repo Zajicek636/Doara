@@ -2,12 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {SkladyPolozkyDataService} from './sklady-polozky-data.service';
 import {BreadcrumbService} from "../../shared/breadcrumb/breadcrumb.service";
 import {Router} from "@angular/router";
-import {MatButton} from "@angular/material/button";
 import {DialogService} from "../../shared/dialog/dialog.service";
 import {CustomValidator, FormField, FormFieldTypes} from "../../shared/forms/form.interfaces";
 import {FormComponentResult} from '../../shared/forms/any-form/any-form.component';
 import {FormGroup} from '@angular/forms';
 import {AnyFormModule} from '../../shared/forms/any-form/any-form.module';
+import {DialogType} from '../../shared/dialog/dialog.interfaces';
 export interface Res {
   Test: string,
   Cislo: string,
@@ -69,24 +69,51 @@ export class SkladyPolozkyComponent implements OnInit {
           {
             validator: CustomValidator.REQUIRED
           },],
-        options: [{label: "Select me", value: "TEST"}, {label: "Select me2", value: "TEST"}]
+        options: [{displayValue: "First", value: "TEST"}, {displayValue: "Second", value: "Second"}]
       },
       {
-        label: "Select me",
-        formControlName: "Select",
+        label: "Select me 2",
+        formControlName: "Select2",
         type: FormFieldTypes.LOOKUP,
-        options: [{label: "Select me", value: "TEST"}, {label: "Select me2", value: "TEST"}]
+        options: [{displayValue: "First", value: "First"}, {displayValue: "Second", value: "Second"}]
       },
       {
         label: "Multiple select",
-        formControlName: "Select2",
+        formControlName: "Select3",
         multipleSelect: true,
         type: FormFieldTypes.LOOKUP,
         validator: [
           {
             validator: CustomValidator.REQUIRED
           },],
-        options: [{label: "Select me", value: "TEST"}, {label: "Select me2", value: "TEST"}]
+        options: [{displayValue: "First", value: "First"}, {displayValue: "Second", value: "Second"}]
+      },
+      {
+        label: "Grouped select",
+        formControlName: "Select4",
+        type: FormFieldTypes.LOOKUP,
+        validator: [
+          {
+            validator: CustomValidator.REQUIRED
+          },],
+        options: [
+          {groupName: "TEST GROUP", val:[{displayValue: "First", value: "First"}]},
+          {groupName: "SECOND GROUP", val:[{displayValue: "Second", value: "Second"}]}
+        ]
+      },
+      {
+        label: "Grouped multiple select",
+        formControlName: "Select5",
+        multipleSelect: true,
+        type: FormFieldTypes.LOOKUP,
+        validator: [
+          {
+            validator: CustomValidator.REQUIRED
+          },],
+        options: [
+          {groupName: "TEST GROUP", val:[{displayValue: "First", value: "TEST"}]},
+          {groupName: "SECOND GROUP", val:[{displayValue: "Second", value: "TEST"}]}
+        ]
       },
       {
         label: "tEXTAREA",
@@ -96,7 +123,30 @@ export class SkladyPolozkyComponent implements OnInit {
           {
             validator: CustomValidator.REQUIRED
           },],
-      }
+      },
+      {
+        label: "Autocomplete classic",
+        formControlName: "autocomplete",
+        type: FormFieldTypes.AUTOCOMPLETE,
+        validator: [
+          {
+            validator: CustomValidator.REQUIRED
+          },],
+        options: [{displayValue: "First", value: "First"}, {displayValue: "Second", value: "Second"}]
+      },
+      {
+        label: "Autocomplete grouped",
+        formControlName: "autocomplete2",
+        type: FormFieldTypes.AUTOCOMPLETE,
+        validator: [
+          {
+            validator: CustomValidator.REQUIRED
+          },],
+        options: [
+          {groupName: "TEST GROUP", val:[{displayValue: "First", value: "TEST"}]},
+          {groupName: "SECOND GROUP", val:[{displayValue: "Second", value: "TEST"}]}
+        ]
+      },
     ]
   }
 
@@ -114,7 +164,7 @@ export class SkladyPolozkyComponent implements OnInit {
     try {
       await this.dataService.get("test")
     } catch (e) {
-      //await this.dialogService.alert({title: "Titulek", message:`${e}`, dialogType: DialogType.ERROR})
+      await this.dialogService.alert({title: "Titulek", message:`${e}`, dialogType: DialogType.WARNING})
     }
   }
 

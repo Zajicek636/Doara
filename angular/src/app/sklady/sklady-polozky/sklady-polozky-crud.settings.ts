@@ -1,8 +1,6 @@
 ﻿import {Injectable} from '@angular/core';
 import {CrudSettings, QueryParams} from '../../shared/crud/base-crud-service';
 
-
-
 export interface SkladyPolozkyDto {
   id: string;
 }

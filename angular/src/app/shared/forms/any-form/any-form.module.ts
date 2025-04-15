@@ -14,6 +14,8 @@ import {TextFieldComponent} from './text-field/text-field.component';
 import {NumberFieldComponent} from './number-field/number-field.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
+import {AutocompleteFieldComponent} from './autocomplete-field/autocomplete-field.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,7 @@ import {MatSelectModule} from '@angular/material/select';
     LookupFieldComponent,
     TextFieldComponent,
     NumberFieldComponent,
+    AutocompleteFieldComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +38,8 @@ import {MatSelectModule} from '@angular/material/select';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
-    MatSelectModule
+    MatSelectModule,
+    MatAutocompleteModule
   ],
   exports: [
     ReactiveFormsModule,

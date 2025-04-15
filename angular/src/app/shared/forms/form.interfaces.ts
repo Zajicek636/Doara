@@ -23,13 +23,18 @@ export interface ValidatorConfig {
 
 export interface FormSelect {
   value: any;
-  label: string;
+  displayValue: string;
+}
+
+export interface FormGroupedSelect {
+  groupName: string;
+  val: FormSelect[]
 }
 
 export interface FormField {
   formControlName: string;
   multipleSelect?: boolean;
-  options?: FormSelect[];
+  options?: FormSelect[] | FormGroupedSelect[];
   defaultValue?: any;
   label: string;
   type: FormFieldTypes;

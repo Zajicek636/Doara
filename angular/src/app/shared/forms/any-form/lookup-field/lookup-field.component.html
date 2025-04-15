@@ -2,11 +2,23 @@
   <mat-label>{{ field.label }}</mat-label>
   <mat-select [formControlName]="field.formControlName" [multiple]="field.multipleSelect">
     @if (canBeNulled) {
-      <mat-option value="null"></mat-option>
+      <mat-option [value]="null"> --- </mat-option>
     }
-    <mat-option *ngFor="let option of field.options" [value]="option.value">
-      {{ option.label }}
-    </mat-option>
+
+    <ng-container *ngIf="groupedOptions">
+      <mat-optgroup *ngFor="let group of groupedOptions" [label]="group.groupName">
+        <mat-option *ngFor="let option of group.val" [value]="option.value">
+          {{ option.displayValue }}
+        </mat-option>
+      </mat-optgroup>
+    </ng-container>
+
+    <ng-container *ngIf="normalOptions">
+      <mat-option *ngFor="let option of normalOptions" [value]="option.value">
+        {{ option.displayValue }}
+      </mat-option>
+    </ng-container>
+
   </mat-select>
   <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
 </mat-form-field>

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {BaseFieldComponent} from '../base-field.component';
 import {ControlContainer, FormGroupDirective} from '@angular/forms';
-import {CustomValidator} from '../../form.interfaces';
+import {CustomValidator, FormGroupedSelect, FormSelect} from '../../form.interfaces';
 
 
 @Component({
@@ -19,4 +19,23 @@ export class LookupFieldComponent extends BaseFieldComponent {
     else
       return true
   }
+
+  get isGroupSelection(): boolean {
+    return !!this.field?.options?.[0]?.hasOwnProperty('groupName');
+  }
+
+  get groupedOptions(): FormGroupedSelect[] | undefined {
+    if (this.isGroupSelection) {
+      return this.field.options as FormGroupedSelect[];
+    }
+    return undefined;
+  }
+
+  get normalOptions(): FormSelect[] | undefined {
+    if (!this.isGroupSelection) {
+      return this.field.options as FormSelect[];
+    }
+    return undefined;
+  }
+
 }
