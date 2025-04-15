@@ -46,6 +46,7 @@ export class SkladyPolozkyComponent implements OnInit {
         }]
       }, {
         label: "Password",
+        defaultValue: "password",
         formControlName: "Cislo",
         type: FormFieldTypes.PASSWORD,
         validator: [
@@ -63,6 +64,7 @@ export class SkladyPolozkyComponent implements OnInit {
       },
       {
         label: "Select me",
+        defaultValue: "Second",
         formControlName: "Select",
         type: FormFieldTypes.LOOKUP,
         validator: [
@@ -74,6 +76,7 @@ export class SkladyPolozkyComponent implements OnInit {
       {
         label: "Select me 2",
         formControlName: "Select2",
+        defaultValue: "First",
         type: FormFieldTypes.LOOKUP,
         options: [{displayValue: "First", value: "First"}, {displayValue: "Second", value: "Second"}]
       },
@@ -127,7 +130,9 @@ export class SkladyPolozkyComponent implements OnInit {
       {
         label: "Autocomplete classic",
         formControlName: "autocomplete",
+        defaultValue: ["Second"],
         type: FormFieldTypes.AUTOCOMPLETE,
+        multipleSelect: true,
         validator: [
           {
             validator: CustomValidator.REQUIRED

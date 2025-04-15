@@ -1,8 +1,11 @@
-<div style="display: flex; flex-wrap: wrap; flex-direction: column; gap: 10px; width: 10%">
-  <app-any-form
-    style="display: flex; flex-direction: row; gap: 15px; flex-wrap: wrap"
-    [fields]="this.testingFields"
-    (formChanged)="handleChange($event)"
-  />
+<div class="content-scroll-wrapper">
+  <div style="width: 250px">
+    <app-any-form
+      style="display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;"
+      [fields]="testingFields"
+      (formChanged)="handleChange($event)">
+    </app-any-form>
+  </div>
 </div>
-

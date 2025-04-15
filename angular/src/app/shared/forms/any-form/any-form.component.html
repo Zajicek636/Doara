@@ -1,4 +1,3 @@
-
 <ng-container [formGroup]="form" *ngFor="let field of fields">
   <ng-container [ngSwitch]="field.type">
     <app-text-field *ngSwitchCase="formFieldTypes.TEXT" [field]="field" [form]="form"></app-text-field>
