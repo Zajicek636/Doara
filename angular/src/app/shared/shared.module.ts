@@ -4,7 +4,6 @@ import {RouterModule} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {LayoutModule} from "./layout/layout.module";
 import {MatDialogModule} from "@angular/material/dialog";
-import {TableComponent} from './table/table/table.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
@@ -14,10 +13,11 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {DynamicTableComponent} from './table/table/table.component';
 
 @NgModule({
     declarations: [
-      TableComponent
+      DynamicTableComponent
     ],
   imports: [
     CommonModule,
@@ -40,7 +40,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
   exports: [
     ReactiveFormsModule,
     LayoutModule,
-    TableComponent
+    DynamicTableComponent,
   ],
     providers: [
     ],

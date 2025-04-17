@@ -20,11 +20,11 @@ const routes: Routes = [
         component: SkladyPolozkyComponent,
         data: { basePath: 'sklady', breadcrumb: 'Položky'},
         children: [
-          {
+       /*   {
             path: 'nastaveni',
             component: SkladyEditaceComponent,
             data: { basePath: 'sklady', breadcrumb: 'Nastaveni'}
-          },
+          },*/
         ]
       },
       {
