@@ -8,9 +8,9 @@ namespace Doara.Sklady.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class WarehouseWorker : AuditedEntity<Guid>, IMultiTenant
 {
-    public virtual Guid? TenantId { get; private set; }
+    public virtual Guid? TenantId { get; }
     public virtual Guid UserId { get; private set; } //IdentityUser
-    public virtual Guid ContainerId { get; private set; }
+    public virtual Guid ContainerId { get; }
     
     public WarehouseWorker(Guid id) : base(id)
     {

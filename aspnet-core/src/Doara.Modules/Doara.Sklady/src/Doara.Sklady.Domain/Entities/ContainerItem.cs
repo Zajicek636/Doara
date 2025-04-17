@@ -9,7 +9,7 @@ namespace Doara.Sklady.Entities;
 
 public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
 {
-    public virtual bool IsDeleted { get; private set;}
+    public virtual bool IsDeleted { get; }
     public virtual ContainerItemState State { get; private set; }
     public virtual QuantityType QuantityType { get; private set; }
     public virtual string Name { get; private set; }
@@ -23,8 +23,8 @@ public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
     public virtual decimal Discount { get; private set; } //Sleva
     public virtual decimal DiscountRate { get; private set; } //Sleva %
     public virtual Guid ContainerId { get; private set; }
-    public virtual Guid? TenantId { get; private set; }
-    public virtual Container Container { get; private set; }
+    public virtual Guid? TenantId { get; }
+    public virtual Container Container { get; }
 
     // ReSharper disable once VirtualMemberCallInConstructor
     public ContainerItem(Guid id, string name, string description, decimal realPrice, 
@@ -37,7 +37,7 @@ public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
         PurchaseUrl = Check.Length(purchaseUrl, nameof(PurchaseUrl), ContainerItemConstants.MaxPurchaseUrlLength);
         ContainerId = containerId;
         State = ContainerItemState.New;
-        Quantity = Check.Range(quantity, nameof(Quantity), 0);
+        Quantity = Check.Range(quantity, nameof(Quantity), ContainerItemConstants.MinQuantity);
         QuantityType = quantityType;
     }
 
@@ -90,11 +90,11 @@ public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
     
     public virtual ContainerItem SetPrice(decimal realPrice, decimal markup, decimal markupRate, decimal discount, decimal discountRate)
     {
-        RealPrice = Check.Range(realPrice, nameof(RealPrice), 0);
-        Markup = Check.Range(markup, nameof(Markup), 0);
-        MarkupRate = Check.Range(markupRate, nameof(MarkupRate), 0);
-        Discount = Check.Range(discount, nameof(Discount), 0);
-        DiscountRate = Check.Range(discountRate, nameof(DiscountRate), 0);
+        RealPrice = Check.Range(realPrice, nameof(RealPrice), ContainerItemConstants.MinRealPrice);
+        Markup = Check.Range(markup, nameof(Markup), ContainerItemConstants.MinMarkup);
+        MarkupRate = Check.Range(markupRate, nameof(MarkupRate), ContainerItemConstants.MinMarkupRate);
+        Discount = Check.Range(discount, nameof(Discount), ContainerItemConstants.MinDiscount);
+        DiscountRate = Check.Range(discountRate, nameof(DiscountRate), ContainerItemConstants.MinDiscountRate);
         return CalculateAndSetPresentationPrice();
     }
     

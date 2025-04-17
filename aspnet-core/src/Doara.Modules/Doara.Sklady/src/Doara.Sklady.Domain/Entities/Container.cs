@@ -10,9 +10,9 @@ namespace Doara.Sklady.Entities;
 
 public class Container : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
 {
-    public virtual bool IsDeleted { get; private set;}
+    public virtual bool IsDeleted { get; }
     public virtual string Name { get; private set; }
-    public virtual Guid? TenantId { get; private set;}
+    public virtual Guid? TenantId { get; }
     public virtual ICollection<WarehouseWorker> WarehouseWorkers { get; private set; }
     public virtual ICollection<ContainerItem> Items { get; private set; }
 
