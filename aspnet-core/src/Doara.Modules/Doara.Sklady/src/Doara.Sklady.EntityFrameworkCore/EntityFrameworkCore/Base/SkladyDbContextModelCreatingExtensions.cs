@@ -24,8 +24,10 @@ public static class SkladyDbContextModelCreatingExtensions
             b.Property(c => c.Name).IsRequired().HasMaxLength(ContainerConstants.MaxNameLength);
 
             //Relations
-            b.HasMany(c => c.WarehouseWorkers).WithOne().HasForeignKey(ww => ww.Id);
-            b.HasMany(c => c.Items).WithOne(ci => ci.Container).HasForeignKey(ci => ci.ContainerId);
+            b.HasMany(c => c.WarehouseWorkers).WithOne(ww => ww.Container).HasForeignKey(ww => ww.ContainerId)
+                .OnDelete(DeleteBehavior.Restrict);
+            b.HasMany(c => c.Items).WithOne(ci => ci.Container).HasForeignKey(ci => ci.ContainerId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             //Indexes
             b.HasIndex(c => c.Id);
@@ -59,7 +61,7 @@ public static class SkladyDbContextModelCreatingExtensions
             //Indexes
             b.HasIndex(ci => ci.Id);
             b.HasOne(ci => ci.Container).WithMany(c => c.Items)
-                .HasForeignKey(x => x.ContainerId);
+                .HasForeignKey(x => x.ContainerId).OnDelete(DeleteBehavior.Cascade);
         });
         
         builder.Entity<WarehouseWorker>(b =>
@@ -67,6 +69,11 @@ public static class SkladyDbContextModelCreatingExtensions
             //Configure table & schema name
             b.ToTable(SkladyDbProperties.DbTablePrefix + "_" + nameof(WarehouseWorker), SkladyDbProperties.DbSchema);
             b.ConfigureByConvention();
+            
+            b.HasOne(ww => ww.Container)
+                .WithMany(c => c.WarehouseWorkers)
+                .HasForeignKey(ww => ww.ContainerId)
+                .OnDelete(DeleteBehavior.Restrict); 
             
             //Indexes
             b.HasIndex(ww => ww.Id);

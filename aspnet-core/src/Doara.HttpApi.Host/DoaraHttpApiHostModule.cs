@@ -13,6 +13,7 @@ using Doara.MultiTenancy;
 using Doara.Sklady;
 using Doara.Sklady.EntityFrameworkCore.Base;
 using Doara.Ucetnictvi;
+using Doara.Ucetnictvi.EntityFrameworkCore.Base;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite.Bundling;
 using Microsoft.OpenApi.Models;
@@ -46,7 +47,10 @@ namespace Doara;
     typeof(AbpSwashbuckleModule),
     typeof(SkladyHttpApiModule),
     typeof(SkladyApplicationModule),
-    typeof(SkladyEntityFrameworkCoreModule)
+    typeof(SkladyEntityFrameworkCoreModule),
+    typeof(UcetnictviHttpApiModule),
+    typeof(UcetnictviApplicationModule),
+    typeof(UcetnictviEntityFrameworkCoreModule)
 )]
 public class DoaraHttpApiHostModule : AbpModule
 {

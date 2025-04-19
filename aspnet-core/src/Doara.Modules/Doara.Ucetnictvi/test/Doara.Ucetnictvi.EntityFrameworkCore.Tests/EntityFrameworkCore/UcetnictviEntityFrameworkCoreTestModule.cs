@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using Doara.Ucetnictvi.EntityFrameworkCore.Base;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;

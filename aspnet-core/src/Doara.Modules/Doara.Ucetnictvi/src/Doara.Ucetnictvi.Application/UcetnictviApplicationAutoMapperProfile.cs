@@ -1,4 +1,10 @@
 ﻿using AutoMapper;
+using Doara.Ucetnictvi.Dto.Address;
+using Doara.Ucetnictvi.Dto.Country;
+using Doara.Ucetnictvi.Dto.Invoice;
+using Doara.Ucetnictvi.Dto.InvoiceItem;
+using Doara.Ucetnictvi.Dto.Subject;
+using Doara.Ucetnictvi.Entities;
 
 namespace Doara.Ucetnictvi;
 
@@ -6,8 +12,12 @@ public class UcetnictviApplicationAutoMapperProfile : Profile
 {
     public UcetnictviApplicationAutoMapperProfile()
     {
-        /* You can configure your AutoMapper mapping configuration here.
-         * Alternatively, you can split your mapping configurations
-         * into multiple profile classes for a better organization. */
+        CreateMap<Address, AddressDetailedDto>()
+            .ForMember(x => x.CountryCode, o => o.MapFrom(x => x.Country.Code))
+            .ForMember(x => x.CountryName, o => o.MapFrom(x => x.Country.Name));
+        CreateMap<Country, CountryDto>();
+        CreateMap<Subject, SubjectDto>();
+        CreateMap<InvoiceItem, InvoiceItemDto>();
+        CreateMap<Invoice, InvoiceDto>();
     }
 }

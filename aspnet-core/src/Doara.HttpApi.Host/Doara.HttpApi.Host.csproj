@@ -28,6 +28,7 @@
     <ProjectReference Include="..\Doara.Application\Doara.Application.csproj" />
     <ProjectReference Include="..\Doara.EntityFrameworkCore\Doara.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Doara.HttpApi\Doara.HttpApi.csproj" />
+    <ProjectReference Include="..\Doara.Modules\Doara.Ucetnictvi\src\Doara.Ucetnictvi.EntityFrameworkCore\Doara.Ucetnictvi.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

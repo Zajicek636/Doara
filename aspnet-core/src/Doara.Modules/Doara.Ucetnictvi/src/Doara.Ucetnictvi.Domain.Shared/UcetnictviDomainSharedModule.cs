@@ -25,7 +25,7 @@ public class UcetnictviDomainSharedModule : AbpModule
         Configure<AbpLocalizationOptions>(options =>
         {
             options.Resources
-                .Add<UcetnictviResource>("en")
+                .Add<UcetnictviResource>("cs")
                 .AddBaseTypes(typeof(AbpValidationResource))
                 .AddVirtualJson("/Localization/Ucetnictvi");
         });

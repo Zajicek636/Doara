@@ -57,6 +57,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doara.Sklady.EntityFramewor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doara.Sklady.Domain.Shared", "src\Doara.Modules\Doara.Sklady\src\Doara.Sklady.Domain.Shared\Doara.Sklady.Domain.Shared.csproj", "{35FC80D1-656E-4540-8817-3A4BE3CD55A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doara.Ucetnictvi.Domain.Shared", "src\Doara.Modules\Doara.Ucetnictvi\src\Doara.Ucetnictvi.Domain.Shared\Doara.Ucetnictvi.Domain.Shared.csproj", "{608E1832-F32C-494C-973F-518A805EB4E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doara.Ucetnictvi.EntityFrameworkCore", "src\Doara.Modules\Doara.Ucetnictvi\src\Doara.Ucetnictvi.EntityFrameworkCore\Doara.Ucetnictvi.EntityFrameworkCore.csproj", "{8CC26FF2-8B10-4796-BEB0-5B59E2BC56F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doara.Ucetnictvi.Application.Contracts", "src\Doara.Modules\Doara.Ucetnictvi\src\Doara.Ucetnictvi.Application.Contracts\Doara.Ucetnictvi.Application.Contracts.csproj", "{41641340-2DA7-4996-918D-0A1478C69D4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doara.Sklady.Application.Contracts", "src\Doara.Modules\Doara.Sklady\src\Doara.Sklady.Application.Contracts\Doara.Sklady.Application.Contracts.csproj", "{4B04602D-ED54-44B2-9D02-9BCF08F439B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -151,6 +159,22 @@ Global
 		{35FC80D1-656E-4540-8817-3A4BE3CD55A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35FC80D1-656E-4540-8817-3A4BE3CD55A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35FC80D1-656E-4540-8817-3A4BE3CD55A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{608E1832-F32C-494C-973F-518A805EB4E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{608E1832-F32C-494C-973F-518A805EB4E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{608E1832-F32C-494C-973F-518A805EB4E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{608E1832-F32C-494C-973F-518A805EB4E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CC26FF2-8B10-4796-BEB0-5B59E2BC56F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CC26FF2-8B10-4796-BEB0-5B59E2BC56F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CC26FF2-8B10-4796-BEB0-5B59E2BC56F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CC26FF2-8B10-4796-BEB0-5B59E2BC56F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41641340-2DA7-4996-918D-0A1478C69D4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41641340-2DA7-4996-918D-0A1478C69D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41641340-2DA7-4996-918D-0A1478C69D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41641340-2DA7-4996-918D-0A1478C69D4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B04602D-ED54-44B2-9D02-9BCF08F439B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B04602D-ED54-44B2-9D02-9BCF08F439B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B04602D-ED54-44B2-9D02-9BCF08F439B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B04602D-ED54-44B2-9D02-9BCF08F439B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -181,6 +205,10 @@ Global
 		{D8592457-43B9-49F7-9421-291BED098442} = {123897BF-F042-40DF-9A80-74454178A170}
 		{C52CCD81-EFB9-4F53-976E-A41AC4B2E356} = {05EBCF70-8717-4BD4-925D-E57A0778C1D8}
 		{35FC80D1-656E-4540-8817-3A4BE3CD55A8} = {05EBCF70-8717-4BD4-925D-E57A0778C1D8}
+		{608E1832-F32C-494C-973F-518A805EB4E5} = {123897BF-F042-40DF-9A80-74454178A170}
+		{8CC26FF2-8B10-4796-BEB0-5B59E2BC56F5} = {123897BF-F042-40DF-9A80-74454178A170}
+		{41641340-2DA7-4996-918D-0A1478C69D4A} = {123897BF-F042-40DF-9A80-74454178A170}
+		{4B04602D-ED54-44B2-9D02-9BCF08F439B5} = {05EBCF70-8717-4BD4-925D-E57A0778C1D8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}

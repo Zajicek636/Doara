@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Doara.Ucetnictvi.EntityFrameworkCore;
+using Doara.Ucetnictvi.EntityFrameworkCore.Base;
 using Doara.Ucetnictvi.MultiTenancy;
 using StackExchange.Redis;
 using Microsoft.OpenApi.Models;

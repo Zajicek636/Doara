@@ -33,6 +33,9 @@
     <PackageReference Include="Volo.Abp.Autofac" Version="9.1.1" />
     <ProjectReference Include="..\Doara.Application.Contracts\Doara.Application.Contracts.csproj" />
     <ProjectReference Include="..\Doara.EntityFrameworkCore\Doara.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\Doara.Modules\Doara.Sklady\src\Doara.Sklady.Application.Contracts\Doara.Sklady.Application.Contracts.csproj" />
+    <ProjectReference Include="..\Doara.Modules\Doara.Ucetnictvi\src\Doara.Ucetnictvi.Application.Contracts\Doara.Ucetnictvi.Application.Contracts.csproj" />
+    <ProjectReference Include="..\Doara.Modules\Doara.Ucetnictvi\src\Doara.Ucetnictvi.EntityFrameworkCore\Doara.Ucetnictvi.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,7 +8,7 @@ namespace Doara.Ucetnictvi.Samples;
 public abstract class SampleAppService_Tests<TStartupModule> : UcetnictviApplicationTestBase<TStartupModule>
     where TStartupModule : IAbpModule
 {
-    private readonly ISampleAppService _sampleAppService;
+    /*private readonly ISampleAppService _sampleAppService;
 
     protected SampleAppService_Tests()
     {
@@ -27,5 +27,5 @@ public abstract class SampleAppService_Tests<TStartupModule> : UcetnictviApplica
     {
         var result = await _sampleAppService.GetAuthorizedAsync();
         result.Value.ShouldBe(42);
-    }
+    }*/
 }

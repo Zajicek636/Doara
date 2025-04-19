@@ -170,6 +170,7 @@ namespace Doara.Sklady.Migrations
             modelBuilder.Entity("Doara.Sklady.Entities.WarehouseWorker", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ContainerId")
@@ -200,6 +201,8 @@ namespace Doara.Sklady.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ContainerId");
+
                     b.HasIndex("Id");
 
                     b.ToTable("Sklady_WarehouseWorker", (string)null);
@@ -218,11 +221,13 @@ namespace Doara.Sklady.Migrations
 
             modelBuilder.Entity("Doara.Sklady.Entities.WarehouseWorker", b =>
                 {
-                    b.HasOne("Doara.Sklady.Entities.Container", null)
+                    b.HasOne("Doara.Sklady.Entities.Container", "Container")
                         .WithMany("WarehouseWorkers")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("ContainerId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Container");
                 });
 
             modelBuilder.Entity("Doara.Sklady.Entities.Container", b =>

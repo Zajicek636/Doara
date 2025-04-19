@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Doara.Ucetnictvi.EntityFrameworkCore.Base;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
 namespace Doara.Ucetnictvi.EntityFrameworkCore;

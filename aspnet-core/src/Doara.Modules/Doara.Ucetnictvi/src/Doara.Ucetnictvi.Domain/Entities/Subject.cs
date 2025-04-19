@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Doara.Ucetnictvi.Constants;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
@@ -13,17 +15,50 @@ public class Subject : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
     public virtual string Name { get; private set; }
     public virtual Guid AddressId { get; private set; }
     public virtual Address Address { get; }
-    public virtual string Ic { get; private set; }
-    public virtual string Dic { get; private set; }
-    
+    public virtual string? Ic { get; private set; }
+    public virtual string? Dic { get; private set; }
     public virtual bool IsVatPayer { get; private set; }
+    public virtual ICollection<Invoice> InvoicesPairAsSupplier { get; private set; }
+    public virtual ICollection<Invoice> InvoicesPairAsCustomer { get; private set; }
 
-    public Subject(Guid id, string name, Guid addressId, string ic, string dic, bool isVatPayer) : base(id)
+    public Subject(Guid id, string name, Guid addressId, string? ic, string? dic, bool isVatPayer) : base(id)
+    {
+        SetName(name)
+            .SetAddress(addressId)
+            .SetIc(ic)
+            .SetDic(dic)
+            .SetIsVatPayer(isVatPayer);
+        InvoicesPairAsSupplier = new Collection<Invoice>();
+        InvoicesPairAsCustomer = new Collection<Invoice>();
+    }
+
+    public Subject SetName(string name)
     {
         Name = Check.NotNullOrWhiteSpace(name, nameof(Name), SubjectConstants.MaxNameLength);
+        return this;
+    }
+    
+    public Subject SetAddress(Guid addressId)
+    {
         AddressId = Check.NotNull(addressId, nameof(AddressId));
-        Ic = Check.NotNullOrWhiteSpace(ic, nameof(Ic), SubjectConstants.MaxIcLength);
-        Dic = Check.NotNullOrWhiteSpace(dic, nameof(Dic), SubjectConstants.MaxDicLength);
+        return this;
+    }
+    
+    public Subject SetIc(string? ic)
+    {
+        Ic = Check.Length(ic, nameof(Ic), SubjectConstants.MaxIcLength);
+        return this;
+    }
+    
+    public Subject SetDic(string? dic)
+    {
+        Dic = Check.Length(dic, nameof(Dic), SubjectConstants.MaxDicLength);
+        return this;
+    }
+    
+    public Subject SetIsVatPayer(bool isVatPayer)
+    {
         IsVatPayer = isVatPayer;
+        return this;
     }
 }

@@ -11,7 +11,9 @@ public class WarehouseWorker : AuditedEntity<Guid>, IMultiTenant
     public virtual Guid? TenantId { get; }
     public virtual Guid UserId { get; private set; } //IdentityUser
     public virtual Guid ContainerId { get; }
-    
+
+    public virtual Container Container { get; }
+
     public WarehouseWorker(Guid id) : base(id)
     {
        

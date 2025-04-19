@@ -62,7 +62,7 @@ public class ContainerItemAppService(IContainerItemRepository containerItemRepos
     [Authorize(SkladyPermissions.DeleteContainerItemPermission)]
     public async Task DeleteAsync(Guid id)
     {
-        if (!await containerRepository.AnyAsync(x => x.Id == id))
+        if (!await containerItemRepository.AnyAsync(x => x.Id == id))
         {
             throw new EntityNotFoundException(typeof(ContainerItem), id);
         }

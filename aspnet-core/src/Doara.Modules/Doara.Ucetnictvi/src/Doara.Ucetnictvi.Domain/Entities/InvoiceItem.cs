@@ -28,7 +28,55 @@ public class InvoiceItem : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
         UnitPrice = Check.NotNull(unitPrice, nameof(UnitPrice));
         NetAmount = Check.NotNull(netAmount, nameof(NetAmount));
         VatRate = Check.Range(vatRate, nameof(VatRate), InvoiceItemConstants.MinVatRate);
-        VatAmount = Check.NotNull(netAmount, nameof(VatAmount));
+        VatAmount = Check.NotNull(vatAmount, nameof(VatAmount));
         GrossAmount = Check.NotNull(grossAmount, nameof(GrossAmount));
+    }
+
+    public InvoiceItem SetInvoice(Guid invoiceId)
+    {
+        InvoiceId = Check.NotNull(invoiceId, nameof(InvoiceId));
+        return this;
+    }
+    
+    public InvoiceItem SetDescription(string description)
+    {
+        Description = Check.NotNullOrWhiteSpace(description, nameof(Description), InvoiceItemConstants.MaxDescriptionLength);
+        return this;
+    }
+    
+    public InvoiceItem SetQuantity(decimal quantity)
+    {
+        Quantity = Check.Range(quantity, nameof(Quantity), InvoiceItemConstants.MinQuantity);
+        return this;
+    }
+    
+    public InvoiceItem SetUnitPrice(decimal unitPrice)
+    {
+        UnitPrice = Check.NotNull(unitPrice, nameof(UnitPrice));
+        return this;
+    }
+    
+    public InvoiceItem SetNetAmount(decimal netAmount)
+    {
+        NetAmount = Check.NotNull(netAmount, nameof(NetAmount));
+        return this;
+    }
+    
+    public InvoiceItem SetVatRate(decimal vatRate)
+    {
+        VatRate = Check.Range(vatRate, nameof(VatRate), InvoiceItemConstants.MinVatRate);
+        return this;
+    }
+    
+    public InvoiceItem SetVatAmount(decimal vatAmount)
+    {
+        VatAmount = Check.NotNull(vatAmount, nameof(VatAmount));
+        return this;
+    }
+    
+    public InvoiceItem SetGrossAmount(decimal grossAmount)
+    {
+        GrossAmount = Check.NotNull(grossAmount, nameof(GrossAmount));
+        return this;
     }
 }
