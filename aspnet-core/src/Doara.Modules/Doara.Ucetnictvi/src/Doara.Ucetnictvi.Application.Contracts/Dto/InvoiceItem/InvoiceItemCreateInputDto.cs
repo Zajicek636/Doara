@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Doara.Ucetnictvi.Constants;
+using Doara.Ucetnictvi.Enums;
 
 namespace Doara.Ucetnictvi.Dto.InvoiceItem;
 
@@ -21,9 +22,8 @@ public class InvoiceItemCreateInputDto
     
     [Required]
     public decimal NetAmount { get; set; }
-        
-    [Required]
-    public decimal VatRate { get; set; }
+    
+    public VatRate? VatRate { get; set; }
         
     [Required]
     public decimal VatAmount { get; set; }

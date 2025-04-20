@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Doara.Ucetnictvi.Entities;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -7,10 +8,6 @@ namespace Doara.Ucetnictvi.EntityFrameworkCore.Base;
 [ConnectionStringName(UcetnictviDbProperties.ConnectionStringName)]
 public class UcetnictviDbContext : AbpDbContext<UcetnictviDbContext>, IUcetnictviDbContext
 {
-    /* Add DbSet for each Aggregate Root here. Example:
-     * public DbSet<Question> Questions { get; set; }
-     */
-
     public UcetnictviDbContext(DbContextOptions<UcetnictviDbContext> options)
         : base(options)
     {
@@ -23,4 +20,10 @@ public class UcetnictviDbContext : AbpDbContext<UcetnictviDbContext>, IUcetnictv
 
         builder.ConfigureUcetnictvi();
     }
+    
+    public DbSet<Country> CountrySet { get; set; }
+    public DbSet<Address> AddressSet { get; set; }
+    public DbSet<Subject> SubjectSet { get; set; }
+    public DbSet<InvoiceItem> InvoiceItemSet { get; set; }
+    public DbSet<Invoice> InvoiceSet { get; set; }
 }

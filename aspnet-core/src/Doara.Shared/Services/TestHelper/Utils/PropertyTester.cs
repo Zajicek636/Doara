@@ -86,9 +86,15 @@ public static class PropertyTester
     /// </summary>
     /// <param name="nullable">Určuje, zda je logická hodnota nullable.</param>
     /// <returns>Seznam testovacích dat pro logické vlastnosti.</returns>
-    public static IEnumerable<object[]> GetBooleanPropertyTestData(bool nullable)
+    public static IEnumerable<object[]> GetNullableBooleanPropertyTestData(bool nullable)
     {
         yield return [null!, !nullable];
+        yield return [true, false];
+        yield return [false, false];
+    }
+    
+    public static IEnumerable<object[]> GetBooleanPropertyTestData()
+    {
         yield return [true, false];
         yield return [false, false];
     }

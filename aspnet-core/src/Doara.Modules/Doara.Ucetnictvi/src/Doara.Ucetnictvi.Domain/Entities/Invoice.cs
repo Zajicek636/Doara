@@ -38,21 +38,20 @@ public class Invoice : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
     
     protected Invoice(Guid id, string invoiceNumber, Guid supplierId, Guid customerId, DateTime issueDate, DateTime? taxDate, DateTime? deliveryDate, decimal totalNetAmount, decimal totalVatAmount, decimal totalGrossAmount, string? paymentTerms, VatRate vatRate, string? variableSymbol, string? constantSymbol, string? specificSymbol) : base(id)
     {
-        SetInvoiceNumber(invoiceNumber);
-        InvoiceNumber = Check.NotNullOrWhiteSpace(invoiceNumber, nameof(InvoiceNumber), InvoiceConstants.MaxInvoiceNumberLength);
-        SupplierId = Check.NotNull(supplierId, nameof(SupplierId));
-        CustomerId = Check.NotNull(customerId, nameof(CustomerId));
-        IssueDate = Check.NotNull(issueDate, nameof(IssueDate));
-        TaxDate = taxDate;
-        DeliveryDate = deliveryDate;
-        TotalNetAmount = Check.NotNull(totalNetAmount, nameof(TotalNetAmount));
-        TotalVatAmount = Check.NotNull(totalVatAmount, nameof(TotalVatAmount));
-        TotalGrossAmount = Check.NotNull(totalGrossAmount, nameof(TotalGrossAmount));
-        PaymentTerms = Check.Length(paymentTerms, nameof(PaymentTerms), InvoiceConstants.MaxPaymentTermsLength);
-        VatRate = vatRate;
-        VariableSymbol = Check.Length(variableSymbol, nameof(VariableSymbol), InvoiceConstants.MaxVariableSymbolLength);
-        ConstantSymbol = Check.Length(constantSymbol, nameof(ConstantSymbol), InvoiceConstants.MaxConstantSymbolLength);
-        SpecificSymbol = Check.Length(specificSymbol, nameof(SpecificSymbol), InvoiceConstants.MaxSpecificSymbolLength);
+        SetInvoiceNumber(invoiceNumber)
+            .SetSupplier(supplierId)
+            .SetCustomer(customerId)
+            .SetIssueDate(issueDate)
+            .SetTaxDate(taxDate)
+            .SetDeliveryDate(deliveryDate)
+            .SetTotalNetAmount(totalNetAmount)
+            .SetTotalVatAmount(totalVatAmount)
+            .SetTotalGrossAmount(totalGrossAmount)
+            .SetPaymentTerms(paymentTerms)
+            .SetVatRate(vatRate)
+            .SetVariableSymbol(variableSymbol)
+            .SetConstantSymbol(constantSymbol)
+            .SetSpecificSymbol(specificSymbol);
         Items = new Collection<InvoiceItem>();
     }
 

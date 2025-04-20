@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Doara.Ucetnictvi.Entities;
+using Doara.Ucetnictvi.Repositories;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
@@ -10,23 +12,28 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
 {
     private readonly IGuidGenerator _guidGenerator;
     private readonly ICurrentTenant _currentTenant;
+    private readonly ICountryRepository _countryRepository;
 
     public UcetnictviDataSeedContributor(
-        IGuidGenerator guidGenerator, ICurrentTenant currentTenant)
+        IGuidGenerator guidGenerator, ICurrentTenant currentTenant, ICountryRepository countryRepository)
     {
         _guidGenerator = guidGenerator;
         _currentTenant = currentTenant;
+        _countryRepository = countryRepository;
     }
 
-    public Task SeedAsync(DataSeedContext context)
+    public async Task SeedAsync(DataSeedContext context)
     {
-        /* Instead of returning the Task.CompletedTask, you can insert your test data
-         * at this point!
-         */
-
         using (_currentTenant.Change(context?.TenantId))
         {
-            return Task.CompletedTask;
+            await SeedCountryAsync();
         }
+    }
+
+    private async Task SeedCountryAsync()
+    {
+        await _countryRepository.CreateAsync(new Country(TestData.CzCountryId, "Česká republika", "CZ"));
+        await _countryRepository.CreateAsync(new Country(TestData.SkCountryId, "Slovensko", "SK"));
+        await _countryRepository.CreateAsync(new Country(TestData.UsCountryId, "United States", "USA"));
     }
 }

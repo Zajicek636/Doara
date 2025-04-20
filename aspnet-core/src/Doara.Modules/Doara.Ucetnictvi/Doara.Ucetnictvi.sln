@@ -37,6 +37,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doara.Ucetnictvi.AuthServer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doara.Ucetnictvi.Host.Shared", "host\Doara.Ucetnictvi.Host.Shared\Doara.Ucetnictvi.Host.Shared.csproj", "{F6AC8D4A-EDD7-4514-8E8A-5BCB019864DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelper", "..\..\Doara.Shared\Services\TestHelper\TestHelper.csproj", "{E5A5E4EB-AAAC-4D4C-8658-ECDD8CAA8B87}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dependencies", "dependencies", "{F121A7D7-6DB7-4CF3-800B-BF011B26A6D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +103,10 @@ Global
 		{F6AC8D4A-EDD7-4514-8E8A-5BCB019864DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6AC8D4A-EDD7-4514-8E8A-5BCB019864DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6AC8D4A-EDD7-4514-8E8A-5BCB019864DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5A5E4EB-AAAC-4D4C-8658-ECDD8CAA8B87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5A5E4EB-AAAC-4D4C-8658-ECDD8CAA8B87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5A5E4EB-AAAC-4D4C-8658-ECDD8CAA8B87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5A5E4EB-AAAC-4D4C-8658-ECDD8CAA8B87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -118,6 +126,7 @@ Global
 		{37B135B0-DAFE-4616-B25C-1BDF32FC44A2} = {E400416D-2895-4512-9D17-90681EEC7E0A}
 		{690203F4-3CD5-4569-88D9-EE831EEA5F5F} = {E400416D-2895-4512-9D17-90681EEC7E0A}
 		{F6AC8D4A-EDD7-4514-8E8A-5BCB019864DB} = {E400416D-2895-4512-9D17-90681EEC7E0A}
+		{E5A5E4EB-AAAC-4D4C-8658-ECDD8CAA8B87} = {F121A7D7-6DB7-4CF3-800B-BF011B26A6D9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4324B3B4-B60B-4E3C-91D8-59576B4E26DD}

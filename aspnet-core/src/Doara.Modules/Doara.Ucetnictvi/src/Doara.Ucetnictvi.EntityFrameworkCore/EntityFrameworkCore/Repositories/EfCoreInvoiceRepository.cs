@@ -15,11 +15,11 @@ using System.Linq;
 namespace Doara.Ucetnictvi.EntityFrameworkCore.Repositories;
 
 public class EfCoreInvoiceRepository(IDbContextProvider<UcetnictviDbContext> dbContextProvider)
-    : EfCoreRepository<UcetnictviDbContext, Invoice>(dbContextProvider), IInvoiceRepository
+    : EfCoreRepository<UcetnictviDbContext, Invoice, Guid>(dbContextProvider), IInvoiceRepository
 {
     public async Task<Invoice> GetAsync(Guid id)
     {
-        var invoice = await FindAsync(x => x.Id == id);
+        var invoice = await FindAsync(id);
         if (invoice == null)
         {
             throw new EntityNotFoundException(typeof(Invoice), id);
@@ -66,7 +66,7 @@ public class EfCoreInvoiceRepository(IDbContextProvider<UcetnictviDbContext> dbC
 
     public async Task DeleteAsync(Guid id)
     {
-        await base.DeleteAsync(x => x.Id == id);
+        await base.DeleteAsync(id);
     }
 
     public async Task<bool> AnyAsync(Expression<Func<Invoice, bool>> predicate)

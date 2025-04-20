@@ -6,7 +6,7 @@ using Shouldly;
 using TestHelper.Utils;
 using Xunit;
 
-namespace Doara.Sklady;
+namespace Doara.Sklady.Tests;
 
 public class ContainerItem_Tests : SkladyDomainModule
 {

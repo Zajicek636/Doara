@@ -12,11 +12,6 @@ public class UcetnictviEntityFrameworkCoreModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddAbpDbContext<UcetnictviDbContext>(options =>
-        {
-                /* Add custom repositories here. Example:
-                 * options.AddRepository<Question, EfCoreQuestionRepository>();
-                 */
-        });
+        context.Services.AddAbpDbContext<UcetnictviDbContext>();
     }
 }

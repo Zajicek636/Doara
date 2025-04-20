@@ -1,5 +1,6 @@
 ﻿using System;
 using Doara.Ucetnictvi.Constants;
+using Doara.Ucetnictvi.Enums;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
@@ -16,20 +17,27 @@ public class InvoiceItem : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
     public virtual decimal Quantity { get; private set; }
     public virtual decimal UnitPrice { get; private set; }
     public virtual decimal NetAmount { get; private set; }
-    public virtual decimal VatRate { get; private set; }
+    public virtual VatRate VatRate { get; private set; }
     public virtual decimal VatAmount { get; private set; }
     public virtual decimal GrossAmount { get; private set; }
 
-    public InvoiceItem(Guid id, Guid invoiceId, string description, decimal quantity, decimal unitPrice, decimal netAmount, decimal vatRate, decimal vatAmount, decimal grossAmount) : base(id)
+    public InvoiceItem(Guid id, Guid invoiceId, string description, decimal quantity, decimal unitPrice,
+        decimal netAmount, VatRate? vatRate, decimal vatAmount, decimal grossAmount) :
+        this(id, invoiceId, description, quantity, unitPrice, netAmount, vatRate ?? VatRate.None, vatAmount,
+            grossAmount)
     {
-        InvoiceId = Check.NotNull(invoiceId, nameof(InvoiceId));
-        Description = Check.NotNullOrWhiteSpace(description, nameof(Description), InvoiceItemConstants.MaxDescriptionLength);
-        Quantity = Check.Range(quantity, nameof(Quantity), InvoiceItemConstants.MinQuantity);
-        UnitPrice = Check.NotNull(unitPrice, nameof(UnitPrice));
-        NetAmount = Check.NotNull(netAmount, nameof(NetAmount));
-        VatRate = Check.Range(vatRate, nameof(VatRate), InvoiceItemConstants.MinVatRate);
-        VatAmount = Check.NotNull(vatAmount, nameof(VatAmount));
-        GrossAmount = Check.NotNull(grossAmount, nameof(GrossAmount));
+    }
+
+    public InvoiceItem(Guid id, Guid invoiceId, string description, decimal quantity, decimal unitPrice, decimal netAmount, VatRate vatRate, decimal vatAmount, decimal grossAmount) : base(id)
+    {
+        SetInvoice(invoiceId)
+            .SetDescription(description)
+            .SetQuantity(quantity)
+            .SetUnitPrice(unitPrice)
+            .SetNetAmount(netAmount)
+            .SetVatRate(vatRate)
+            .SetVatAmount(vatAmount)
+            .SetGrossAmount(grossAmount);
     }
 
     public InvoiceItem SetInvoice(Guid invoiceId)
@@ -62,9 +70,9 @@ public class InvoiceItem : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
         return this;
     }
     
-    public InvoiceItem SetVatRate(decimal vatRate)
+    public InvoiceItem SetVatRate(VatRate? vatRate)
     {
-        VatRate = Check.Range(vatRate, nameof(VatRate), InvoiceItemConstants.MinVatRate);
+        VatRate = vatRate ?? VatRate.None;
         return this;
     }
     

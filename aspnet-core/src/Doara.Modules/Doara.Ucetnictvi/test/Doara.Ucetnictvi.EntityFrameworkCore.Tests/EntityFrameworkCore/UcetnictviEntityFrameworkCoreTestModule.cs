@@ -11,7 +11,6 @@ using Volo.Abp.Uow;
 namespace Doara.Ucetnictvi.EntityFrameworkCore;
 
 [DependsOn(
-    typeof(UcetnictviApplicationTestModule),
     typeof(UcetnictviEntityFrameworkCoreModule),
     typeof(AbpEntityFrameworkCoreSqliteModule)
 )]
@@ -19,6 +18,7 @@ public class UcetnictviEntityFrameworkCoreTestModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        base.ConfigureServices(context);
         context.Services.AddAlwaysDisableUnitOfWorkTransaction();
 
         var sqliteConnection = CreateDatabaseAndGetConnection();

@@ -23,7 +23,6 @@ public class Address : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
     {
         SetStreet(street)
             .SetCity(city)
-            .SetPostalCode(city)
             .SetPostalCode(postalCode)
             .SetCountry(countryId);
         Subjects = new Collection<Subject>();

@@ -10,8 +10,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Doara.Ucetnictvi.Application\Doara.Ucetnictvi.Application.csproj" />
+    <ProjectReference Include="..\..\src\Doara.Ucetnictvi.EntityFrameworkCore\Doara.Ucetnictvi.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Doara.Ucetnictvi.Domain.Tests\Doara.Ucetnictvi.Domain.Tests.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1.0" />
+    <ProjectReference Include="..\Doara.Ucetnictvi.EntityFrameworkCore.Tests\Doara.Ucetnictvi.EntityFrameworkCore.Tests.csproj" />
   </ItemGroup>
 
 </Project>
