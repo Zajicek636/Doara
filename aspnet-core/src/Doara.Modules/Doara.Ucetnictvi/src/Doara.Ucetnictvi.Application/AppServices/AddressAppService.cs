@@ -36,29 +36,23 @@ public class AddressAppService(IAddressRepository addressRepository, ICountryRep
     [Authorize(UcetnictviPermissions.CreateAddressPermission)]
     public async Task<AddressDetailedDto> CreateAsync(AddressCreateInputDto input)
     {
-        if (!await countryRepository.AnyAsync(x => x.Id == input.CountryId))
-        {
-            throw new EntityNotFoundException(typeof(Country), input.CountryId);
-        }
-        
+        var country = await countryRepository.GetAsync(input.CountryId);
         var guid = GuidGenerator.Create();
         var address = new Address(guid, input.Street, input.City, input.PostalCode, input.CountryId);
         var res = await addressRepository.CreateAsync(address);
+        res.SetCountry(country);
         return ObjectMapper.Map<Address, AddressDetailedDto>(res); 
     }
 
     [Authorize(UcetnictviPermissions.UpdateAddressPermission)]
     public async Task<AddressDetailedDto> UpdateAsync(AddressUpdateInputDto input)
     {
-        if (!await countryRepository.AnyAsync(x => x.Id == input.CountryId))
-        {
-            throw new EntityNotFoundException(typeof(Country), input.CountryId);
-        }
-        
+        var country = await countryRepository.GetAsync(input.CountryId);
         var address = await addressRepository.GetAsync(input.Id);
         address.SetCity(input.City).SetStreet(input.Street)
             .SetPostalCode(input.PostalCode).SetCountry(input.CountryId);
         var res = await addressRepository.UpdateAsync(address);
+        res.SetCountry(country);
         return ObjectMapper.Map<Address, AddressDetailedDto>(res); 
     }
 

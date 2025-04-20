@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Doara.Shared\Services\TestHelper\TestHelper.csproj" />
+    <ProjectReference Include="..\..\src\Doara.Ucetnictvi.Application.Contracts\Doara.Ucetnictvi.Application.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Doara.Ucetnictvi.Domain\Doara.Ucetnictvi.Domain.csproj" />
   </ItemGroup>
 

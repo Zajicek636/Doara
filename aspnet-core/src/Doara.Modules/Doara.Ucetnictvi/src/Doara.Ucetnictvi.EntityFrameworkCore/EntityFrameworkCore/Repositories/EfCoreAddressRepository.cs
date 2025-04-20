@@ -17,6 +17,12 @@ namespace Doara.Ucetnictvi.EntityFrameworkCore.Repositories;
 public class EfCoreAddressRepository(IDbContextProvider<UcetnictviDbContext> dbContextProvider)
     : EfCoreRepository<UcetnictviDbContext, Address, Guid>(dbContextProvider), IAddressRepository
 {
+    
+    public override async Task<IQueryable<Address>> WithDetailsAsync()
+    {
+        return (await base.WithDetailsAsync()).Include(x => x.Country);
+    }
+    
     public async Task<Address> GetAsync(Guid id)
     {
         var address = await FindAsync(id);

@@ -10,13 +10,13 @@ namespace Doara.Ucetnictvi.Entities;
 
 public class Address : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
 {
-    public virtual bool IsDeleted { get; }
-    public virtual Guid? TenantId { get; }
+    public virtual bool IsDeleted { get; private set; }
+    public virtual Guid? TenantId { get; private set; }
     public virtual string Street { get; private set; }
     public virtual string City { get; private set; }
     public virtual string PostalCode { get; private set; }
     public virtual Guid CountryId { get; private set; }
-    public virtual Country Country { get; }
+    public virtual Country Country { get; private set; }
     public virtual ICollection<Subject> Subjects { get; private set; }
 
     public Address(Guid id, string street, string city, string postalCode, Guid countryId) : base(id)
@@ -50,5 +50,11 @@ public class Address : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
     {
         CountryId = Check.NotNull(countryId, nameof(CountryId));
         return this;
+    }
+    
+    public Address SetCountry(Country country)
+    {
+        Country = country;
+        return SetCountry(country.Id);
     }
 }

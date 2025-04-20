@@ -10,8 +10,8 @@ namespace Doara.Ucetnictvi.Entities;
 
 public class Country : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
 {
-    public virtual bool IsDeleted { get; }
-    public virtual Guid? TenantId { get; }
+    public virtual bool IsDeleted { get; private set; }
+    public virtual Guid? TenantId { get; private set; }
     public virtual string Name { get; private set; }
     public virtual string Code { get; private set; }
     public virtual ICollection<Address> Addresses { get; private set; }
