@@ -11,13 +11,13 @@ namespace Doara.Ucetnictvi.Entities;
 
 public class Invoice : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
 {
-    public virtual bool IsDeleted { get; }
-    public virtual Guid? TenantId { get; }
+    public virtual bool IsDeleted { get; private set; }
+    public virtual Guid? TenantId { get; private set; }
     public virtual string InvoiceNumber { get; private set; }
     public virtual Guid SupplierId { get; private set; }
-    public virtual Subject Supplier { get; }// Dodavatel (plátce DPH)
+    public virtual Subject Supplier { get; private set; }// Dodavatel (plátce DPH)
     public virtual Guid CustomerId { get; private set; }
-    public virtual Subject Customer { get; }// Odběratel
+    public virtual Subject Customer { get; private set; }// Odběratel
     public virtual DateTime IssueDate { get; private set; }// Datum vystavení faktury
     public virtual DateTime? TaxDate { get; private set; }// Datum uskutečnění plnění (nebo datum přijetí platby)
     public virtual DateTime? DeliveryDate { get; private set; }// Datum zdanitelného plnění (pokud se liší)
@@ -67,10 +67,22 @@ public class Invoice : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
         return this;
     }
     
+    public Invoice SetSupplier(Subject supplier)
+    {
+        Supplier = supplier;
+        return SetSupplier(supplier.Id);
+    }
+    
     public Invoice SetCustomer(Guid customerId)
     {
         CustomerId = Check.NotNull(customerId, nameof(CustomerId));
         return this;
+    }
+    
+    public Invoice SetCustomer(Subject customer)
+    {
+        Customer = customer;
+        return SetCustomer(customer.Id);
     }
     
     public Invoice SetIssueDate(DateTime issueDate)

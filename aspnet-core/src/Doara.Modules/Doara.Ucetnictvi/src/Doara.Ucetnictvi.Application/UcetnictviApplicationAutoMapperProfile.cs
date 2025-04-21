@@ -19,5 +19,6 @@ public class UcetnictviApplicationAutoMapperProfile : Profile
         CreateMap<Subject, SubjectDetailDto>();
         CreateMap<InvoiceItem, InvoiceItemDto>();
         CreateMap<Invoice, InvoiceDto>();
+        CreateMap<Invoice, InvoiceDetailDto>();
     }
 }

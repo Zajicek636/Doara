@@ -7,18 +7,19 @@ using Doara.Ucetnictvi.IAppServices;
 using Doara.Ucetnictvi.Permissions;
 using Doara.Ucetnictvi.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Entities;
 
 namespace Doara.Ucetnictvi.AppServices;
 
-public class InvoiceAppService(IInvoiceRepository invoiceRepository) : UcetnictviAppService, IInvoiceAppService
+public class InvoiceAppService(IInvoiceRepository invoiceRepository, ISubjectRepository subjectRepository) : UcetnictviAppService, IInvoiceAppService
 {
     [Authorize(UcetnictviPermissions.ReadInvoicePermission)]
-    public async Task<InvoiceDto> GetAsync(Guid id)
+    public async Task<InvoiceDetailDto> GetAsync(Guid id)
     {
         var res = await invoiceRepository.GetAsync(id);
-        return ObjectMapper.Map<Invoice, InvoiceDto>(res); 
+        return ObjectMapper.Map<Invoice, InvoiceDetailDto>(res); 
     }
 
     [Authorize(UcetnictviPermissions.ReadInvoicePermission)]
@@ -34,20 +35,59 @@ public class InvoiceAppService(IInvoiceRepository invoiceRepository) : Ucetnictv
     }
 
     [Authorize(UcetnictviPermissions.CreateInvoicePermission)]
-    public async Task<InvoiceDto> CreateAsync(InvoiceCreateInputDto input)
+    public async Task<InvoiceDetailDto> CreateAsync(InvoiceCreateInputDto input)
     {
+        if (input.CustomerId == input.SupplierId)
+        {
+            throw new BusinessException(UcetnictviErrorCodes.SupplierIsSameAsCustomer);
+        }
+
+        var customer = await subjectRepository.FindAsync(input.CustomerId);
+        if (customer == null)
+        {
+            throw new BusinessException(UcetnictviErrorCodes.CustomerDoesNotExist)
+                .WithData("Id", input.CustomerId);
+        }
+
+        var supplier = await subjectRepository.FindAsync(input.SupplierId);
+        if (supplier == null)
+        {
+            throw new BusinessException(UcetnictviErrorCodes.SupplierDoesNotExist)
+                .WithData("Id", input.SupplierId);
+        }
+        
         var guid = GuidGenerator.Create();
         var invoice = new Invoice(guid, input.InvoiceNumber, input.SupplierId, input.CustomerId, 
             input.IssueDate, input.TaxDate, input.DeliveryDate, input.TotalNetAmount, input.TotalVatAmount,
             input.TotalGrossAmount, input.PaymentTerms, input.VatRate, 
             input.VariableSymbol, input.ConstantSymbol, input.SpecificSymbol);
         var res = await invoiceRepository.CreateAsync(invoice);
-        return ObjectMapper.Map<Invoice, InvoiceDto>(res); 
+        res.SetCustomer(customer).SetSupplier(supplier);
+        return ObjectMapper.Map<Invoice, InvoiceDetailDto>(res); 
     }
 
     [Authorize(UcetnictviPermissions.UpdateInvoicePermission)]
-    public async Task<InvoiceDto> UpdateAsync(InvoiceUpdateInputDto input)
+    public async Task<InvoiceDetailDto> UpdateAsync(InvoiceUpdateInputDto input)
     {
+        if (input.CustomerId == input.SupplierId)
+        {
+            throw new BusinessException(UcetnictviErrorCodes.SupplierIsSameAsCustomer);
+        }
+        
+        var customer = await subjectRepository.FindAsync(input.CustomerId);
+        if (customer == null)
+        {
+            throw new BusinessException(UcetnictviErrorCodes.CustomerDoesNotExist)
+                .WithData("Id", input.CustomerId);
+        }
+
+        var supplier = await subjectRepository.FindAsync(input.SupplierId);
+        if (supplier == null)
+        {
+            throw new BusinessException(UcetnictviErrorCodes.SupplierDoesNotExist)
+                .WithData("Id", input.SupplierId);
+        }
+        
         var invoice = await invoiceRepository.GetAsync(input.Id);
         invoice.SetInvoiceNumber(input.InvoiceNumber).SetSupplier(input.SupplierId)
             .SetCustomer(input.CustomerId).SetIssueDate(input.IssueDate)
@@ -57,7 +97,8 @@ public class InvoiceAppService(IInvoiceRepository invoiceRepository) : Ucetnictv
             .SetVatRate(input.VatRate).SetVariableSymbol(input.VariableSymbol)
             .SetConstantSymbol(input.ConstantSymbol).SetSpecificSymbol(input.SpecificSymbol);
         var res = await invoiceRepository.UpdateAsync(invoice);
-        return ObjectMapper.Map<Invoice, InvoiceDto>(res); 
+        res.SetCustomer(customer).SetSupplier(supplier);
+        return ObjectMapper.Map<Invoice, InvoiceDetailDto>(res); 
     }
 
     [Authorize(UcetnictviPermissions.DeleteInvoicePermission)]

@@ -18,7 +18,7 @@ public class InvoiceController(IInvoiceAppService invoiceAppService) : Ucetnictv
 {
     [HttpGet]
     [Authorize(UcetnictviPermissions.ReadInvoicePermission)]
-    public async Task<InvoiceDto> GetAsync([Required] Guid id)
+    public async Task<InvoiceDetailDto> GetAsync([Required] Guid id)
     {
         return await invoiceAppService.GetAsync(id);
     }
@@ -32,14 +32,14 @@ public class InvoiceController(IInvoiceAppService invoiceAppService) : Ucetnictv
 
     [HttpPost]
     [Authorize(UcetnictviPermissions.CreateInvoicePermission)]
-    public async Task<InvoiceDto> CreateAsync(InvoiceCreateInputDto input)
+    public async Task<InvoiceDetailDto> CreateAsync(InvoiceCreateInputDto input)
     {
         return await invoiceAppService.CreateAsync(input);
     }
     
     [HttpPut]
     [Authorize(UcetnictviPermissions.UpdateInvoicePermission)]
-    public async Task<InvoiceDto> UpdateAsync(InvoiceUpdateInputDto input)
+    public async Task<InvoiceDetailDto> UpdateAsync(InvoiceUpdateInputDto input)
     {
         return await invoiceAppService.UpdateAsync(input);
     }

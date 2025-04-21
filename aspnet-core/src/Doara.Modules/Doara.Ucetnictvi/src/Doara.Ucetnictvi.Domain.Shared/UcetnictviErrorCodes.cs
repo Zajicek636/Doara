@@ -2,5 +2,7 @@
 
 public static class UcetnictviErrorCodes
 {
-    //Add your business exception error codes here...
+    public const string CustomerDoesNotExist = "Ucetnictvi:010000";
+    public const string SupplierDoesNotExist = "Ucetnictvi:010001";
+    public const string SupplierIsSameAsCustomer = "Ucetnictvi:010002";
 }

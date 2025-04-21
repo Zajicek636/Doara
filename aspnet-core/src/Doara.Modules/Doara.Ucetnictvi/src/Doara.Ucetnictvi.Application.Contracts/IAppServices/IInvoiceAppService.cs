@@ -7,9 +7,9 @@ namespace Doara.Ucetnictvi.IAppServices;
 
 public interface IInvoiceAppService
 {
-    Task<InvoiceDto> GetAsync(Guid id);
+    Task<InvoiceDetailDto> GetAsync(Guid id);
     Task<PagedResultDto<InvoiceDto>> GetAllAsync(PagedAndSortedResultRequestDto input);
-    Task<InvoiceDto> CreateAsync(InvoiceCreateInputDto input);
-    Task<InvoiceDto> UpdateAsync(InvoiceUpdateInputDto input);
+    Task<InvoiceDetailDto> CreateAsync(InvoiceCreateInputDto input);
+    Task<InvoiceDetailDto> UpdateAsync(InvoiceUpdateInputDto input);
     Task DeleteAsync(Guid id);
 }

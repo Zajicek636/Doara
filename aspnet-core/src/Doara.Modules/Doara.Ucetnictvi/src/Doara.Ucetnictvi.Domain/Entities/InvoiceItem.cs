@@ -9,10 +9,10 @@ namespace Doara.Ucetnictvi.Entities;
 
 public class InvoiceItem : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
 {
-    public virtual bool IsDeleted { get; }
-    public virtual Guid? TenantId { get; }
+    public virtual bool IsDeleted { get; private set; }
+    public virtual Guid? TenantId { get; private set; }
     public virtual Guid InvoiceId { get; private set; }
-    public virtual Invoice Invoice { get; }
+    public virtual Invoice Invoice { get; private set; }
     public virtual string Description { get; private set; }
     public virtual decimal Quantity { get; private set; }
     public virtual decimal UnitPrice { get; private set; }

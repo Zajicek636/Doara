@@ -27,6 +27,11 @@ public class EfCoreSubjectRepository(IDbContextProvider<UcetnictviDbContext> dbC
 
         return subject;
     }
+    
+    public async Task<Subject?> FindAsync(Guid id)
+    {
+        return await base.FindAsync(id);;
+    }
 
     public async Task<List<Subject>> GetAllAsync(int skip, int take, string sortBy, bool withDetail, Expression<Func<Subject, bool>>? filter = null)
     {

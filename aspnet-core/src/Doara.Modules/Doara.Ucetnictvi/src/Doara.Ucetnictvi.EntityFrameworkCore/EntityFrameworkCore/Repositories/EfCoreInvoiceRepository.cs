@@ -74,4 +74,16 @@ public class EfCoreInvoiceRepository(IDbContextProvider<UcetnictviDbContext> dbC
         var query = await GetQueryableAsync();
         return await query.AnyAsync(predicate);
     }
+    
+    public override async Task<IQueryable<Invoice>> WithDetailsAsync()
+    {
+        return (await base.WithDetailsAsync())
+            .Include(x => x.Customer)
+            .Include(x => x.Customer.Address)
+            .Include(x => x.Customer.Address.Country)
+            .Include(x => x.Supplier)
+            .Include(x => x.Supplier.Address)
+            .Include(x => x.Supplier.Address.Country)
+            .Include(x => x.Items);
+    }
 }
