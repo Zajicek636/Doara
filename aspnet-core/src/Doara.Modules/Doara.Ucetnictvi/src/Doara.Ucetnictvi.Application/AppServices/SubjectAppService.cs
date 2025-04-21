@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Doara.Ucetnictvi.Dto.Address;
 using Doara.Ucetnictvi.Dto.Subject;
 using Doara.Ucetnictvi.Entities;
 using Doara.Ucetnictvi.IAppServices;
@@ -15,16 +16,16 @@ namespace Doara.Ucetnictvi.AppServices;
 public class SubjectAppService(ISubjectRepository subjectRepository, IAddressRepository addressRepository) : UcetnictviAppService, ISubjectAppService
 {
     [Authorize(UcetnictviPermissions.ReadSubjectPermission)]
-    public async Task<SubjectDto> GetAsync(Guid id)
+    public async Task<SubjectDetailDto> GetAsync(Guid id)
     {
         var res = await subjectRepository.GetAsync(id);
-        return ObjectMapper.Map<Subject, SubjectDto>(res); 
+        return ObjectMapper.Map<Subject, SubjectDetailDto>(res); 
     }
 
     [Authorize(UcetnictviPermissions.ReadSubjectPermission)]
     public async Task<PagedResultDto<SubjectDto>> GetAllAsync(PagedAndSortedResultRequestDto input)
     {
-        var res = await subjectRepository.GetAllAsync(input.SkipCount, input.MaxResultCount, input.Sorting ?? nameof(Subject.Id));
+        var res = await subjectRepository.GetAllAsync(input.SkipCount, input.MaxResultCount, input.Sorting ?? nameof(Subject.Id), false);
         var totalCount = await subjectRepository.GetCountAsync();
         return new PagedResultDto<SubjectDto>
         {
@@ -32,32 +33,40 @@ public class SubjectAppService(ISubjectRepository subjectRepository, IAddressRep
             TotalCount = totalCount
         };
     }
+    
+    [Authorize(UcetnictviPermissions.ReadSubjectPermission)]
+    public async Task<PagedResultDto<SubjectDetailDto>> GetAllWithDetailAsync(PagedAndSortedResultRequestDto input)
+    {
+        var res = await subjectRepository.GetAllAsync(input.SkipCount, input.MaxResultCount, input.Sorting ?? nameof(Subject.Id), true);
+        var totalCount = await subjectRepository.GetCountAsync();
+        return new PagedResultDto<SubjectDetailDto>
+        {
+            Items = ObjectMapper.Map<List<Subject>, List<SubjectDetailDto>>(res),
+            TotalCount = totalCount
+        };
+    }
 
     [Authorize(UcetnictviPermissions.CreateSubjectPermission)]
-    public async Task<SubjectDto> CreateAsync(SubjectCreateInputDto input)
+    public async Task<SubjectDetailDto> CreateAsync(SubjectCreateInputDto input)
     {
-        if (!await addressRepository.AnyAsync(x => x.Id == input.AddressId))
-        {
-            throw new EntityNotFoundException(typeof(Address), input.AddressId);
-        }
+        var address = await addressRepository.GetAsync(input.AddressId);
         var guid = GuidGenerator.Create();
         var subject = new Subject(guid, input.Name, input.AddressId, input.Ic, input.Dic, input.IsVatPayer);
         var res = await subjectRepository.CreateAsync(subject);
-        return ObjectMapper.Map<Subject, SubjectDto>(res); 
+        res.SetAddress(address);
+        return ObjectMapper.Map<Subject, SubjectDetailDto>(res); 
     }
 
     [Authorize(UcetnictviPermissions.UpdateSubjectPermission)]
-    public async Task<SubjectDto> UpdateAsync(SubjectUpdateInputDto input)
+    public async Task<SubjectDetailDto> UpdateAsync(SubjectUpdateInputDto input)
     {
-        if (!await addressRepository.AnyAsync(x => x.Id == input.AddressId))
-        {
-            throw new EntityNotFoundException(typeof(Address), input.AddressId);
-        }
+        var address = await addressRepository.GetAsync(input.AddressId);
         var subject = await subjectRepository.GetAsync(input.Id);
         subject.SetName(input.Name).SetAddress(input.AddressId)
             .SetIc(input.Ic).SetDic(input.Dic).SetIsVatPayer(input.IsVatPayer);
         var res = await subjectRepository.UpdateAsync(subject);
-        return ObjectMapper.Map<Subject, SubjectDto>(res); 
+        res.SetAddress(address);
+        return ObjectMapper.Map<Subject, SubjectDetailDto>(res); 
     }
 
     [Authorize(UcetnictviPermissions.DeleteSubjectPermission)]

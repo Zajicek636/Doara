@@ -15,10 +15,10 @@ public class SubjectUpdateInputDto : EntityDto<Guid>
     public Guid AddressId { get; set; }
     
     [StringLength(SubjectConstants.MaxNameLength)]
-    public string Ic { get; set; } = null!;
+    public string? Ic { get; set; }
     
     [StringLength(SubjectConstants.MaxNameLength)]
-    public string Dic { get; set; } = null!;
+    public string? Dic { get; set; }
     
     [Required]
     public bool IsVatPayer { get; set; }

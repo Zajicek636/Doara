@@ -18,7 +18,7 @@ public class SubjectController(ISubjectAppService subjectAppService) : Ucetnictv
 {
     [HttpGet]
     [Authorize(UcetnictviPermissions.ReadSubjectPermission)]
-    public async Task<SubjectDto> GetAsync([Required] Guid id)
+    public async Task<SubjectDetailDto> GetAsync([Required] Guid id)
     {
         return await subjectAppService.GetAsync(id);
     }
@@ -29,17 +29,24 @@ public class SubjectController(ISubjectAppService subjectAppService) : Ucetnictv
     {
         return await subjectAppService.GetAllAsync(input);
     }
+    
+    [HttpGet("GetAllWithDetail")]
+    [Authorize(UcetnictviPermissions.ReadSubjectPermission)]
+    public async Task<PagedResultDto<SubjectDetailDto>> GetAllWithDetailAsync(PagedAndSortedResultRequestDto input)
+    {
+        return await subjectAppService.GetAllWithDetailAsync(input);
+    }
 
     [HttpPost]
     [Authorize(UcetnictviPermissions.CreateSubjectPermission)]
-    public async Task<SubjectDto> CreateAsync(SubjectCreateInputDto input)
+    public async Task<SubjectDetailDto> CreateAsync(SubjectCreateInputDto input)
     {
         return await subjectAppService.CreateAsync(input);
     }
     
     [HttpPut]
     [Authorize(UcetnictviPermissions.UpdateSubjectPermission)]
-    public async Task<SubjectDto> UpdateAsync(SubjectUpdateInputDto input)
+    public async Task<SubjectDetailDto> UpdateAsync(SubjectUpdateInputDto input)
     {
         return await subjectAppService.UpdateAsync(input);
     }

@@ -9,7 +9,7 @@ namespace Doara.Ucetnictvi.Repositories;
 public interface IAddressRepository
 {
     Task<Address> GetAsync(Guid id);
-    Task<List<Address>> GetAllAsync(int skip, int take, string sortBy, Expression<Func<Address, bool>>? filter = null);
+    Task<List<Address>> GetAllAsync(int skip, int take, string sortBy, bool withDetail, Expression<Func<Address, bool>>? filter = null);
     Task<long> GetCountAsync(Expression<Func<Address, bool>>? filter = null);
     Task<Address> CreateAsync(Address address);
     Task<Address> UpdateAsync(Address address);

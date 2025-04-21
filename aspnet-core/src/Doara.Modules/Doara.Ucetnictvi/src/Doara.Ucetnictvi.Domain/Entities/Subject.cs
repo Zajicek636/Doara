@@ -10,11 +10,11 @@ namespace Doara.Ucetnictvi.Entities;
 
 public class Subject : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
 {
-    public virtual bool IsDeleted { get; }
-    public virtual Guid? TenantId { get; }
+    public virtual bool IsDeleted { get; private set; }
+    public virtual Guid? TenantId { get; private set; }
     public virtual string Name { get; private set; }
     public virtual Guid AddressId { get; private set; }
-    public virtual Address Address { get; }
+    public virtual Address Address { get; private set; }
     public virtual string? Ic { get; private set; }
     public virtual string? Dic { get; private set; }
     public virtual bool IsVatPayer { get; private set; }
@@ -42,6 +42,12 @@ public class Subject : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
     {
         AddressId = Check.NotNull(addressId, nameof(AddressId));
         return this;
+    }
+    
+    public Subject SetAddress(Address address)
+    {
+        Address = address;
+        return SetAddress(address.Id);
     }
     
     public Subject SetIc(string? ic)

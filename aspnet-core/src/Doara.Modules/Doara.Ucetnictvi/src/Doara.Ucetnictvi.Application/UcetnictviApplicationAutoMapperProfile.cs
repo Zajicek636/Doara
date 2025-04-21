@@ -12,11 +12,11 @@ public class UcetnictviApplicationAutoMapperProfile : Profile
 {
     public UcetnictviApplicationAutoMapperProfile()
     {
-        CreateMap<Address, AddressDetailedDto>()
-            .ForMember(x => x.CountryCode, o => o.MapFrom(x => x.Country.Code))
-            .ForMember(x => x.CountryName, o => o.MapFrom(x => x.Country.Name));
+        CreateMap<Address, AddressDto>();
+        CreateMap<Address, AddressDetailDto>();
         CreateMap<Country, CountryDto>();
         CreateMap<Subject, SubjectDto>();
+        CreateMap<Subject, SubjectDetailDto>();
         CreateMap<InvoiceItem, InvoiceItemDto>();
         CreateMap<Invoice, InvoiceDto>();
     }

@@ -14,15 +14,17 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
     private readonly ICurrentTenant _currentTenant;
     private readonly ICountryRepository _countryRepository;
     private readonly IAddressRepository _addressRepository;
+    private readonly ISubjectRepository _subjectRepository;
 
     public UcetnictviDataSeedContributor(
         IGuidGenerator guidGenerator, ICurrentTenant currentTenant, ICountryRepository countryRepository, 
-        IAddressRepository addressRepository)
+        IAddressRepository addressRepository, ISubjectRepository subjectRepository)
     {
         _guidGenerator = guidGenerator;
         _currentTenant = currentTenant;
         _countryRepository = countryRepository;
         _addressRepository = addressRepository;
+        _subjectRepository = subjectRepository;
     }
 
     public async Task SeedAsync(DataSeedContext context)
@@ -31,6 +33,7 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
         {
             await SeedCountryAsync();
             await SeedAddressAsync();
+            await SeedSubjectAsync();
         }
     }
 
@@ -65,6 +68,36 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
             "Washington", 
             "20500", 
             TestData.UsCountryId
+        ));
+    }
+
+    private async Task SeedSubjectAsync()
+    {
+        await _subjectRepository.CreateAsync(new Subject(
+            TestData.CzSubjectId,
+            "Alza.cz a.s.",
+            TestData.CzAddressId,
+            "27082440",
+            "CZ27082440",
+            true
+        ));
+
+        await _subjectRepository.CreateAsync(new Subject(
+            TestData.SkSubjectId,
+            "Martinus, s.r.o.",
+            TestData.SkAddressId,
+            "35840773",
+            "SK2020269786",
+            true
+        ));
+
+        await _subjectRepository.CreateAsync(new Subject(
+            TestData.UsSubjectId,
+            "Amazon Inc.",
+            TestData.UsAddressId,
+            null,
+            "US-94-32821",
+            false
         ));
     }
 }

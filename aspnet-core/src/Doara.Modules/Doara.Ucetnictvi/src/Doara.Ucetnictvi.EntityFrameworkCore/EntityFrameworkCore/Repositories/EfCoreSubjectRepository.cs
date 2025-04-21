@@ -28,9 +28,9 @@ public class EfCoreSubjectRepository(IDbContextProvider<UcetnictviDbContext> dbC
         return subject;
     }
 
-    public async Task<List<Subject>> GetAllAsync(int skip, int take, string sortBy, Expression<Func<Subject, bool>>? filter = null)
+    public async Task<List<Subject>> GetAllAsync(int skip, int take, string sortBy, bool withDetail, Expression<Func<Subject, bool>>? filter = null)
     {
-        var query = await GetQueryableAsync();
+        var query = withDetail ? await WithDetailsAsync(): await GetQueryableAsync();
         if (filter != null)
         {
             query = query.Where(filter);
@@ -73,5 +73,11 @@ public class EfCoreSubjectRepository(IDbContextProvider<UcetnictviDbContext> dbC
     {
         var query = await GetQueryableAsync();
         return await query.AnyAsync(predicate);
+    }
+    
+    public override async Task<IQueryable<Subject>> WithDetailsAsync()
+    {
+        return (await base.WithDetailsAsync()).Include(x => x.Address)
+            .Include(x => x.Address.Country);
     }
 }

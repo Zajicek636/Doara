@@ -15,37 +15,49 @@ namespace Doara.Ucetnictvi.AppServices;
 public class AddressAppService(IAddressRepository addressRepository, ICountryRepository countryRepository) : UcetnictviAppService, IAddressAppService
 {
     [Authorize(UcetnictviPermissions.ReadAddressPermission)]
-    public async Task<AddressDetailedDto> GetAsync(Guid id)
+    public async Task<AddressDetailDto> GetAsync(Guid id)
     {
         var res = await addressRepository.GetAsync(id);
-        return ObjectMapper.Map<Address, AddressDetailedDto>(res); 
+        return ObjectMapper.Map<Address, AddressDetailDto>(res); 
     }
 
     [Authorize(UcetnictviPermissions.ReadAddressPermission)]
-    public async Task<PagedResultDto<AddressDetailedDto>> GetAllAsync(PagedAndSortedResultRequestDto input)
+    public async Task<PagedResultDto<AddressDto>> GetAllAsync(PagedAndSortedResultRequestDto input)
     {
-        var res = await addressRepository.GetAllAsync(input.SkipCount, input.MaxResultCount, input.Sorting ?? nameof(Address.Id));
+        var res = await addressRepository.GetAllAsync(input.SkipCount, input.MaxResultCount, input.Sorting ?? nameof(Address.Id), false);
         var totalCount = await addressRepository.GetCountAsync();
-        return new PagedResultDto<AddressDetailedDto>
+        return new PagedResultDto<AddressDto>
         {
-            Items = ObjectMapper.Map<List<Address>, List<AddressDetailedDto>>(res),
+            Items = ObjectMapper.Map<List<Address>, List<AddressDto>>(res),
+            TotalCount = totalCount
+        };
+    }
+    
+    [Authorize(UcetnictviPermissions.ReadAddressPermission)]
+    public async Task<PagedResultDto<AddressDetailDto>> GetAllWithDetailAsync(PagedAndSortedResultRequestDto input)
+    {
+        var res = await addressRepository.GetAllAsync(input.SkipCount, input.MaxResultCount, input.Sorting ?? nameof(Address.Id), true);
+        var totalCount = await addressRepository.GetCountAsync();
+        return new PagedResultDto<AddressDetailDto>
+        {
+            Items = ObjectMapper.Map<List<Address>, List<AddressDetailDto>>(res),
             TotalCount = totalCount
         };
     }
 
     [Authorize(UcetnictviPermissions.CreateAddressPermission)]
-    public async Task<AddressDetailedDto> CreateAsync(AddressCreateInputDto input)
+    public async Task<AddressDetailDto> CreateAsync(AddressCreateInputDto input)
     {
         var country = await countryRepository.GetAsync(input.CountryId);
         var guid = GuidGenerator.Create();
         var address = new Address(guid, input.Street, input.City, input.PostalCode, input.CountryId);
         var res = await addressRepository.CreateAsync(address);
         res.SetCountry(country);
-        return ObjectMapper.Map<Address, AddressDetailedDto>(res); 
+        return ObjectMapper.Map<Address, AddressDetailDto>(res); 
     }
 
     [Authorize(UcetnictviPermissions.UpdateAddressPermission)]
-    public async Task<AddressDetailedDto> UpdateAsync(AddressUpdateInputDto input)
+    public async Task<AddressDetailDto> UpdateAsync(AddressUpdateInputDto input)
     {
         var country = await countryRepository.GetAsync(input.CountryId);
         var address = await addressRepository.GetAsync(input.Id);
@@ -53,7 +65,7 @@ public class AddressAppService(IAddressRepository addressRepository, ICountryRep
             .SetPostalCode(input.PostalCode).SetCountry(input.CountryId);
         var res = await addressRepository.UpdateAsync(address);
         res.SetCountry(country);
-        return ObjectMapper.Map<Address, AddressDetailedDto>(res); 
+        return ObjectMapper.Map<Address, AddressDetailDto>(res); 
     }
 
     [Authorize(UcetnictviPermissions.DeleteAddressPermission)]

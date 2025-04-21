@@ -34,9 +34,9 @@ public class EfCoreAddressRepository(IDbContextProvider<UcetnictviDbContext> dbC
         return address;
     }
 
-    public async Task<List<Address>> GetAllAsync(int skip, int take, string sortBy, Expression<Func<Address, bool>>? filter = null)
+    public async Task<List<Address>> GetAllAsync(int skip, int take, string sortBy, bool withDetail, Expression<Func<Address, bool>>? filter = null)
     {
-        var query = await GetQueryableAsync();
+        var query = withDetail ? await WithDetailsAsync(): await GetQueryableAsync();
         if (filter != null)
         {
             query = query.Where(filter);

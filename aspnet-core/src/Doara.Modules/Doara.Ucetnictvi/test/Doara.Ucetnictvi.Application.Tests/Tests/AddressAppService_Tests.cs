@@ -29,9 +29,9 @@ public class AddressAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         czAddress.Street.ShouldBe("Václavské náměstí 1");
         czAddress.City.ShouldBe("Praha");
         czAddress.PostalCode.ShouldBe("11000");
-        czAddress.CountryId.ShouldBe(TestData.CzCountryId);
-        czAddress.CountryCode.ShouldBe("CZ");
-        czAddress.CountryName.ShouldBe("Česká republika");
+        czAddress.Country.Id.ShouldBe(TestData.CzCountryId);
+        czAddress.Country.Code.ShouldBe("CZ");
+        czAddress.Country.Name.ShouldBe("Česká republika");
     }
     
     [Fact]
@@ -56,13 +56,13 @@ public class AddressAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         address.Street.ShouldBe(input.Street);
         address.City.ShouldBe(input.City);
         address.PostalCode.ShouldBe(input.PostalCode);
-        address.CountryId.ShouldBe(input.CountryId);
-        address.CountryCode.ShouldBe("CZ");
-        address.CountryName.ShouldBe("Česká republika");
+        address.Country.Id.ShouldBe(input.CountryId);
+        address.Country.Code.ShouldBe("CZ");
+        address.Country.Name.ShouldBe("Česká republika");
     }
     
     [Fact]
-    public async Task Should_Create_Address_Non_Existing_Country()
+    public async Task Should_Throw_Create_Address_Non_Existing_Country()
     {
         var id = _guidGenerator.Create();
         var input = Converter.CreateAddressInput(id);
@@ -79,7 +79,7 @@ public class AddressAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
     public async Task Should_Update_Address()
     {
         var address = await _addressAppService.GetAsync(TestData.CzAddressId);
-        address.CountryId = TestData.UsCountryId;
+        address.Country.Id = TestData.UsCountryId;
         address.Street = Converter.DefaultAddressStreet;
         address.City = Converter.DefaultAddressCity;
         address.PostalCode = Converter.DefaultAddressPostalCode;
@@ -90,9 +90,9 @@ public class AddressAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         updatedAddress.Street.ShouldBe(address.Street);
         updatedAddress.City.ShouldBe(address.City);
         updatedAddress.PostalCode.ShouldBe(address.PostalCode);
-        updatedAddress.CountryId.ShouldBe(address.CountryId);
-        updatedAddress.CountryCode.ShouldBe("USA");
-        updatedAddress.CountryName.ShouldBe("United States");
+        updatedAddress.Country.Id.ShouldBe(address.Country.Id);
+        updatedAddress.Country.Code.ShouldBe("USA");
+        updatedAddress.Country.Name.ShouldBe("United States");
     }
     
     [Fact]
@@ -100,7 +100,7 @@ public class AddressAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
     {
         var id = _guidGenerator.Create();
         var address = await _addressAppService.GetAsync(TestData.CzAddressId);
-        address.CountryId = TestData.UsCountryId;
+        address.Country.Id = TestData.UsCountryId;
         address.Street = Converter.DefaultAddressStreet;
         address.City = Converter.DefaultAddressCity;
         address.PostalCode = Converter.DefaultAddressPostalCode;
@@ -119,7 +119,7 @@ public class AddressAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
     {
         var id = _guidGenerator.Create();
         var address = await _addressAppService.GetAsync(TestData.CzAddressId);
-        address.CountryId = id;
+        address.Country.Id = id;
         address.Street = Converter.DefaultAddressStreet;
         address.City = Converter.DefaultAddressCity;
         address.PostalCode = Converter.DefaultAddressPostalCode;
@@ -171,5 +171,25 @@ public class AddressAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         entities.Items.Count.ShouldBe(2);
         entities.Items[0].Id.ShouldBe(TestData.CzAddressId);
         entities.Items[1].Id.ShouldBe(TestData.SkAddressId);
+        entities.Items[0].CountryId.ShouldBe(TestData.CzCountryId);
+        entities.Items[1].CountryId.ShouldBe(TestData.SkCountryId);
+    }
+    
+    [Fact]
+    public async Task Should_GetAllWithDetail()
+    {
+        var entities = await _addressAppService.GetAllWithDetailAsync(new PagedAndSortedResultRequestDto
+        {
+            SkipCount = 1,
+            MaxResultCount = 4,
+            Sorting = "City desc"
+        });
+        
+        entities.TotalCount.ShouldBe(3);
+        entities.Items.Count.ShouldBe(2);
+        entities.Items[0].Id.ShouldBe(TestData.CzAddressId);
+        entities.Items[1].Id.ShouldBe(TestData.SkAddressId);
+        entities.Items[0].Country.ShouldNotBeNull();
+        entities.Items[1].Country.ShouldNotBeNull();
     }
 }

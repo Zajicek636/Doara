@@ -21,14 +21,14 @@ public static partial class Converter
         };
     }
 
-    public static AddressUpdateInputDto Convert2UpdateInput(AddressDetailedDto input)
+    public static AddressUpdateInputDto Convert2UpdateInput(AddressDetailDto input)
     {
         return new AddressUpdateInputDto
         {
             Street = input.Street,
             City = input.City,
             PostalCode = input.PostalCode,
-            CountryId = input.CountryId,
+            CountryId = input.Country.Id,
             Id = input.Id
         };
     }

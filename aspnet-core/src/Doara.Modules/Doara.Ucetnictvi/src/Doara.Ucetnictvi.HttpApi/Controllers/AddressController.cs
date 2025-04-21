@@ -18,28 +18,36 @@ public class AddressController(IAddressAppService addressAppService) : Ucetnictv
 {
     [HttpGet]
     [Authorize(UcetnictviPermissions.ReadAddressPermission)]
-    public async Task<AddressDetailedDto> GetAsync([Required] Guid id)
+    public async Task<AddressDetailDto> GetAsync([Required] Guid id)
     {
         return await addressAppService.GetAsync(id);
     }
     
     [HttpGet("GetAll")]
     [Authorize(UcetnictviPermissions.ReadAddressPermission)]
-    public async Task<PagedResultDto<AddressDetailedDto>> GetAllAsync(PagedAndSortedResultRequestDto input)
+    public async Task<PagedResultDto<AddressDto>> GetAllAsync(PagedAndSortedResultRequestDto input)
     {
         return await addressAppService.GetAllAsync(input);
     }
+    
+    [HttpGet("GetAllWithDetail")]
+    [Authorize(UcetnictviPermissions.ReadAddressPermission)]
+    public async Task<PagedResultDto<AddressDetailDto>> GetAllWithDetailAsync(PagedAndSortedResultRequestDto input)
+    {
+        return await addressAppService.GetAllWithDetailAsync(input);
+    }
+    
 
     [HttpPost]
     [Authorize(UcetnictviPermissions.CreateAddressPermission)]
-    public async Task<AddressDetailedDto> CreateAsync(AddressCreateInputDto input)
+    public async Task<AddressDetailDto> CreateAsync(AddressCreateInputDto input)
     {
         return await addressAppService.CreateAsync(input);
     }
     
     [HttpPut]
     [Authorize(UcetnictviPermissions.UpdateAddressPermission)]
-    public async Task<AddressDetailedDto> UpdateAsync(AddressUpdateInputDto input)
+    public async Task<AddressDetailDto> UpdateAsync(AddressUpdateInputDto input)
     {
         return await addressAppService.UpdateAsync(input);
     }

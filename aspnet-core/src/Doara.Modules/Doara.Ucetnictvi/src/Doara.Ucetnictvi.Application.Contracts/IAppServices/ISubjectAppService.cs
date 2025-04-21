@@ -7,9 +7,10 @@ namespace Doara.Ucetnictvi.IAppServices;
 
 public interface ISubjectAppService
 {
-    Task<SubjectDto> GetAsync(Guid id);
+    Task<SubjectDetailDto> GetAsync(Guid id);
     Task<PagedResultDto<SubjectDto>> GetAllAsync(PagedAndSortedResultRequestDto input);
-    Task<SubjectDto> CreateAsync(SubjectCreateInputDto input);
-    Task<SubjectDto> UpdateAsync(SubjectUpdateInputDto input);
+    Task<PagedResultDto<SubjectDetailDto>> GetAllWithDetailAsync(PagedAndSortedResultRequestDto input);
+    Task<SubjectDetailDto> CreateAsync(SubjectCreateInputDto input);
+    Task<SubjectDetailDto> UpdateAsync(SubjectUpdateInputDto input);
     Task DeleteAsync(Guid id);
 }
