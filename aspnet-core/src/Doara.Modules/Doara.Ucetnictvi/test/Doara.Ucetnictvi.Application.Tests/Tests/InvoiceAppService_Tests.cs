@@ -394,4 +394,28 @@ public class InvoiceAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         entities.Items[0].Id.ShouldBe(TestData.SkInvoiceId2);
         entities.Items[1].Id.ShouldBe(TestData.SkInvoiceId1);
     }
+    
+    [Fact]
+    public async Task Should_GetAllWithDetail()
+    {
+        var entities = await _invoiceAppService.GetAllWithDetailAsync(new PagedAndSortedResultRequestDto
+        {
+            SkipCount = 1,
+            MaxResultCount = 2,
+            Sorting = "InvoiceNumber desc"
+        });
+
+        entities.TotalCount.ShouldBe(4);
+        entities.Items.Count.ShouldBe(2);
+        entities.Items[0].Id.ShouldBe(TestData.SkInvoiceId2);
+        entities.Items[0].Customer.Id.ShouldBe(TestData.CzSubjectId);
+        entities.Items[0].Supplier.Id.ShouldBe(TestData.SkSubjectId);
+        entities.Items[0].Items.Count.ShouldBe(0);
+        
+        entities.Items[1].Id.ShouldBe(TestData.SkInvoiceId1);
+        entities.Items[1].Customer.Id.ShouldBe(TestData.CzSubjectId);
+        entities.Items[1].Supplier.Id.ShouldBe(TestData.SkSubjectId);
+        entities.Items[1].Items.Count.ShouldBe(1);
+        entities.Items[1].Items[0].Id.ShouldBe(TestData.SkInvoiceItemId11);
+    }
 }

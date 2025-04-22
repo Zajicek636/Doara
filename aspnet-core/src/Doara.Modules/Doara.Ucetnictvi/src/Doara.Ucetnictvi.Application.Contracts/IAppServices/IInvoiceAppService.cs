@@ -9,6 +9,7 @@ public interface IInvoiceAppService
 {
     Task<InvoiceDetailDto> GetAsync(Guid id);
     Task<PagedResultDto<InvoiceDto>> GetAllAsync(PagedAndSortedResultRequestDto input);
+    Task<PagedResultDto<InvoiceDetailDto>> GetAllWithDetailAsync(PagedAndSortedResultRequestDto input);
     Task<InvoiceDetailDto> CreateAsync(InvoiceCreateInputDto input);
     Task<InvoiceDetailDto> UpdateAsync(InvoiceUpdateInputDto input);
     Task DeleteAsync(Guid id);

@@ -28,9 +28,9 @@ public class EfCoreInvoiceRepository(IDbContextProvider<UcetnictviDbContext> dbC
         return invoice;
     }
 
-    public async Task<List<Invoice>> GetAllAsync(int skip, int take, string sortBy, Expression<Func<Invoice, bool>>? filter = null)
+    public async Task<List<Invoice>> GetAllAsync(int skip, int take, string sortBy, bool withDetail, Expression<Func<Invoice, bool>>? filter = null)
     {
-        var query = await GetQueryableAsync();
+        var query = withDetail ? await WithDetailsAsync() : await GetQueryableAsync();
         if (filter != null)
         {
             query = query.Where(filter);

@@ -25,11 +25,24 @@ public class InvoiceAppService(IInvoiceRepository invoiceRepository, ISubjectRep
     [Authorize(UcetnictviPermissions.ReadInvoicePermission)]
     public async Task<PagedResultDto<InvoiceDto>> GetAllAsync(PagedAndSortedResultRequestDto input)
     {
-        var res = await invoiceRepository.GetAllAsync(input.SkipCount, input.MaxResultCount, input.Sorting ?? nameof(Invoice.Id));
+        var res = await invoiceRepository.GetAllAsync(input.SkipCount, input.MaxResultCount, input.Sorting ?? nameof(Invoice.Id), false);
         var totalCount = await invoiceRepository.GetCountAsync();
         return new PagedResultDto<InvoiceDto>
         {
             Items = ObjectMapper.Map<List<Invoice>, List<InvoiceDto>>(res),
+            TotalCount = totalCount
+        };
+    }
+    
+    
+    [Authorize(UcetnictviPermissions.ReadInvoicePermission)]
+    public async Task<PagedResultDto<InvoiceDetailDto>> GetAllWithDetailAsync(PagedAndSortedResultRequestDto input)
+    {
+        var res = await invoiceRepository.GetAllAsync(input.SkipCount, input.MaxResultCount, input.Sorting ?? nameof(Invoice.Id), true);
+        var totalCount = await invoiceRepository.GetCountAsync();
+        return new PagedResultDto<InvoiceDetailDto>
+        {
+            Items = ObjectMapper.Map<List<Invoice>, List<InvoiceDetailDto>>(res),
             TotalCount = totalCount
         };
     }

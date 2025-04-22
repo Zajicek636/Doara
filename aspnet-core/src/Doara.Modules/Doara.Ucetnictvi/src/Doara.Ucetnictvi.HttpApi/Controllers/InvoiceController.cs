@@ -29,6 +29,13 @@ public class InvoiceController(IInvoiceAppService invoiceAppService) : Ucetnictv
     {
         return await invoiceAppService.GetAllAsync(input);
     }
+    
+    [HttpGet("GetAllWithDetail")]
+    [Authorize(UcetnictviPermissions.ReadInvoicePermission)]
+    public async Task<PagedResultDto<InvoiceDetailDto>> GetAllWithDetailAsync(PagedAndSortedResultRequestDto input)
+    {
+        return await invoiceAppService.GetAllWithDetailAsync(input);
+    }
 
     [HttpPost]
     [Authorize(UcetnictviPermissions.CreateInvoicePermission)]
