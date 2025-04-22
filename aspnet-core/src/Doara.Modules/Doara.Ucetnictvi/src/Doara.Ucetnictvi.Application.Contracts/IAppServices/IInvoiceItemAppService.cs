@@ -9,7 +9,5 @@ public interface IInvoiceItemAppService
 {
     Task<InvoiceItemDto> GetAsync(Guid id);
     Task<PagedResultDto<InvoiceItemDto>> GetAllAsync(PagedAndSortedResultRequestDto input);
-    Task<InvoiceItemDto> CreateAsync(InvoiceItemCreateInputDto input);
-    Task<InvoiceItemDto> UpdateAsync(InvoiceItemUpdateInputDto input);
-    Task DeleteAsync(Guid id);
+    Task<InvoiceItemManageReportDto> ManageManyAsync(InvoiceItemManageManyInputDto input);
 }

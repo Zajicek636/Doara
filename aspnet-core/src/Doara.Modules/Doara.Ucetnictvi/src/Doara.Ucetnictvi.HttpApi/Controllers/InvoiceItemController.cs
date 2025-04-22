@@ -30,24 +30,13 @@ public class InvoiceItemController(IInvoiceItemAppService invoiceItemAppService)
         return await invoiceItemAppService.GetAllAsync(input);
     }
 
-    [HttpPost]
+
     [Authorize(UcetnictviPermissions.CreateInvoiceItemPermission)]
-    public async Task<InvoiceItemDto> CreateAsync(InvoiceItemCreateInputDto input)
-    {
-        return await invoiceItemAppService.CreateAsync(input);
-    }
-    
-    [HttpPut]
     [Authorize(UcetnictviPermissions.UpdateInvoiceItemPermission)]
-    public async Task<InvoiceItemDto> UpdateAsync(InvoiceItemUpdateInputDto input)
-    {
-        return await invoiceItemAppService.UpdateAsync(input);
-    }
-    
-    [HttpDelete]
     [Authorize(UcetnictviPermissions.DeleteInvoiceItemPermission)]
-    public async Task DeleteAsync([Required] Guid id)
+    [HttpPost("ManageMany")]
+    public async Task<InvoiceItemManageReportDto> ManageManyAsync(InvoiceItemManageManyInputDto input)
     {
-        await invoiceItemAppService.DeleteAsync(id);
+        return await invoiceItemAppService.ManageManyAsync(input);
     }
 }

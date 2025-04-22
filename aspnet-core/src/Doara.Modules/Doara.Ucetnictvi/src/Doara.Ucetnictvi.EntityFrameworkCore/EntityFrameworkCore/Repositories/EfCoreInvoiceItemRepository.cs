@@ -54,24 +54,29 @@ public class EfCoreInvoiceItemRepository(IDbContextProvider<UcetnictviDbContext>
         return await query.CountAsync();
     }
 
-    public async Task<InvoiceItem> CreateAsync(InvoiceItem invoiceItem)
+    public async Task CreateManyAsync(IEnumerable<InvoiceItem> invoiceItems)
     {
-        return await base.InsertAsync(invoiceItem);
+        await base.InsertManyAsync(invoiceItems);
     }
 
-    public async Task<InvoiceItem> UpdateAsync(InvoiceItem invoiceItem)
+    public async Task UpdateManyAsync(IEnumerable<InvoiceItem> invoiceItems)
     {
-        return await base.UpdateAsync(invoiceItem);
+        await base.UpdateManyAsync(invoiceItems);
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteManyAsync(IEnumerable<InvoiceItem> invoiceItems)
     {
-        await base.DeleteAsync(id);
+        await base.DeleteManyAsync(invoiceItems);
     }
-
+    
     public async Task<bool> AnyAsync(Expression<Func<InvoiceItem, bool>> predicate)
     {
         var query = await GetQueryableAsync();
         return await query.AnyAsync(predicate);
+    }
+
+    public async Task<InvoiceItem> CreateAsync(InvoiceItem invoiceItem)
+    {
+        return await base.InsertAsync(invoiceItem);
     }
 }

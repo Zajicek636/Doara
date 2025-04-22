@@ -5,8 +5,10 @@ using Doara.Ucetnictvi.Enums;
 
 namespace Doara.Ucetnictvi.Dto.InvoiceItem;
 
-public class InvoiceItemCreateInputDto
+public class InvoiceItemManageManyDto
 {
+    public Guid? Id { get; set; }
+    
     [Required]
     public Guid InvoiceId { get; set; }
     

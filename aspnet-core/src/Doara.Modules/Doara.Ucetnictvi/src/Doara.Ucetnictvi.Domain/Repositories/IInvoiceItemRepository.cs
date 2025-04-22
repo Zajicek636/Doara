@@ -11,8 +11,9 @@ public interface IInvoiceItemRepository
     Task<InvoiceItem> GetAsync(Guid id);
     Task<List<InvoiceItem>> GetAllAsync(int skip, int take, string sortBy, Expression<Func<InvoiceItem, bool>>? filter = null);
     Task<long> GetCountAsync(Expression<Func<InvoiceItem, bool>>? filter = null);
+    Task CreateManyAsync(IEnumerable<InvoiceItem> invoiceItems);
+    Task UpdateManyAsync(IEnumerable<InvoiceItem> invoiceItems);
+    Task DeleteManyAsync(IEnumerable<InvoiceItem> invoiceItems);
     Task<InvoiceItem> CreateAsync(InvoiceItem invoiceItem);
-    Task<InvoiceItem> UpdateAsync(InvoiceItem invoiceItem);
-    Task DeleteAsync(Guid id);
     Task<bool> AnyAsync(Expression<Func<InvoiceItem, bool>> predicate);
 }

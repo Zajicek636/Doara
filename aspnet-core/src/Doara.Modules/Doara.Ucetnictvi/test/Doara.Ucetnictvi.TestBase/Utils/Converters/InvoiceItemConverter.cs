@@ -14,12 +14,12 @@ public static partial class Converter
     public const decimal DefaultInvoiceItemVatAmount = 5;
     public const decimal DefaultInvoiceItemGrossAmount = 8;
     
-    public static InvoiceItemCreateInputDto CreateInvoiceItemInput(Guid invoiceId, string description = DefaultInvoiceItemDescription, 
+    public static InvoiceItemManageManyDto CreateInvoiceItemInput(Guid invoiceId, string description = DefaultInvoiceItemDescription, 
         decimal quantity = DefaultInvoiceItemQuantity, decimal unitPrice = DefaultInvoiceItemUnitPrice, 
         decimal netAmount = DefaultInvoiceItemNetAmount, VatRate vatRate = DefaultInvoiceItemVatRate,
         decimal vatAmount = DefaultInvoiceItemVatAmount, decimal grossAmount = DefaultInvoiceItemGrossAmount)
     {
-        return new InvoiceItemCreateInputDto
+        return new InvoiceItemManageManyDto
         {
             InvoiceId = invoiceId,
             Description = description,
@@ -32,9 +32,9 @@ public static partial class Converter
         };
     }
     
-    public static InvoiceItemUpdateInputDto Convert2UpdateInput(InvoiceItemDto input)
+    /*public static InvoiceItemManageManyInputDto Convert2UpdateInput(InvoiceItemDto input)
     {
-        return new InvoiceItemUpdateInputDto
+        return new InvoiceItemManageManyInputDto
         {
             Id = input.Id,
             InvoiceId = input.InvoiceId,
@@ -46,5 +46,5 @@ public static partial class Converter
             VatAmount = input.VatAmount,
             GrossAmount = input.GrossAmount
         };
-    }
+    }*/
 }
