@@ -18,7 +18,7 @@ export class MenuComponent implements OnInit {
 
   menuItems = signal<MenuItem[]>([
     { name: 'Sklady', link: 'sklady', icon: 'dataset', items: [{ name: 'Test', link: 'polozky', icon: 'data_thresholding' },{ name: 'Test2', link: 'editace-skladu', icon: 'data_thresholding'}]},
-    { name: 'Účetnictví', link: 'ucetnictvi', icon: 'data_thresholding' },
+    { name: 'Účetnictví', link: 'ucetnictvi', icon: 'data_thresholding', items: [{ name: 'Nová fakura', link: 'nova-faktura', icon: 'plus' },{ name: 'Faktury', link: 'seznam-faktur', icon: 'data_thresholding' }]},
     { name: 'Settings', link: 'nastaveni', icon: 'settings' },
   ]) ;
 

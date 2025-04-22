@@ -4,7 +4,9 @@ import {TableSettings} from '../../shared/table/table/table.settings';
 import {BreadcrumbService} from '../../shared/breadcrumb/breadcrumb.service';
 import {Router} from '@angular/router';
 import {DialogService} from '../../shared/dialog/dialog.service';
-import {SkladyEditaceDataService} from './sklady-editace-data.service';
+import {SkladyEditaceDataService} from './data/sklady-editace-data.service';
+import {SeznamFakturDto} from '../../ucetnictvi/seznam-faktur/data/seznam-faktur.interfaces';
+;
 
 @Component({
   selector: 'app-sklady-editace',
@@ -36,7 +38,7 @@ export class SkladyEditaceComponent implements OnInit {
     };
   }
 
-  public handleDoubleClick(event: any) {
+  public handleDoubleClick(event: SeznamFakturDto) {
     console.log(event)
   }
 

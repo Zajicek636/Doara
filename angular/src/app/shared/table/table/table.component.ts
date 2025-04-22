@@ -14,22 +14,20 @@ import {DialogType} from '../../dialog/dialog.interfaces';
   standalone: false,
   styleUrls: ['./table.component.scss']
 })
-export class DynamicTableComponent implements OnInit, AfterViewInit {
+export class DynamicTableComponent<T> implements OnInit, AfterViewInit {
   @Input() settings!: TableSettings;
-  @Input() dataService!: { getPagedRequest: (params: any) => Promise<any[]> };
+  @Input() dataService!: { getPagedRequest: (params: any) => Promise<T[]> };
+  @Input() data?: T[];
 
-  // Event emitter pro dvojklik na řádek
-  @Output() rowDoubleClicked: EventEmitter<any> = new EventEmitter<any>();
-
-  dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = [];
-  expandedElement: any = undefined;
-
+  @Output() rowDoubleClicked: EventEmitter<T> = new EventEmitter<T>();
+  @Output() selectedElement: EventEmitter<T> = new EventEmitter<T>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  // Subject pro debounce filtru
+  dataSource = new MatTableDataSource<T>([]);
+  displayedColumns: string[] = [];
+  expandedElement: T | undefined;
   private filterSubject = new Subject<string>();
   currentFilter: string = '';
 
@@ -37,15 +35,10 @@ export class DynamicTableComponent implements OnInit, AfterViewInit {
     private cacheService: CacheService,
     private dialogService: DialogService
   )
-  {
-
-  }
+  {}
 
   ngOnInit(): void {
-    // Pokud máte definované sloupce jako stringové pole
     this.displayedColumns = this.settings.displayedColumns;
-
-    // Nastavení vestavěného filter predicate, pokud chcete filtrovat dle všech polí
     this.dataSource.filterPredicate = (data: any, filter: string) => {
       const accumulator = (currentTerm: string, key: string) => {
         return currentTerm + (data[key] ? data[key].toString().toLowerCase() : '');
@@ -65,8 +58,6 @@ export class DynamicTableComponent implements OnInit, AfterViewInit {
         this.paginator.pageIndex = 0;
       }
     });
-
-    // Načtení prvních dat – pro účely demonstrace s mock daty
     this.loadData();
   }
 
@@ -74,39 +65,27 @@ export class DynamicTableComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    // Na změnu stránky načteme nová data (server-side) nebo necháme paginator pracovat s klientskými daty
     this.paginator.page.subscribe((pageEvent: PageEvent) => {
       this.loadData();
     });
 
-    // Na změnu řazení resetujeme stránkovací index a načteme data
     this.sort.sortChange.subscribe((sort: Sort) => {
       this.paginator.pageIndex = 0;
       this.loadData();
     });
   }
 
-  /**
-   * Metoda volaná při zadání filtru uživatelem.
-   * Používáme vestavěné filtrování MatTableDataSource.
-   */
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
     this.filterSubject.next(filterValue);
   }
 
-  /**
-   * Sestaví query parametry pro volání metody getPagedRequest.
-   */
   private buildQueryParams(): any {
     let params = new URLSearchParams();
 
-    // Přidání filtru, pokud je zadán
     if (this.currentFilter) {
       params.set('filter', this.currentFilter);
     }
-
-    // Přidání dodatečných parametrů z nastavení
     if (this.settings.extraQueryParams) {
       Object.keys(this.settings.extraQueryParams).forEach(key => {
         if (this.settings.extraQueryParams![key] != null) {
@@ -124,12 +103,10 @@ export class DynamicTableComponent implements OnInit, AfterViewInit {
       params.set('pageSize', (this.settings.defaultPageSize || 10).toString());
     }
 
-    // Řazení
     if (this.sort && this.sort.active) {
       params.set('sortField', this.sort.active);
       params.set('sortOrder', this.sort.direction);
     }
-    // Převod na objekt – HttpClient totiž očekává prostý objekt s klíči a hodnotami
     const paramsObj: any = {};
     params.forEach((value, key) => {
       paramsObj[key] = value;
@@ -137,40 +114,34 @@ export class DynamicTableComponent implements OnInit, AfterViewInit {
     return paramsObj;
   }
 
-  /**
-   * Načte data voláním metody getPagedRequest předané datové služby s aktuálními parametry.
-   * Pro účely demonstrace zde využíváme namockovaná data.
-   */
   async loadData(): Promise<void> {
-    const params = this.buildQueryParams();
-
-/*
-    this.dataService.getPagedRequest(params)
-      .then((data: any[]) => {
-        this.dataSource.data = data;
-      })
-      .catch(error => {
-        this.dialogService.alert({
-          title: "Chyba",
-          dialogType: DialogType.ERROR,
-          message: "Chyba při načítání dat z externího zdroje"
-        })
-        this.dataSource.data = [];
-      });
-*/
-
-    const b: any[] = [];
-    for (let a = 0; a < 999; a++) {
-      b.push({ id: `ANO+${a}`, name: `Jméno ${a}`, progress: Math.round(Math.random() * 100), fruit: ['jablko', 'hruška', 'banán'][a % 3] });
+    if (this.data) {
+      this.dataSource.data = this.data;
+      return;
     }
-    this.dataSource.data = b;
+
+    if (this.dataService && this.dataService.getPagedRequest) {
+      const params = this.buildQueryParams();
+      try {
+        const data = await this.dataService.getPagedRequest(params);
+        this.dataSource.data = data;
+      } catch (error) {
+        await this.dialogService.alert({
+          title: 'Chyba',
+          dialogType: DialogType.ERROR,
+          message: 'Chyba při načítání dat z externího zdroje'
+        });
+        this.dataSource.data = [];
+      }
+    }
   }
 
-  onRowDoubleClick(row: any): void {
+  onRowDoubleClick(row: T): void {
     this.rowDoubleClicked.emit(row);
   }
 
-  toggleRow(row: any) {
+  toggleRow(row: T) {
     this.expandedElement = row;
+    this.selectedElement.emit(row)
   }
 }

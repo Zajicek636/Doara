@@ -14,10 +14,14 @@ import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {DynamicTableComponent} from './table/table/table.component';
+import {AnyFormModule} from './forms/any-form/any-form.module';
+import {ContextToolbarComponent} from './context-toolbar/context-toolbar.component';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 @NgModule({
     declarations: [
-      DynamicTableComponent
+      DynamicTableComponent,
+      ContextToolbarComponent
     ],
   imports: [
     CommonModule,
@@ -36,11 +40,14 @@ import {DynamicTableComponent} from './table/table/table.component';
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
+    MatToolbarModule,
   ],
   exports: [
     ReactiveFormsModule,
     LayoutModule,
     DynamicTableComponent,
+    AnyFormModule,
+    ContextToolbarComponent
   ],
     providers: [
     ],

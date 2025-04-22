@@ -4,7 +4,7 @@
 </div>
 
 -->
-<mat-nav-list>
+<mat-nav-list style="width: 100%; overflow-x: hidden; text-overflow: ellipsis">
   @for (item of menuItems(); track item.name) {
     <app-menu-item [item]="item"></app-menu-item>
   }

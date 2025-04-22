@@ -1,8 +1,9 @@
 ﻿import {Injectable} from '@angular/core';
-import {BaseCrud} from '../../shared/crud/base-crud-service';
 import {HttpClient} from '@angular/common/http';
-import {SkladyEditaceCrudSettings, SkladyEditaceDto} from './sklady-editace-crud.settings';
+import {SkladyEditaceCrudSettings} from './sklady-editace-crud.settings';
 import {lastValueFrom} from 'rxjs';
+import {BaseCrud} from '../../../shared/crud/base-crud-service';
+import {SkladyEditaceDto} from './sklady-editace.interfaces';
 
 @Injectable({
   providedIn: 'root',

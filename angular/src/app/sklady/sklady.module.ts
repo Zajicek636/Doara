@@ -2,7 +2,8 @@
 import {SkladyRoutingModule} from './sklady-routing.module';
 import {SkladyPolozkyComponent} from './sklady-polozky/sklady-polozky.component';
 import {SkladyEditaceComponent} from './sklady-editace/sklady-editace.component';
-import {SkladyPolozkyDataService} from './sklady-polozky/sklady-polozky-data.service';
+import {SkladyPolozkyDataService} from './sklady-polozky/data/sklady-polozky-data.service';
+
 
 @NgModule({
   providers: [SkladyPolozkyDataService],

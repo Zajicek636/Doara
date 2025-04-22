@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {SkladyPolozkyDataService} from './sklady-polozky-data.service';
 import {BreadcrumbService} from "../../shared/breadcrumb/breadcrumb.service";
 import {Router} from "@angular/router";
 import {DialogService} from "../../shared/dialog/dialog.service";
@@ -8,13 +7,12 @@ import {FormComponentResult} from '../../shared/forms/any-form/any-form.componen
 import {FormGroup} from '@angular/forms';
 import {AnyFormModule} from '../../shared/forms/any-form/any-form.module';
 import {DialogType} from '../../shared/dialog/dialog.interfaces';
-export interface Res {
-  Test: string,
-  Cislo: string,
-}
+import {SkladyPolozkyDataService} from './data/sklady-polozky-data.service';
+import {Res} from './data/sklady-polozky.interfaces';
+import {SharedModule} from '../../shared/shared.module';
 @Component({
   selector: 'app-sklady-polozky',
-  imports: [AnyFormModule],
+  imports: [SharedModule],
   templateUrl: './sklady-polozky.component.html',
   styleUrl: './sklady-polozky.component.scss'
 })

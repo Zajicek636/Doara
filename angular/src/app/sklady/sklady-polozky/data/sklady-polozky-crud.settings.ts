@@ -1,9 +1,7 @@
 ﻿import {Injectable} from '@angular/core';
-import {CrudSettings, QueryParams} from '../../shared/crud/base-crud-service';
+import {CrudSettings, QueryParams} from '../../../shared/crud/base-crud-service';
+import {SkladyPolozkyDto} from './sklady-polozky.interfaces';
 
-export interface SkladyPolozkyDto {
-  id: string;
-}
 @Injectable({
   providedIn: 'root',
 })
