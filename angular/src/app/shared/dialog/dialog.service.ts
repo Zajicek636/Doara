@@ -34,7 +34,9 @@ export class DialogService {
     const result = await this.open(ConfirmDialogComponent, {
       title: params.title,
       message: params.message,
-      type: DialogType.WARNING,
+      type: params.dialogType,
+      cancelButton: params.cancelButton,
+      confirmButton: params.confirmButton
     });
     return result;
   }

@@ -8,8 +8,6 @@ import {ToolbarButton} from './context-toolbar.interfaces';
   styleUrl: './context-toolbar.component.scss'
 })
 export class ContextToolbarComponent<T> {
-  /** Pole tlačítek, definovaných v rodiči */
-  @Input() buttons: ToolbarButton<T>[] = [];
-  /** Volitelný kontext (např. vybraný řádek) */
+  @Input() buttons: ToolbarButton[] = [];
   @Input() contextItem?: T;
 }

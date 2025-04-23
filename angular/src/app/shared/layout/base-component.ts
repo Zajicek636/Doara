@@ -1,4 +1,4 @@
-﻿import {Directive} from '@angular/core';
+﻿import {Directive, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TableSettings} from '../table/table/table.settings';
 import {ToolbarButton} from '../context-toolbar/context-toolbar.interfaces';
@@ -10,11 +10,13 @@ export interface RouteData {
   breadcrumb: string
 }
 @Directive()
-export abstract class BaseContentComponent<T, DataService> {
+export abstract class BaseContentComponent<T, DataService> implements OnInit {
   tableSettings: TableSettings | undefined;
   basePath: string | undefined;
   breadCrumbTitle: string | undefined;
   protected _chosenElement?: T;
+
+  toolbarButtons!: ToolbarButton[];
 
   protected constructor(
     protected route: ActivatedRoute,
@@ -31,8 +33,8 @@ export abstract class BaseContentComponent<T, DataService> {
     }
   }
 
-  get toolbarButtons(): ToolbarButton[] {
-    return [];
+  ngOnInit() {
+    this.refreshToolbarButtons();
   }
 
   get chosenElement(): T | undefined {
@@ -41,6 +43,12 @@ export abstract class BaseContentComponent<T, DataService> {
 
   set chosenElement(value: T | undefined) {
     this._chosenElement = value;
+    this.refreshToolbarButtons();
   }
 
+  private refreshToolbarButtons() {
+    this.toolbarButtons = this.buildToolbarButtons();
+  }
+
+  protected abstract buildToolbarButtons(): ToolbarButton<T>[];
 }

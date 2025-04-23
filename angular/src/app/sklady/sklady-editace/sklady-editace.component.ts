@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import {DialogService} from '../../shared/dialog/dialog.service';
 import {SkladyEditaceDataService} from './data/sklady-editace-data.service';
 import {SeznamFakturDto} from '../../ucetnictvi/seznam-faktur/data/seznam-faktur.interfaces';
+import {SkladyEditaceDto} from './data/sklady-editace.interfaces';
 ;
 
 @Component({
@@ -38,7 +39,7 @@ export class SkladyEditaceComponent implements OnInit {
     };
   }
 
-  public handleDoubleClick(event: SeznamFakturDto) {
+  public handleDoubleClick(event: SkladyEditaceDto) {
     console.log(event)
   }
 

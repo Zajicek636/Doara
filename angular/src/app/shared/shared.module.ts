@@ -1,5 +1,5 @@
 ﻿import { NgModule } from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, NgIf} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {LayoutModule} from "./layout/layout.module";
@@ -43,6 +43,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     MatToolbarModule,
   ],
   exports: [
+    NgIf,
     ReactiveFormsModule,
     LayoutModule,
     DynamicTableComponent,

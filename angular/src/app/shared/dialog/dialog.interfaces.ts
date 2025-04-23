@@ -20,6 +20,7 @@ export interface AlertDialogParams extends DialogParams {
 
 export interface ConfirmDialogParams extends DialogParams {
   cancelButton: string
+  confirmButton: string
 }
 
 export interface FormDialogParams {

@@ -8,7 +8,7 @@ import {
   MatDialogTitle
 } from '@angular/material/dialog';
 import {MatButton} from '@angular/material/button';
-import {NgClass} from '@angular/common';
+import {NgClass, NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -23,8 +23,8 @@ import {NgClass} from '@angular/common';
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
-        <button mat-button [ngClass]="data.type" (click)="cancel()">Cancel</button>
-        <button mat-button [ngClass]="data.type" (click)="close()">Confirm</button>
+        <button *ngIf="data.cancelButton" mat-button [ngClass]="data.type" (click)="onCancel()">{{data.cancelButton}}</button>
+        <button *ngIf="data.confirmButton" mat-button [ngClass]="data.type" (click)="onConfirm()">{{data.confirmButton}}</button>
       </mat-dialog-actions>
     </div>
   `,
@@ -33,7 +33,8 @@ import {NgClass} from '@angular/common';
     MatDialogActions,
     MatButton,
     MatDialogTitle,
-    NgClass
+    NgClass,
+    NgIf
   ],
   styleUrls: ['base-dialog.component.scss']
 })
@@ -43,9 +44,12 @@ export class ConfirmDialogComponent extends DefaultDialogComponent {
     private dialogRef: MatDialogRef<ConfirmDialogComponent>
   ) {
     super();
-    this.close = this.dialogRef.close.bind(this.dialogRef);
   }
-  cancel() {
-    this.dialogRef.close();
+  onCancel(): void {
+    this.dialogRef.close(false);
+  }
+
+  onConfirm(): void {
+    this.dialogRef.close(true);
   }
 }

@@ -15,18 +15,18 @@ export class SeznamFakurDataService extends BaseCrud<string, SeznamFakturDto, Se
 
   public async getPagedRequest(params: any): Promise<SeznamFakturDto[]> {
     const b: any[] = []
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 1000; i++) {
       const a: SeznamFakturDto = {
-        id: `13451${i}`,
-        subjektname: `${i+i}*`,
-        subjektIco: `${i*i}`,
+        id: `FakId${i}`,
+        subjektname: `SubjektNameFaktura${i+i}*`,
+        subjektIco: `SubjektIcoFaktura${i*i}`,
       }
       b.push(a)
     }
     return b
 
-    const res$ = this.client.get<SeznamFakturDto[]>(`${this.settings.baseUrl}`, { params });
-    return await lastValueFrom(res$);
+   /* const res$ = this.client.get<SeznamFakturDto[]>(`${this.settings.baseUrl}`, { params });
+    return await lastValueFrom(res$);*/
   }
 
 }

@@ -1,5 +1,5 @@
 ﻿import {Component, OnInit} from '@angular/core';
-import {BreadcrumbService} from './breadcrumb.service';
+import {BreadcrumbService, IBreadCrumb} from './breadcrumb.service';
 import {RouterLink} from '@angular/router';
 import {NgForOf, NgIf} from '@angular/common';
 
@@ -14,13 +14,11 @@ import {NgForOf, NgIf} from '@angular/common';
   ]
 })
 export class BreadcrumbComponent implements OnInit {
-  breadcrumbs: Array<{ label: string, url: string }> = [];
+  breadcrumbs: IBreadCrumb[] = [];
 
-  constructor(private breadcrumbService: BreadcrumbService) {}
+  constructor(private bcService: BreadcrumbService) {}
 
   ngOnInit(): void {
-    this.breadcrumbService.breadcrumbs$.subscribe(b => {
-      this.breadcrumbs = b;
-    });
+    this.bcService.breadcrumbs$.subscribe(b => this.breadcrumbs = b);
   }
 }
