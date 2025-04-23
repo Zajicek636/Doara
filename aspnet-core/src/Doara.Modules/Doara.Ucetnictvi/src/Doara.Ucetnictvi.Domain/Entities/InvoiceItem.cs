@@ -87,4 +87,9 @@ public class InvoiceItem : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
         GrossAmount = Check.NotNull(grossAmount, nameof(GrossAmount));
         return this;
     }
+    
+    public InvoiceItem GetCopy()
+    {
+        return (InvoiceItem)MemberwiseClone();
+    }
 }

@@ -7,7 +7,7 @@
     "Ucetnictvi:010001": "Dodavatel s id={Id} neexistuje.",
     
     "Ucetnictvi:020000": "Položku se nepodařilo vytvořit.",
-    "Ucetnictvi:020001": "Položku s id={Id} se nepodařilo zpracovat.",
-    "Ucetnictvi:020002": "Položku s id={Id} neexistuje v faktuře s id={InvoiceId}."
+    "Ucetnictvi:020001": "Položku s id={0} se nepodařilo zpracovat.",
+    "Ucetnictvi:020002": "Položku s id={0} neexistuje na faktuře s id={1}."
   }
 }

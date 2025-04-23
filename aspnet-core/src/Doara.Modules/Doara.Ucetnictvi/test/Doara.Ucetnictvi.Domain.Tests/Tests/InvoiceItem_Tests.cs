@@ -2,6 +2,7 @@
 using Doara.Ucetnictvi.Enums;
 using Doara.Ucetnictvi.FakeEntities;
 using Doara.Ucetnictvi.Generators;
+using Shouldly;
 using TestHelper.Utils;
 using Xunit;
 
@@ -152,5 +153,15 @@ public class InvoiceItem_Tests : UcetnictviDomainModule
             .SetVatRate(null);
         _data.VatRate = VatRate.None;
         _data.CheckIfSame(entity);
+    }
+    
+    [Fact]
+    public void Test_InvoiceItem_GetCopy()
+    {
+        var entity = _data.CreateOriginalEntity(false);
+        var copy = entity.GetCopy();
+        
+        entity.ShouldNotBe(copy);
+        entity.ShouldBeEquivalentTo(copy);
     }
 }

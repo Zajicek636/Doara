@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Volo.Abp.Application.Dtos;
 
 namespace Doara.Ucetnictvi.Dto.InvoiceItem;
 
-public class InvoiceItemManageManyInputDto : EntityDto<Guid>
+public class InvoiceItemManageManyInputDto
 {
     [Required]
     public Guid InvoiceId { get; set; }

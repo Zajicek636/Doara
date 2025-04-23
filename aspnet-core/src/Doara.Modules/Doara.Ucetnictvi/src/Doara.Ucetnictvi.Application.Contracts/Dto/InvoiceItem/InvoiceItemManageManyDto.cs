@@ -10,9 +10,6 @@ public class InvoiceItemManageManyDto
     public Guid? Id { get; set; }
     
     [Required]
-    public Guid InvoiceId { get; set; }
-    
-    [Required]
     [StringLength(InvoiceItemConstants.MaxDescriptionLength)]
     public string Description { get; set; } = null!;
     

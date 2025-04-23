@@ -14,14 +14,14 @@ public static partial class Converter
     public const decimal DefaultInvoiceItemVatAmount = 5;
     public const decimal DefaultInvoiceItemGrossAmount = 8;
     
-    public static InvoiceItemManageManyDto CreateInvoiceItemInput(Guid invoiceId, string description = DefaultInvoiceItemDescription, 
+    public static InvoiceItemManageManyDto CreateInvoiceItemManageMany(Guid? id = null, string description = DefaultInvoiceItemDescription, 
         decimal quantity = DefaultInvoiceItemQuantity, decimal unitPrice = DefaultInvoiceItemUnitPrice, 
-        decimal netAmount = DefaultInvoiceItemNetAmount, VatRate vatRate = DefaultInvoiceItemVatRate,
+        decimal netAmount = DefaultInvoiceItemNetAmount, VatRate? vatRate = DefaultInvoiceItemVatRate,
         decimal vatAmount = DefaultInvoiceItemVatAmount, decimal grossAmount = DefaultInvoiceItemGrossAmount)
     {
         return new InvoiceItemManageManyDto
         {
-            InvoiceId = invoiceId,
+            Id = id,
             Description = description,
             Quantity = quantity,
             UnitPrice = unitPrice,
@@ -31,20 +31,4 @@ public static partial class Converter
             GrossAmount = grossAmount
         };
     }
-    
-    /*public static InvoiceItemManageManyInputDto Convert2UpdateInput(InvoiceItemDto input)
-    {
-        return new InvoiceItemManageManyInputDto
-        {
-            Id = input.Id,
-            InvoiceId = input.InvoiceId,
-            Description = input.Description,
-            Quantity = input.Quantity,
-            UnitPrice = input.UnitPrice,
-            NetAmount = input.NetAmount,
-            VatRate = input.VatRate,
-            VatAmount = input.VatAmount,
-            GrossAmount = input.GrossAmount
-        };
-    }*/
 }

@@ -25,7 +25,7 @@ public class InvoiceItemController(IInvoiceItemAppService invoiceItemAppService)
     
     [HttpGet("GetAll")]
     [Authorize(UcetnictviPermissions.ReadInvoiceItemPermission)]
-    public async Task<PagedResultDto<InvoiceItemDto>> GetAllAsync(PagedAndSortedResultRequestDto input)
+    public async Task<PagedResultDto<InvoiceItemDto>> GetAllAsync(InvoiceItemGetAllDto input)
     {
         return await invoiceItemAppService.GetAllAsync(input);
     }

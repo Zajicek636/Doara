@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Doara.Ucetnictvi.Dto.InvoiceItem;
 using Doara.Ucetnictvi.Entities;
@@ -27,10 +28,13 @@ public class InvoiceItemAppService(IInvoiceItemRepository invoiceItemRepository,
     }
 
     [Authorize(UcetnictviPermissions.ReadInvoiceItemPermission)]
-    public async Task<PagedResultDto<InvoiceItemDto>> GetAllAsync(PagedAndSortedResultRequestDto input)
+    public async Task<PagedResultDto<InvoiceItemDto>> GetAllAsync(InvoiceItemGetAllDto input)
     {
-        var res = await invoiceItemRepository.GetAllAsync(input.SkipCount, input.MaxResultCount, input.Sorting ?? nameof(InvoiceItem.Id));
-        var totalCount = await invoiceItemRepository.GetCountAsync();
+        Expression<Func<InvoiceItem, bool>>? filter =
+            input.InvoiceId != null ? i => i.InvoiceId == input.InvoiceId : null;
+        var res = await invoiceItemRepository.GetAllAsync(input.SkipCount, input.MaxResultCount, input.Sorting ?? nameof(InvoiceItem.Id),
+            filter);
+        var totalCount = await invoiceItemRepository.GetCountAsync(filter);
         return new PagedResultDto<InvoiceItemDto>
         {
             Items = ObjectMapper.Map<List<InvoiceItem>, List<InvoiceItemDto>>(res),
@@ -48,18 +52,16 @@ public class InvoiceItemAppService(IInvoiceItemRepository invoiceItemRepository,
         {
             return ObjectMapper.Map<InvoiceItemManageReport, InvoiceItemManageReportDto>(report);
         }
-        var invoice = await invoiceRepository.GetAsync(input.Id);
-        var (itemsForCreate, itemsForUpdate) = ProcessCreateAndUpdate(input.Items, invoice, report);
+        var invoice = await invoiceRepository.GetAsync(input.InvoiceId);
+        var (itemsForCreate, itemsForUpdate) = ProcessCreateAndUpdate(
+            input.Items.Where(x => x.Id == null || !input.ItemsForDelete.Contains((Guid)x.Id)), invoice, report);
 
         var itemsForDelete = new List<InvoiceItem>();
         if (input.DeleteMissingItems && itemsForUpdate.Count != invoice.Items.Count)
         {
-            itemsForDelete = invoice.Items.Where(del => itemsForUpdate.Any(upd => upd.Id == del.Id)).ToList();
+            itemsForDelete = invoice.Items.Where(del => itemsForUpdate.Count == 0 || itemsForUpdate.Any(upd => upd.Id != del.Id)).ToList();
         }
-        else if (!input.DeleteMissingItems && input.ItemsForDelete.Count != 0)
-        {
-            itemsForDelete = ProcessDelete(input.ItemsForDelete, invoice, report);
-        }
+        itemsForDelete.AddRange(ProcessDelete(input.ItemsForDelete, invoice, report));
 
         if (itemsForCreate.Count > 0)
         {
@@ -76,15 +78,15 @@ public class InvoiceItemAppService(IInvoiceItemRepository invoiceItemRepository,
         return ObjectMapper.Map<InvoiceItemManageReport, InvoiceItemManageReportDto>(report);
     }
 
-    private (List<InvoiceItem>, List<InvoiceItem>) ProcessCreateAndUpdate(List<InvoiceItemManageManyDto> input, Invoice invoice, InvoiceItemManageReport report)
+    private (List<InvoiceItem>, List<InvoiceItem>) ProcessCreateAndUpdate(IEnumerable<InvoiceItemManageManyDto> input, Invoice invoice, InvoiceItemManageReport report)
     {
         var itemsForCreate = new List<InvoiceItem>();
         var itemsForUpdate = new List<InvoiceItem>();
         foreach (var item in input)
         {
-            if (item.Id == null || item.Id == Guid.Empty)
+            if (item.Id == null)
             {
-                var res = ProcessCreate(item, report);
+                var res = ProcessCreate(item, invoice, report);
                 if (res != null)
                 {
                     itemsForCreate.Add(res);
@@ -102,27 +104,15 @@ public class InvoiceItemAppService(IInvoiceItemRepository invoiceItemRepository,
         return (itemsForCreate, itemsForUpdate);
     }
 
-    private InvoiceItem? ProcessCreate(InvoiceItemManageManyDto input, InvoiceItemManageReport report)
+    private InvoiceItem? ProcessCreate(InvoiceItemManageManyDto input, Invoice invoice, InvoiceItemManageReport report)
     {
         var guid = GuidGenerator.Create();
         try
         {
-            var invoiceItem = new InvoiceItem(guid, input.InvoiceId, input.Description,
+            var invoiceItem = new InvoiceItem(guid, invoice.Id, input.Description,
                 input.Quantity, input.UnitPrice, input.NetAmount, input.VatRate,
                 input.VatAmount, input.GrossAmount);
             return invoiceItem;
-        }
-        catch (BusinessException e)
-        {
-            report.Errors.Add(localizer[e.Code!, e.Data]);
-            logger.LogException(e);
-            return null;
-        }
-        catch (ArgumentException e)
-        {
-            report.Errors.Add(localizer[UcetnictviErrorCodes.InvoiceItemCreateGeneralError]);
-            logger.LogException(e);
-            return null;
         }
         catch (Exception e)
         {
@@ -137,40 +127,29 @@ public class InvoiceItemAppService(IInvoiceItemRepository invoiceItemRepository,
         var invoiceItem = invoice.Items.FirstOrDefault(x => x.Id == input.Id);
         if (invoiceItem == null)
         {
-            report.Errors.Add(localizer[UcetnictviErrorCodes.InvoiceItemNotExistInInvoice, new Dictionary<string, string>
-            {
-                { "InvoiceId", input.InvoiceId.ToString() },
-                { "Id", input.Id.ToString()! }
-            }]);
+            report.Errors.Add(localizer[UcetnictviErrorCodes.InvoiceItemNotExistInInvoice, input.Id!, invoice.Id]);
             return null;
         }
-
+        
+        var copy = invoiceItem.GetCopy();
         try
         {
-            invoiceItem.SetInvoice(input.InvoiceId).SetDescription(input.Description)
+            copy.SetDescription(input.Description)
                 .SetQuantity(input.Quantity).SetUnitPrice(input.UnitPrice)
                 .SetNetAmount(input.NetAmount).SetVatRate(input.VatRate)
                 .SetVatAmount(input.VatAmount).SetGrossAmount(input.GrossAmount);
-            return invoiceItem;
-        }
-        catch (BusinessException e)
-        {
-            report.Errors.Add(localizer[e.Code!, e.Data]);
-            logger.LogException(e);
-            return null;
-        }
-        catch (ArgumentException e)
-        {
-            report.Errors.Add(localizer[UcetnictviErrorCodes.InvoiceItemUpdateGeneralError]);
-            logger.LogException(e);
-            return null;
         }
         catch (Exception e)
         {
-            report.Errors.Add(localizer[UcetnictviErrorCodes.InvoiceItemUpdateGeneralError]);
+            report.Errors.Add(localizer[UcetnictviErrorCodes.InvoiceItemUpdateGeneralError, input.Id!]);
             logger.LogException(e);
             return null;
         }
+
+        return invoiceItem.SetDescription(input.Description)
+            .SetQuantity(input.Quantity).SetUnitPrice(input.UnitPrice)
+            .SetNetAmount(input.NetAmount).SetVatRate(input.VatRate)
+            .SetVatAmount(input.VatAmount).SetGrossAmount(input.GrossAmount);
     }
 
     private List<InvoiceItem> ProcessDelete(List<Guid> ids, Invoice invoice, InvoiceItemManageReport report)
@@ -181,11 +160,7 @@ public class InvoiceItemAppService(IInvoiceItemRepository invoiceItemRepository,
             var invoiceItem = invoice.Items.FirstOrDefault(x => x.Id == id);
             if (invoiceItem == null)
             {
-                report.Errors.Add(localizer[UcetnictviErrorCodes.InvoiceItemNotExistInInvoice, new Dictionary<string, string>
-                {
-                    { "InvoiceId", invoice.ToString() },
-                    { "Id", id.ToString() }
-                }]);
+                report.Errors.Add(localizer[UcetnictviErrorCodes.InvoiceItemNotExistInInvoice, id, invoice.Id]);
             }
             else
             {

@@ -8,6 +8,6 @@ namespace Doara.Ucetnictvi.IAppServices;
 public interface IInvoiceItemAppService
 {
     Task<InvoiceItemDto> GetAsync(Guid id);
-    Task<PagedResultDto<InvoiceItemDto>> GetAllAsync(PagedAndSortedResultRequestDto input);
+    Task<PagedResultDto<InvoiceItemDto>> GetAllAsync(InvoiceItemGetAllDto input);
     Task<InvoiceItemManageReportDto> ManageManyAsync(InvoiceItemManageManyInputDto input);
 }
