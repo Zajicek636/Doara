@@ -5,7 +5,15 @@
   color: $darkOrangeAlert;
 }
 .dialog-header {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.mat-card {
+  margin-bottom:0.5rem;
 }
 
 .alert-danger {

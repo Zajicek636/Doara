@@ -6,7 +6,7 @@ import {BaseFieldComponent} from '../base-field.component';
   selector: 'app-text-field',
   standalone: false,
   templateUrl: './text-field.component.html',
-  styleUrl: './text-field.component.scss',
+  styleUrls: ['./text-field.component.scss', '../any-form.component.scss'],
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }]
 })
 export class TextFieldComponent extends BaseFieldComponent {

@@ -1,12 +1,12 @@
 ﻿import {Injectable} from '@angular/core';
 import {CrudSettings, QueryParams} from '../../../shared/crud/base-crud-service';
-import {SeznamFakturDto} from '../../seznam-faktur/data/seznam-faktur.interfaces';
-import {SubjektyDto} from './subjekty.interfaces';
+
+import {SubjektDetailDto} from './subjekty.interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SubjektyCrudSettings implements CrudSettings<string, SubjektyDto> {
+export class SubjektyCrudSettings implements CrudSettings<string, SubjektDetailDto> {
   baseUrl: string = 'https://example.com/api/Subjekty/Subjekty';
   postUrl?: string;
   queryParam?: string;

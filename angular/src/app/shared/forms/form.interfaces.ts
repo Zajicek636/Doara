@@ -2,6 +2,7 @@
   TEXT = 'string',
   NUMBER = 'number',
   BOOLEAN = 'boolean',
+  RADIO = 'radiobutton',
   AUTOCOMPLETE = 'autocomplete',
   LOOKUP = 'lookup',
   PASSWORD = 'password',
@@ -31,7 +32,7 @@ export interface FormGroupedSelect {
   val: FormSelect[]
 }
 
-export interface FormField {
+export interface  FormField {
   formControlName: string;
   multipleSelect?: boolean;
   options?: FormSelect[] | FormGroupedSelect[];
@@ -39,4 +40,8 @@ export interface FormField {
   label: string;
   type: FormFieldTypes;
   validator?: ValidatorConfig[];
+
+  showInTable?: boolean;
+  //helpingy pro default values z dto pro table a mapovani
+  defaultValueGetter: (dto: any) => any;
 }

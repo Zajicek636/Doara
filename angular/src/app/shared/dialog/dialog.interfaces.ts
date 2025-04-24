@@ -24,5 +24,6 @@ export interface ConfirmDialogParams extends DialogParams {
 }
 
 export interface FormDialogParams {
+  title: string,
   fields: FormField[]
 }

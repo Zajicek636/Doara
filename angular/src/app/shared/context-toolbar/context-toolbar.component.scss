@@ -1,11 +1,9 @@
 .context-toolbar {
   display: flex;
   gap: 0.75rem;
-  /* už nepřepisujeme background-color, použije se accent z vašeho theme */
   padding: 0.5rem 1rem;
 }
 
-/* pokud chcete doladit vnitřní padding / margin ikon a textu */
 .icon {
   margin-right: 0.25rem;
   font-size: 1.2rem;

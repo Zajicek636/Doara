@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SharedModule} from '../../shared/shared.module';
-import {TableSettings} from '../../shared/table/table/table.settings';
+import {ColumnSetting, TableSettings} from '../../shared/table/table/table.settings';
 import {BreadcrumbService} from '../../shared/breadcrumb/breadcrumb.service';
 import {Router} from '@angular/router';
 import {DialogService} from '../../shared/dialog/dialog.service';
@@ -28,15 +28,19 @@ export class SkladyEditaceComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.tableSettings = {
+    const columnSettings: ColumnSetting<SkladyEditaceDto>[] = [
+      { key: 'id',header: 'Jméno', valueGetter: row => row.id },
+    ]
+
+  /*  this.tableSettings = {
       cacheEntityType: "entity",
-      displayedColumns: ['id', "name","progress"], // přizpůsobte dle DTO
+      displayedColumns: columnSettings,
       clickable: true,
       expandable: false,
       pageSizeOptions: [5, 10, 25, 100],
       defaultPageSize: 10,
       extraQueryParams: { active: true }
-    };
+    };*/
   }
 
   public handleDoubleClick(event: SkladyEditaceDto) {

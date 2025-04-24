@@ -6,7 +6,7 @@ import {BaseFieldComponent} from '../base-field.component';
   selector: 'app-number-field',
   standalone:false,
   templateUrl: './number-field.component.html',
-  styleUrl: './number-field.component.scss',
+  styleUrls: ['./number-field.component.scss','../any-form.component.scss'],
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }]
 })
 export class NumberFieldComponent extends BaseFieldComponent{

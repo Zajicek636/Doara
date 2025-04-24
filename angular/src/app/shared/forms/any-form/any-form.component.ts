@@ -13,7 +13,7 @@ export interface FormComponentResult<T> {
   valid: boolean;
   data: T;
   modified: boolean;
-  form: FormGroup;
+  form: FormGroup
 }
 
 @Component({

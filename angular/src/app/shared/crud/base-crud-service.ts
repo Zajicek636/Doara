@@ -41,7 +41,7 @@ export class BaseCrud<TId, TDto, TCreateDto, TEditDto> {
     return await lastValueFrom(res$);
   }
 
-  public async post<T>(id: TId, body: TDto): Promise<T> {
+  public async post<T>(id: TId, body: TCreateDto): Promise<T> {
     const url = this.settings.postUrl ?? this.settings.baseUrl;
     const res$ = this.client.post<T>(`${url}${this.settings.queryParam ? '?' + this.settings.queryParam : ''}${id ? '=' + id : ''}`, body);
     return await lastValueFrom(res$);

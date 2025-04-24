@@ -11,7 +11,7 @@ export interface RouteData {
 }
 @Directive()
 export abstract class BaseContentComponent<T, DataService> implements OnInit {
-  tableSettings: TableSettings | undefined;
+  tableSettings: TableSettings| undefined;
   basePath: string | undefined;
   breadCrumbTitle: string | undefined;
   protected _chosenElement?: T;

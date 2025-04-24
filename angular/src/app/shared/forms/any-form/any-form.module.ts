@@ -16,6 +16,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {AutocompleteFieldComponent} from './autocomplete-field/autocomplete-field.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {RadiobuttonFieldComponent} from './radiobutton-field/radiobutton-field.component';
+import {MatRadioModule} from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     LookupFieldComponent,
     TextFieldComponent,
     NumberFieldComponent,
-    AutocompleteFieldComponent
+    AutocompleteFieldComponent,
+    RadiobuttonFieldComponent
   ],
   imports: [
     CommonModule,
@@ -39,7 +42,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatIconModule,
     MatButtonModule,
     MatSelectModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatRadioModule
   ],
   exports: [
     ReactiveFormsModule,

@@ -8,7 +8,7 @@ import {Observable, of, startWith} from 'rxjs';
   selector: 'app-autocomplete-field',
   standalone: false,
   templateUrl: './autocomplete-field.component.html',
-  styleUrl: './autocomplete-field.component.scss',
+  styleUrls: ['./autocomplete-field.component.scss','../any-form.component.scss'],
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }]
 })
 export class AutocompleteFieldComponent extends BaseFieldComponent implements OnInit {

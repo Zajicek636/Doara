@@ -1,0 +1,11 @@
+<mat-radio-group [formControlName]="field.formControlName" class="radio-group">
+  <mat-label>{{ field.label }}</mat-label>
+  <mat-radio-button
+    *ngFor="let opt of options"
+    [value]="opt.value"
+    class="radio-button"
+  >
+    {{ opt.displayValue }}
+  </mat-radio-button>
+</mat-radio-group>
+<mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>

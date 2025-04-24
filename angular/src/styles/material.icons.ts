@@ -18,4 +18,7 @@
   GROUPS_PEOPLE = "groups",
   EDIT_PERSON = "manage_accounts",
   ADD_PERSON = "person_add",
+  REMOVE_PERSON = "person_remove",
+  PERSON = "person",
+  PERSON_LOCATION = "person_pin_circle",
 }

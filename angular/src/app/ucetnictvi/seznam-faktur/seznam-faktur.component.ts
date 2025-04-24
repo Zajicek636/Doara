@@ -4,12 +4,13 @@ import {BreadcrumbService, IBreadCrumb} from '../../shared/breadcrumb/breadcrumb
 import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {DialogService} from '../../shared/dialog/dialog.service';
 import {BaseContentComponent} from '../../shared/layout/base-component';
-import {SeznamFakturDto} from './data/seznam-faktur.interfaces';
+import {SEZNAM_FAKTUR_FIELDS, SeznamFakturDto} from './data/seznam-faktur.interfaces';
 import {SeznamFakurDataService} from './data/seznam-fakur-data.service';
 import {DialogType} from '../../shared/dialog/dialog.interfaces';
 import {DynamicTableComponent} from '../../shared/table/table/table.component';
 import {BaseMaterialIcons} from '../../../styles/material.icons';
 import {ToolbarButton} from '../../shared/context-toolbar/context-toolbar.interfaces';
+import {ColumnSetting} from '../../shared/table/table/table.settings';
 
 @Component({
   selector: 'app-seznam-faktur',
@@ -35,7 +36,7 @@ export class SeznamFakturComponent extends BaseContentComponent<SeznamFakturDto,
     super.ngOnInit();
     this.tableSettings = {
       cacheEntityType: "entity",
-      displayedColumns: ['id', "subjektname","subjektIco"],
+      formFields: SEZNAM_FAKTUR_FIELDS,
       clickable: true,
       expandable: false,
       pageSizeOptions: [10, 30, 50, 100],

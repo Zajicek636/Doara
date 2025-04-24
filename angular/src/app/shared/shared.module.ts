@@ -17,6 +17,7 @@ import {DynamicTableComponent} from './table/table/table.component';
 import {AnyFormModule} from './forms/any-form/any-form.module';
 import {ContextToolbarComponent} from './context-toolbar/context-toolbar.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatDivider} from '@angular/material/divider';
 
 @NgModule({
     declarations: [
@@ -41,6 +42,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     MatSortModule,
     MatPaginatorModule,
     MatToolbarModule,
+    MatDivider,
   ],
   exports: [
     NgIf,

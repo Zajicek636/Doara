@@ -1,10 +1,11 @@
 <ng-container [formGroup]="form" *ngFor="let field of fields">
   <ng-container [ngSwitch]="field.type">
-    <app-text-field *ngSwitchCase="formFieldTypes.TEXT" [field]="field" [form]="form"></app-text-field>
-    <app-text-field *ngSwitchCase="formFieldTypes.PASSWORD" [field]="field" [form]="form"></app-text-field>
-    <app-number-field *ngSwitchCase="formFieldTypes.NUMBER" [field]="field" [form]="form"></app-number-field>
-    <app-lookup-field *ngSwitchCase="formFieldTypes.LOOKUP" [field]="field" [form]="form"></app-lookup-field>
-    <app-textarea-field *ngSwitchCase="formFieldTypes.TEXTAREA" [field]="field" [form]="form"></app-textarea-field>
-    <app-autocomplete-field *ngSwitchCase="formFieldTypes.AUTOCOMPLETE" [field]="field" [form]="form"></app-autocomplete-field>
+    <app-text-field style="width: 100%" *ngSwitchCase="formFieldTypes.TEXT" [field]="field" [form]="form"></app-text-field>
+    <app-text-field style="width: 100%" *ngSwitchCase="formFieldTypes.PASSWORD" [field]="field" [form]="form"></app-text-field>
+    <app-number-field style="width: 100%" *ngSwitchCase="formFieldTypes.NUMBER" [field]="field" [form]="form"></app-number-field>
+    <app-lookup-field style="width: 100%" *ngSwitchCase="formFieldTypes.LOOKUP" [field]="field" [form]="form"></app-lookup-field>
+    <app-textarea-field style="width: 100%" *ngSwitchCase="formFieldTypes.TEXTAREA" [field]="field" [form]="form"></app-textarea-field>
+    <app-autocomplete-field style="width: 100%" *ngSwitchCase="formFieldTypes.AUTOCOMPLETE" [field]="field" [form]="form"></app-autocomplete-field>
+    <app-radiobutton-field style="width: 100%" *ngSwitchCase="formFieldTypes.RADIO" [field]="field" [form]="form"></app-radiobutton-field>
   </ng-container>
 </ng-container>

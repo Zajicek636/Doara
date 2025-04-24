@@ -43,6 +43,7 @@ export class DialogService {
 
   async form<T>(params: FormDialogParams): Promise<T | undefined> {
     return this.open(FormDialogComponent, {
+      title: params.title,
       fields: params.fields,
       type: DialogType.ALERT,
     });

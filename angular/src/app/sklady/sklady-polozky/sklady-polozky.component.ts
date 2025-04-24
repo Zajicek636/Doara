@@ -29,6 +29,7 @@ export class SkladyPolozkyComponent implements OnInit {
 
     this.testingFields  = [
       {
+        defaultValueGetter: () => {},
         label: "Test",
         defaultValue: "TEST",
         formControlName: "Test",
@@ -43,6 +44,7 @@ export class SkladyPolozkyComponent implements OnInit {
           params: 3
         }]
       }, {
+        defaultValueGetter: () => {},
         label: "Password",
         defaultValue: "password",
         formControlName: "Cislo",
@@ -61,6 +63,7 @@ export class SkladyPolozkyComponent implements OnInit {
           }]
       },
       {
+        defaultValueGetter: () => {},
         label: "Select me",
         defaultValue: "Second",
         formControlName: "Select",
@@ -72,6 +75,7 @@ export class SkladyPolozkyComponent implements OnInit {
         options: [{displayValue: "First", value: "TEST"}, {displayValue: "Second", value: "Second"}]
       },
       {
+        defaultValueGetter: () => {},
         label: "Select me 2",
         formControlName: "Select2",
         defaultValue: "First",
@@ -79,6 +83,7 @@ export class SkladyPolozkyComponent implements OnInit {
         options: [{displayValue: "First", value: "First"}, {displayValue: "Second", value: "Second"}]
       },
       {
+        defaultValueGetter: () => {},
         label: "Multiple select",
         formControlName: "Select3",
         multipleSelect: true,
@@ -90,6 +95,7 @@ export class SkladyPolozkyComponent implements OnInit {
         options: [{displayValue: "First", value: "First"}, {displayValue: "Second", value: "Second"}]
       },
       {
+        defaultValueGetter: () => {},
         label: "Grouped select",
         formControlName: "Select4",
         type: FormFieldTypes.LOOKUP,
@@ -103,6 +109,7 @@ export class SkladyPolozkyComponent implements OnInit {
         ]
       },
       {
+        defaultValueGetter: () => {},
         label: "Grouped multiple select",
         formControlName: "Select5",
         multipleSelect: true,
@@ -117,6 +124,7 @@ export class SkladyPolozkyComponent implements OnInit {
         ]
       },
       {
+        defaultValueGetter: () => {},
         label: "tEXTAREA",
         formControlName: "tEXTAREA",
         type: FormFieldTypes.TEXTAREA,
@@ -126,6 +134,7 @@ export class SkladyPolozkyComponent implements OnInit {
           },],
       },
       {
+        defaultValueGetter: () => {},
         label: "Autocomplete classic",
         formControlName: "autocomplete",
         defaultValue: ["Second"],
@@ -138,6 +147,7 @@ export class SkladyPolozkyComponent implements OnInit {
         options: [{displayValue: "First", value: "First"}, {displayValue: "Second", value: "Second"}]
       },
       {
+        defaultValueGetter: () => {},
         label: "Autocomplete grouped",
         formControlName: "autocomplete2",
         type: FormFieldTypes.AUTOCOMPLETE,
@@ -173,7 +183,7 @@ export class SkladyPolozkyComponent implements OnInit {
 
   async route() {
 
-    const tes = await this.dialogService.form<Res>({fields: this.testingFields})
+    const tes = await this.dialogService.form<Res>({fields: this.testingFields, title: "Test"})
     console.log(tes)
 
     /*const form: FormGroup = this.formService.createForm([{ name: 'firstName', label: 'First Name', type: 'text' },

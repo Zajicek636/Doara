@@ -1,27 +1,37 @@
 ﻿import {Injectable} from '@angular/core';
 import {BaseCrud} from '../../../shared/crud/base-crud-service';
-import {SeznamFakturDto} from '../../seznam-faktur/data/seznam-faktur.interfaces';
 import {HttpClient} from '@angular/common/http';
-import {SkladyPolozkyCrudSettings} from '../../../sklady/sklady-polozky/data/sklady-polozky-crud.settings';
-import {SubjektyDto} from './subjekty.interfaces';
+import {SubjektDetailDto} from './subjekty.interfaces';
 import {SubjektyCrudSettings} from './subjekty-crud.settings';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SubjektyDataService extends BaseCrud<string, SubjektyDto, SubjektyDto, SubjektyDto> {
+export class SubjektyDataService extends BaseCrud<string, SubjektDetailDto, SubjektDetailDto, SubjektDetailDto> {
   constructor(client: HttpClient, settings: SubjektyCrudSettings) {
     super(client, settings);
   }
 
-  public async getPagedRequest(params: any): Promise<SubjektyDto[]> {
+  public async getPagedRequest(params: any): Promise<SubjektDetailDto[]> {
     const b: any[] = []
-    for (let i = 0; i < 100; i++) {
-      const a: SubjektyDto = {
+    for (let i = 0; i < 1; i++) {
+      const a: SubjektDetailDto = {
         id: `SubId${i}`,
-        jmeno: `JmenoSub${i+i}*`,
-        prijmeni: `PrijmeniSub${i*i}`,
-        ico: `4${i + 10}6${i * 3}5${i * 3}6${i*2}`
+        Name: `JmenoSub${i+i}*`,
+        Ic: `1${i + 13}7${i * 6}1${i * 3}4${i*3}`,
+        Dic: `4${i + 10}6${i * 3}5${i * 3}6${i*2}`,
+        IsVatPayer: false,
+        AddressDetailDto: {
+          id: `AdderssId${i}`,
+          Street: `Street${i}`,
+          City: `City${i}`,
+          PostalCode: `${i+1*123}`,
+          CountryDto: {
+            id: `CountryId${i}`,
+            Name:`CZ`,
+            Code:`CZ`,
+          }
+        }
       }
       b.push(a)
     }
