@@ -4,11 +4,10 @@ import {BreadcrumbService, IBreadCrumb} from '../../shared/breadcrumb/breadcrumb
 import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {DialogService} from '../../shared/dialog/dialog.service';
 import {BaseContentComponent} from '../../shared/layout/base-component';
-import {SEZNAM_FAKTUR_FIELDS, SeznamFakturDto} from './data/seznam-faktur.interfaces';
+import {SeznamFakturDto} from './data/seznam-faktur.interfaces';
 import {SeznamFakurDataService} from './data/seznam-fakur-data.service';
 import {DialogType} from '../../shared/dialog/dialog.interfaces';
 import {DynamicTableComponent} from '../../shared/table/table/table.component';
-import {BaseMaterialIcons} from '../../../styles/material.icons';
 import {ToolbarButton} from '../../shared/context-toolbar/context-toolbar.interfaces';
 import {ColumnSetting} from '../../shared/table/table/table.settings';
 
@@ -34,9 +33,15 @@ export class SeznamFakturComponent extends BaseContentComponent<SeznamFakturDto,
 
   override ngOnInit() {
     super.ngOnInit();
+
+    const columnSettings: ColumnSetting<SeznamFakturDto>[] = [
+      { key: 'id', header: 'ID', valueGetter: r => r.id  },
+      { key: 'subjektname', header: 'Název subjektu', valueGetter: r => r.subjektname },
+    ];
+
     this.tableSettings = {
       cacheEntityType: "entity",
-      formFields: SEZNAM_FAKTUR_FIELDS,
+      columns: columnSettings,
       clickable: true,
       expandable: false,
       pageSizeOptions: [10, 30, 50, 100],

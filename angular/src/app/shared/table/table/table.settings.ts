@@ -1,7 +1,8 @@
 ﻿import {FormField} from '../../forms/form.interfaces';
 
-export interface TableSettings {
-  formFields: FormField[];
+export interface TableSettings<T> {
+  formFields?: FormField[];
+  columns?: ColumnSetting<T>[];
   pageSizeOptions?: number[];
   clickable: boolean;
   expandable: boolean;

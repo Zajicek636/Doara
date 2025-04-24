@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
-import {MatSort, Sort} from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
 import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
 import {ColumnSetting, TableSettings} from './table.settings';
 import {CacheService} from '../../cache/cache.service';
@@ -16,7 +16,7 @@ import {fieldsToColumns} from '../../forms/form-field.utils';
   styleUrls: ['./table.component.scss']
 })
 export class DynamicTableComponent<T> implements OnInit, AfterViewInit {
-  @Input() settings!: TableSettings;
+  @Input() settings!: TableSettings<T>;
   @Input() dataService!: { getPagedRequest: (params: any) => Promise<T[]> };
   @Input() data?: T[];
 
@@ -40,10 +40,19 @@ export class DynamicTableComponent<T> implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    const visibleFields = this.settings.formFields.filter(f => f.showInTable === true);
-    this.displayedColumns = fieldsToColumns<T>(visibleFields);this.columnKeys = this.displayedColumns.map(c => c.key);
+    let columns: ColumnSetting<T>[] = [];
+    if (this.settings.columns) {
+      columns = this.settings.columns;
+    } else if (this.settings.formFields) {
+      const visibleFields = this.settings.formFields.filter(f => f.showInTable === true);
+      columns = fieldsToColumns<T>(visibleFields);
+    } else {
+      console.warn('DynamicTableComponent: Nebyly poskytnuty žádné sloupce (ani columns, ani formFields).');
+    }
 
-    // Filter predicate uses only valueGetter
+    this.displayedColumns = columns;
+    this.columnKeys = columns.map(c => c.key);
+
     this.dataSource.filterPredicate = (data, filter) => {
       const dataStr = this.displayedColumns
         .map(col => col.valueGetter(data))

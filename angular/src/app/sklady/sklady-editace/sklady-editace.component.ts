@@ -16,7 +16,7 @@ import {SkladyEditaceDto} from './data/sklady-editace.interfaces';
   styleUrl: './sklady-editace.component.scss'
 })
 export class SkladyEditaceComponent implements OnInit {
-  tableSettings!: TableSettings;
+  tableSettings!: TableSettings<SkladyEditaceDto>;
 
   constructor(
     protected dataService: SkladyEditaceDataService,
