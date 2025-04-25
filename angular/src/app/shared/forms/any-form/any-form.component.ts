@@ -56,7 +56,18 @@ export class AnyFormComponent<T> implements OnInit {
       }
     })
     this.modified = false;
-    //this.form.valueChanges.subscribe( x=> this.triggerOnChange(x));
+    this.triggerInitialChange();
+  }
+
+  private triggerInitialChange() {
+    const FormVal = Object.assign({}, this.entity, this.form.value);
+
+    this.formChanged.emit({
+      valid: this.form.valid,
+      data: FormVal,
+      modified: false,
+      form: this.form
+    });
   }
 
   triggerOnChange(control: any) {

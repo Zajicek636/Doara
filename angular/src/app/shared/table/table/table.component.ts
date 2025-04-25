@@ -44,7 +44,7 @@ export class DynamicTableComponent<T> implements OnInit, AfterViewInit {
     if (this.settings.columns) {
       columns = this.settings.columns;
     } else if (this.settings.formFields) {
-      const visibleFields = this.settings.formFields.filter(f => f.showInTable === true);
+      const visibleFields = this.settings.formFields.filter(f => f.visible === true);
       columns = fieldsToColumns<T>(visibleFields);
     } else {
       console.warn('DynamicTableComponent: Nebyly poskytnuty žádné sloupce (ani columns, ani formFields).');

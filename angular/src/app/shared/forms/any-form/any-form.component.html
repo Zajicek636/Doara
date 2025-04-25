@@ -1,5 +1,5 @@
 <ng-container [formGroup]="form" *ngFor="let field of fields">
-  <ng-container [ngSwitch]="field.type">
+  <ng-container *ngIf="field.visible" [ngSwitch]="field.type">
     <app-text-field style="width: 100%" *ngSwitchCase="formFieldTypes.TEXT" [field]="field" [form]="form"></app-text-field>
     <app-text-field style="width: 100%" *ngSwitchCase="formFieldTypes.PASSWORD" [field]="field" [form]="form"></app-text-field>
     <app-number-field style="width: 100%" *ngSwitchCase="formFieldTypes.NUMBER" [field]="field" [form]="form"></app-number-field>

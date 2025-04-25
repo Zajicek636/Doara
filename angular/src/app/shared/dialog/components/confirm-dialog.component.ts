@@ -9,17 +9,19 @@ import {
 } from '@angular/material/dialog';
 import {MatButton} from '@angular/material/button';
 import {NgClass, NgIf} from '@angular/common';
+import {MatIcon} from '@angular/material/icon';
 
 @Component({
   selector: 'app-confirm-dialog',
   template: `
     <div class="dialog-container">
       <div mat-dialog-title class="dialog-header shadow-sm" [ngClass]="data.type">
+        <mat-icon *ngIf="data.icon">{{ data.icon }}</mat-icon>
         <span>{{ data.title }}</span>
       </div>
 
       <mat-dialog-content>
-        <p class="message">{{ data.message }}</p>
+        <p class="message" [innerHTML]="data.message"></p>
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
@@ -34,7 +36,8 @@ import {NgClass, NgIf} from '@angular/common';
     MatButton,
     MatDialogTitle,
     NgClass,
-    NgIf
+    NgIf,
+    MatIcon,
   ],
   styleUrls: ['base-dialog.component.scss']
 })

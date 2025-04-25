@@ -60,7 +60,7 @@ import {BaseMaterialIcons} from '../../../styles/material.icons';
 
       <mat-dialog-actions align="end">
         <button mat-button (click)="cancel()">Zrušit</button>
-        <button mat-button [disabled]="this.isSubmitDisabled" (click)="submit()">Přidat</button>
+        <button mat-button [disabled]="this.isSubmitDisabled" (click)="submit()">Potvrdit</button>
       </mat-dialog-actions>
     </div>
   `,
@@ -77,7 +77,7 @@ import {BaseMaterialIcons} from '../../../styles/material.icons';
     MatCardModule,
   ]
 })
-export class SubjektyNovyModalComponent<T> extends DefaultDialogComponent {
+export class SubjektyModalComponent<T> extends DefaultDialogComponent {
   formBase: FormGroup = new FormGroup({});
   formAdditional: FormGroup = new FormGroup({});
 
@@ -89,12 +89,13 @@ export class SubjektyNovyModalComponent<T> extends DefaultDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public override data: any,
-    private dialogRef: MatDialogRef<SubjektyNovyModalComponent<T>>,
+    private dialogRef: MatDialogRef<SubjektyModalComponent<T>>,
   ) {
     super();
 
     this.subjektBaseFields = data.subjektBaseFields;
     this.additionalSubjektFields = data.additionalSubjektFields;
+    this.updateSubmitState()
   }
 
   public isSubmitDisabled = true;
@@ -102,7 +103,7 @@ export class SubjektyNovyModalComponent<T> extends DefaultDialogComponent {
   submit(): void {
     if (!this.baseResult || !this.addressResult) return;
     const result: SubjektyDialogResult = {
-      subjektBaseResult:    this.baseResult,
+      subjektBaseResult: this.baseResult,
       subjektAddressResult: this.addressResult
     };
     this.dialogRef.close(result);
@@ -120,7 +121,8 @@ export class SubjektyNovyModalComponent<T> extends DefaultDialogComponent {
     this.updateSubmitState();
   }
 
-  cancel() {this.dialogRef.close();
+  cancel() {
+    this.dialogRef.close();
   }
 
   private updateSubmitState() {

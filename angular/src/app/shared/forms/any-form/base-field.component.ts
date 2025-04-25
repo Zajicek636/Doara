@@ -21,7 +21,7 @@ export abstract class BaseFieldComponent {
       max: (error: any) => `Maximum je ${error.max}`,
       maxlength: (error: any) => `Překročeno maximum znaků: ${error.actualLength} / ${error.requiredLength}`,
       email: 'Email není ve správném formátu',
-      pattern: 'Položka není ve správném formátu'
+      pattern: (error: any) => `Položka není ve správném formátu`
     };
 
     const messages = Object.keys(errors).map(key => {

@@ -18,8 +18,8 @@ export class SubjektyDataService extends BaseCrud<string, SubjektDetailDto, Subj
       const a: SubjektDetailDto = {
         id: `SubId${i}`,
         Name: `JmenoSub${i+i}*`,
-        Ic: `1${i + 13}7${i * 6}1${i * 3}4${i*3}`,
-        Dic: `4${i + 10}6${i * 3}5${i * 3}6${i*2}`,
+        Ic: `11370105`,
+        Dic: `CZ410605060`,
         IsVatPayer: false,
         AddressDetailDto: {
           id: `AdderssId${i}`,

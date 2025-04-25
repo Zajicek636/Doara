@@ -12,7 +12,7 @@ export const SEZNAM_FAKTUR_FIELDS: Omit<FormField, 'defaultValue'>[] = [
   {
     label: 'Jméno',
     formControlName: 'SubjektName',
-    showInTable: true,
+    visible: true,
     type: FormFieldTypes.TEXT,
     defaultValueGetter: (s: SeznamFakturDto) => s.subjektname,
     validator: [{ validator: CustomValidator.REQUIRED }]
@@ -20,7 +20,7 @@ export const SEZNAM_FAKTUR_FIELDS: Omit<FormField, 'defaultValue'>[] = [
   {
     label: 'Ičo',
     formControlName: 'SubjektIco',
-    showInTable: true,
+    visible: true,
     type: FormFieldTypes.TEXT,
     defaultValueGetter: (s: SeznamFakturDto) => s.subjektIco,
     validator: [{ validator: CustomValidator.REQUIRED }]

@@ -13,10 +13,10 @@ export class DialogService {
   open<T extends DefaultDialogComponent>(component: new (...args: any[]) => T, data?: any): Promise<any> {
     const dialogRef = this.dialog.open(component, {
       data,
-      width: '30%',
-      height: 'auto',
-      maxWidth: '100%',
-      panelClass: 'custom-dialog',
+      width: '90vw',
+      maxWidth: '800px',
+      minWidth: '300px',
+      panelClass: 'custom-dialog'
     });
 
     return dialogRef.afterClosed().toPromise();
@@ -33,6 +33,7 @@ export class DialogService {
   async confirmAsync(params: ConfirmDialogParams): Promise<boolean> {
     const result = await this.open(ConfirmDialogComponent, {
       title: params.title,
+      icon: params.icon,
       message: params.message,
       type: params.dialogType,
       cancelButton: params.cancelButton,

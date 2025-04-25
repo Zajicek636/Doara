@@ -31,32 +31,39 @@ export interface SubjektyDialogResult<T = any> {
 
 export const SUBJEKT_BASE_FIELDS: Omit<FormField, 'defaultValue'>[] = [
   {
+    label: 'Id',
+    formControlName: 'SubjektId',
+    type: FormFieldTypes.TEXT,
+    visible: false,
+    defaultValueGetter: (s: SubjektDetailDto) => s.id,
+  },
+  {
     label: 'Jméno',
     formControlName: 'SubjektName',
-    showInTable: true,
+    visible: true,
     type: FormFieldTypes.TEXT,
     defaultValueGetter: (s: SubjektDetailDto) => s.Name,
-    validator: [{ validator: CustomValidator.REQUIRED }]
+    validator: [{ validator: CustomValidator.REQUIRED}],
   },
   {
     label: 'IČ',
     formControlName: 'SubjektIc',
-    showInTable: true,
+    visible: true,
     type: FormFieldTypes.TEXT,
     defaultValueGetter: (s: SubjektDetailDto) => s.Ic,
-    validator: [{ validator: CustomValidator.REQUIRED }]
+    validator: [{ validator: CustomValidator.REQUIRED},{validator: CustomValidator.PATTERN, params: '^\\d{8}$'}]
   },
   {
     label: 'DIČ',
     formControlName: 'SubjektDic',
-    showInTable: true,
+    visible: true,
     type: FormFieldTypes.TEXT,
     defaultValueGetter: (s: SubjektDetailDto) => s.Dic,
-    validator: [{ validator: CustomValidator.REQUIRED }]
+    validator: [{ validator: CustomValidator.REQUIRED }, {validator: CustomValidator.PATTERN, params: '^(CZ\\d{8,10}|SK\\d{10})$'}]
   },
   {
     label: 'Plátce DPH',
-    showInTable: true,
+    visible: true,
     formControlName: 'SubjektPayer',
     type: FormFieldTypes.LOOKUP,
     defaultValueGetter: (s: SubjektDetailDto) => s.IsVatPayer,
@@ -70,8 +77,24 @@ export const SUBJEKT_BASE_FIELDS: Omit<FormField, 'defaultValue'>[] = [
 
 export const SUBJEKT_ADDRESS_FIELDS: Omit<FormField, 'defaultValue'>[] = [
   {
+    label: 'AddressId',
+    formControlName: 'AddressId',
+    visible: false,
+    type: FormFieldTypes.TEXT,
+    defaultValueGetter: (s: SubjektDetailDto) => s.AddressDetailDto.id,
+    validator: [{ validator: CustomValidator.REQUIRED}],
+  },
+  {
+    label: 'CountryId',
+    formControlName: 'CountryId',
+    visible: false,
+    type: FormFieldTypes.TEXT,
+    defaultValueGetter: (s: SubjektDetailDto) => s.AddressDetailDto.CountryDto.id,
+    validator: [{ validator: CustomValidator.REQUIRED}],
+  },
+  {
     label: 'Ulice',
-    showInTable: true,
+    visible: true,
     formControlName: 'SubjektStreet',
     defaultValueGetter: (a: SubjektDetailDto) => a.AddressDetailDto.Street,
     type: FormFieldTypes.TEXT,
@@ -79,7 +102,7 @@ export const SUBJEKT_ADDRESS_FIELDS: Omit<FormField, 'defaultValue'>[] = [
   },
   {
     label: 'Město',
-    showInTable: true,
+    visible: true,
     formControlName: 'SubjektCity',
     defaultValueGetter: (a: SubjektDetailDto) => a.AddressDetailDto.City,
     type: FormFieldTypes.TEXT,
@@ -87,7 +110,7 @@ export const SUBJEKT_ADDRESS_FIELDS: Omit<FormField, 'defaultValue'>[] = [
   },
   {
     label: 'PSČ',
-    showInTable: true,
+    visible: true,
     formControlName: 'SubjektPSC',
     defaultValueGetter: (a: SubjektDetailDto) => a.AddressDetailDto.PostalCode,
     type: FormFieldTypes.TEXT,
@@ -96,7 +119,7 @@ export const SUBJEKT_ADDRESS_FIELDS: Omit<FormField, 'defaultValue'>[] = [
   {
     label: 'Kód země',
     formControlName: 'SubjektCountryCode',
-    showInTable: true,
+    visible: true,
     defaultValueGetter: (a: SubjektDetailDto) => a.AddressDetailDto.CountryDto.Name,
     type: FormFieldTypes.LOOKUP,
     options: [

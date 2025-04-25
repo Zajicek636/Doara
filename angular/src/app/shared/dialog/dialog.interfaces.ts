@@ -12,6 +12,7 @@ export interface DialogParams {
   title: string,
   message: string,
   dialogType: DialogType
+  icon?: string,
 }
 
 export interface AlertDialogParams extends DialogParams {
