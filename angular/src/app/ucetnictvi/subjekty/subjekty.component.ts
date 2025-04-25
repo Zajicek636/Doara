@@ -96,7 +96,7 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
 
   async deleteSubjekt() {
     if(!this.chosenElement) return;
-    await this.dialogService.confirmAsync({
+    const res = await this.dialogService.confirmAsync({
       title: "Potvrzení smazání",
       icon: BaseMaterialIcons.REMOVE_PERSON,
       message: `Opravdu chcete odebrat subjekt: <strong>${this.chosenElement.Name} - ${this.chosenElement.Ic}</strong> ?`,
@@ -104,6 +104,24 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
       cancelButton: "Ne",
       confirmButton: "Ano"
     })
+    if(!res) return;
+
+    try {
+      //this.dialogService.delete(this.chosenElement.id)
+      const data = this.tableComponent.dataSource.data;
+      const index = data.findIndex(el => el.id === this.chosenElement?.id);
+      if (index !== -1) {
+        data.splice(index, 1);
+        this.tableComponent.dataSource.data = [...data];
+      }
+
+    } catch (e: any) {
+      await this.dialogService.alert({
+        title: "Chyba",
+        message: e,
+        dialogType: DialogType.ERROR
+      })
+    }
   }
 
   async editSubjekt() {
