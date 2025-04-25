@@ -7,7 +7,7 @@
   >
 </mat-form-field>
 
-<div class="mat-elevation-z8">
+<div class="mat-elevation-z8 table-responsive">
   <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
 
       <ng-container
@@ -22,7 +22,7 @@
         </td>
       </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="columnKeys"></tr>
+    <tr mat-header-row *matHeaderRowDef="columnKeys; sticky: true" class="table-header"></tr>
 
     <tr
       mat-row

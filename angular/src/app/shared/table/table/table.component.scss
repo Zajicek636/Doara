@@ -20,3 +20,16 @@ tr:active {
   background: $baseLightGrey;
 }
 
+.table-responsive {
+  width: 100%;
+  height: calc(100vh - 300px);
+  overflow: auto;
+}
+.full-width-table {
+  display: inline-table;
+  white-space: nowrap;
+}
+
+.table-header {
+  background-color: $lightenBaseGreen;
+}
