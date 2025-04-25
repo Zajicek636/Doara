@@ -82,7 +82,6 @@ export const SUBJEKT_ADDRESS_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     visible: false,
     type: FormFieldTypes.TEXT,
     defaultValueGetter: (s: SubjektDetailDto) => s.AddressDetailDto.id,
-    validator: [{ validator: CustomValidator.REQUIRED}],
   },
   {
     label: 'CountryId',
@@ -90,7 +89,6 @@ export const SUBJEKT_ADDRESS_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     visible: false,
     type: FormFieldTypes.TEXT,
     defaultValueGetter: (s: SubjektDetailDto) => s.AddressDetailDto.CountryDto.id,
-    validator: [{ validator: CustomValidator.REQUIRED}],
   },
   {
     label: 'Ulice',
