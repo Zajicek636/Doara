@@ -4,12 +4,13 @@ import {HttpClient} from '@angular/common/http';
 import {SkladyPolozkyCrudSettings} from '../../../sklady/sklady-polozky/data/sklady-polozky-crud.settings';
 import {SeznamFakturDto} from './seznam-faktur.interfaces';
 import {lastValueFrom} from 'rxjs';
+import {SeznamFakturCrudSettings} from './seznam-faktur-crud.settings';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SeznamFakurDataService extends BaseCrud<string, SeznamFakturDto, SeznamFakturDto, SeznamFakturDto> {
-  constructor(client: HttpClient, settings: SkladyPolozkyCrudSettings) {
+  constructor(client: HttpClient, settings: SeznamFakturCrudSettings) {
     super(client, settings);
   }
 

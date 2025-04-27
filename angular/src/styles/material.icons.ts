@@ -4,6 +4,11 @@
   CONTAINER = "dataset",
   COG_SETTINGS = "settings",
   LIST_ICON = "library_books",
+  REFRESH = "sync",
+  CANCEL = "undo",
+  SAVE = "save",
+
+
 
   //---PAYMENT
   GRAPH_INCREASE = "data_thresholding",
@@ -21,4 +26,7 @@
   REMOVE_PERSON = "person_remove",
   PERSON = "person",
   PERSON_LOCATION = "person_pin_circle",
+
+  //Containers
+  CATEGORY = "category"
 }

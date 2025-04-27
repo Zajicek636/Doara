@@ -1,8 +1,9 @@
-﻿export interface Res {
-  Test: string,
-  Cislo: string,
+﻿
+export interface ContainerDto {
+  id: string,
+  name: string
 }
 
-export interface SkladyPolozkyDto {
-  id: string;
+export interface ContainerCreateDto {
+  name: string
 }

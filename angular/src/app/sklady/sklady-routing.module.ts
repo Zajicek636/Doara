@@ -18,7 +18,7 @@ const routes: Routes = [
       {
         path: 'polozky',
         component: SkladyPolozkyComponent,
-        data: { basePath: 'sklady', breadcrumb: 'Položky'},
+        data: { basePath: 'sklady', breadcrumb: 'Skladové položky'},
         children: [
        /*   {
             path: 'nastaveni',
