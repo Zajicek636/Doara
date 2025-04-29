@@ -41,7 +41,7 @@ export class FormService {
         case CustomValidator.MAX:
           if (!v.params || typeof v.params !== 'number') break;
 
-          if (field.type === FormFieldTypes.TEXT) {
+          if (field.type === FormFieldTypes.TEXT || field.type === FormFieldTypes.TEXTAREA) {
             validators.push(Validators.maxLength(v.params));
           } else if (field.type === FormFieldTypes.NUMBER) {
             validators.push(Validators.max(v.params));

@@ -14,7 +14,7 @@ export abstract class BaseContentComponent<T, DataService> implements OnInit {
   tableSettings: TableSettings<T>| undefined;
   basePath: string | undefined;
   breadCrumbTitle: string | undefined;
-  protected _chosenElement?: T;
+  private _chosenElement?: T;
 
   toolbarButtons!: ToolbarButton[];
 

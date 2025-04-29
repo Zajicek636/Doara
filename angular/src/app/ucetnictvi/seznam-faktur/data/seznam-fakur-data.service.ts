@@ -1,5 +1,5 @@
 ﻿import {Injectable} from '@angular/core';
-import {BaseCrud} from '../../../shared/crud/base-crud-service';
+import {BaseCrud, PagedList, PagedRequest} from '../../../shared/crud/base-crud-service';
 import {HttpClient} from '@angular/common/http';
 import {SkladyPolozkyCrudSettings} from '../../../sklady/sklady-polozky/data/sklady-polozky-crud.settings';
 import {SeznamFakturDto} from './seznam-faktur.interfaces';
@@ -14,20 +14,25 @@ export class SeznamFakurDataService extends BaseCrud<string, SeznamFakturDto, Se
     super(client, settings);
   }
 
-  public async getPagedRequest(params: any): Promise<SeznamFakturDto[]> {
-    const b: any[] = []
-    for (let i = 0; i < 1000; i++) {
-      const a: SeznamFakturDto = {
-        id: `FakId${i}`,
-        subjektname: `SubjektNameFaktura${i+i}*`,
-        subjektIco: `SubjektIcoFaktura${i*i}`,
-      }
-      b.push(a)
-    }
-    return b
+  public override async getPagedRequestAsync(params: PagedRequest): Promise<PagedList<SeznamFakturDto>> {
+    // Vygenerujeme všech 1000 "faktur"
+    const allFaktury: SeznamFakturDto[] = Array.from({ length: 1000 }, (_, i) => ({
+      id:             `FakId${i + 1}`,
+      subjektname:    `Subjekt ${i + 1}`,
+      subjektIco:     `ICO${100000 + i}`,
+    }));
 
-   /* const res$ = this.client.get<SeznamFakturDto[]>(`${this.settings.baseUrl}`, { params });
-    return await lastValueFrom(res$);*/
+    // Vypočítáme offset a limit
+    const skip  = params.skipCount ?? 0;
+    const take  = params.maxResultCount ?? 10;
+
+    // Vybereme jen požadovanou "stránku"
+    const pageItems = allFaktury.slice(skip, skip + take);
+
+    return {
+      items:      pageItems,
+      totalCount: allFaktury.length
+    };
   }
 
 }

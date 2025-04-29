@@ -1,7 +1,7 @@
 ﻿import {Injectable} from '@angular/core';
-import {BaseCrud} from '../../../shared/crud/base-crud-service';
+import {BaseCrud, PagedList, PagedRequest} from '../../../shared/crud/base-crud-service';
 import {HttpClient} from '@angular/common/http';
-import {SubjektDetailDto} from './subjekty.interfaces';
+import {AddressDetailDto, CountryDto, SubjektDetailDto} from './subjekty.interfaces';
 import {SubjektyCrudSettings} from './subjekty-crud.settings';
 
 @Injectable({
@@ -12,33 +12,39 @@ export class SubjektyDataService extends BaseCrud<string, SubjektDetailDto, Subj
     super(client, settings);
   }
 
-  public async getPagedRequest(params: any): Promise<SubjektDetailDto[]> {
-    const b: any[] = []
-    for (let i = 0; i < 1; i++) {
-      const a: SubjektDetailDto = {
-        id: `SubId${i}`,
-        Name: `JmenoSub${i+i}*`,
-        Ic: `11370105`,
-        Dic: `CZ410605060`,
-        IsVatPayer: false,
-        AddressDetailDto: {
-          id: `AdderssId${i}`,
-          Street: `Street${i}`,
-          City: `City${i}`,
-          PostalCode: `${i+1*123}`,
-          CountryDto: {
-            id: `CountryId${i}`,
-            Name:`CZ`,
-            Code:`CZ`,
-          }
-        }
-      }
-      b.push(a)
-    }
-    return b
+  public override async getPagedRequestAsync(params: PagedRequest): Promise<PagedList<SubjektDetailDto>> {
+    // 1) Generování všech subjektů
+    const allSubjekty: SubjektDetailDto[] = Array.from({ length: 500 }, (_, i) => ({
+      id: `SubId${i + 1}`,
+      Name: `Jméno Subjektu ${i + 1}`,
+      Ic: `${10000000 + i}`,
+      Dic: `CZ${400000000 + i}`,
+      IsVatPayer: i % 2 === 0,
+      AddressDetailDto: {
+        id: `AddressId${i + 1}`,
+        Street: `Ulice ${i + 1}`,
+        City: `Město ${i + 1}`,
+        PostalCode: `${10000 + i}`,
+        CountryDto: {
+          id: `CountryId${i % 3 + 1}`,
+          Name: ['Česká republika', 'Slovensko', 'Polsko'][i % 3],
+          Code: ['CZ', 'SK', 'PL'][i % 3],
+        } as CountryDto
+      } as AddressDetailDto
+    }));
 
-    /* const res$ = this.client.get<SeznamFakturDto[]>(`${this.settings.baseUrl}`, { params });
-     return await lastValueFrom(res$);*/
+    // 2) Vytažení parametrů stránkování
+    const skip  = params.skipCount  ?? 0;
+    const take  = params.maxResultCount ?? 10;
+
+    // 3) Sestavení stránky
+    const pageItems = allSubjekty.slice(skip, skip + take);
+
+    // 4) Návrat paged listu
+    return {
+      items:      pageItems,
+      totalCount: allSubjekty.length
+    };
   }
 
 }

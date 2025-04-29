@@ -13,6 +13,17 @@ export interface CrudSettings<TId, TEntity> {
   idGetter: (entity: TEntity) => TId;
 }
 
+export interface PagedList<T> {
+  items: T[];
+  totalCount: number;
+}
+
+export interface PagedRequest {
+  skipCount: number;
+  maxResultCount: number;
+  [key: string]: any;
+}
+
 export class BaseCrud<TId, TDto, TCreateDto, TEditDto> {
   constructor(
     protected client: HttpClient,
@@ -32,7 +43,7 @@ export class BaseCrud<TId, TDto, TCreateDto, TEditDto> {
 
   public async get(id: TId): Promise<TDto> {
     const qString = this.toQueryString(this.settings.mapper(id));
-    const res$ = this.client.get<TDto>(`${this.settings.baseUrl}/${id}${qString}`);
+    const res$ = this.client.get<TDto>(`${this.settings.baseUrl}${qString}`);
     return await lastValueFrom(res$);
   }
 
@@ -56,5 +67,20 @@ export class BaseCrud<TId, TDto, TCreateDto, TEditDto> {
   public async delete(id: TId): Promise<void> {
     const qString = this.toQueryString(this.settings.mapper(id));
     await lastValueFrom(this.client.delete(`${this.settings.baseUrl}/${id}${qString}`));
+  }
+  public async getPagedRequestAsync(params: PagedRequest):Promise<PagedList<TDto>> {
+    const queryParams = new URLSearchParams();
+    if (params.skipCount != null) queryParams.set('skipCount', params.skipCount.toString());
+    if (params.maxResultCount != null) queryParams.set('maxResultCount', params.maxResultCount.toString());
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (!['sorting', 'skipCount', 'maxResultCount'].includes(key) && value != null) {
+        queryParams.set(key, value);
+      }
+    });
+
+    const url = `${this.settings.baseUrl}/GetAll?${queryParams.toString()}`;
+    const res$ = this.client.get<PagedList<TDto>>(url);
+    return await lastValueFrom(res$);
   }
 }

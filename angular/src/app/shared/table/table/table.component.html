@@ -1,11 +1,11 @@
-<mat-form-field appearance="outline" style="width: 100%">
+<!--<mat-form-field appearance="outline" style="width: 100%">
   <mat-label>Filtr</mat-label>
   <input
     matInput
     (keyup)="applyFilter($event)"
     placeholder="Zadejte hledaný výraz"
   >
-</mat-form-field>
+</mat-form-field>-->
 
 <div class="mat-elevation-z8 table-responsive">
   <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
@@ -41,9 +41,8 @@
   </table>
 
   <mat-paginator
+    [length]="totalCount"
     [pageSizeOptions]="settings.pageSizeOptions || [20, 40, 60, 100]"
-    [pageSize]="settings.defaultPageSize || 10"
-    showFirstLastButtons
-  >
+    showFirstLastButtons>
   </mat-paginator>
 </div>

@@ -182,7 +182,8 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
 
   }
 
-  public handleDoubleClick(row: SubjektDetailDto) {
+  public async handleDoubleClick(row: SubjektDetailDto) {
+    await this.editSubjekt()
   }
 
   public clickedElement(row: SubjektDetailDto) {

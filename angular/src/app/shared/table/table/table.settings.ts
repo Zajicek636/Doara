@@ -9,6 +9,7 @@ export interface TableSettings<T> {
   defaultPageSize?: number;
   cacheEntityType: string;
   extraQueryParams?: { [key: string]: any };
+  clientSideFilter?: boolean;
 }
 
 export interface ColumnSetting<T> {

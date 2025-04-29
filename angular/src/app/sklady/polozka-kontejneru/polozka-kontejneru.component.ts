@@ -1,12 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {SharedModule} from '../../shared/shared.module';
 import {BaseContentComponent} from '../../shared/layout/base-component';
-import {
-  SUBJEKT_ADDRESS_FIELDS,
-  SUBJEKT_BASE_FIELDS,
-  SubjektDetailDto
-} from '../../ucetnictvi/subjekty/data/subjekty.interfaces';
-import {SubjektyDataService} from '../../ucetnictvi/subjekty/data/subjekty-data.service';
 import {DynamicTableComponent} from '../../shared/table/table/table.component';
 import {BreadcrumbService} from '../../shared/breadcrumb/breadcrumb.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -15,6 +9,14 @@ import {FormGroup} from '@angular/forms';
 import {ToolbarButton} from '../../shared/context-toolbar/context-toolbar.interfaces';
 import {BaseMaterialIcons} from '../../../styles/material.icons';
 import {PolozkaKontejneruDataService} from './data/polozka-kontejneru-data.service';
+import {
+  CONTAINER_ITEM_CREATE_FIELDS,
+  CONTAINER_ITEM_FIELDS,
+  ContainerItemDto
+} from "./data/polozka-kontejneru.interfaces";
+import {DialogType} from "../../shared/dialog/dialog.interfaces";
+import {CustomValidator} from "../../shared/forms/form.interfaces";
+import {populateDefaults} from "../../shared/forms/form-field.utils";
 
 @Component({
   selector: 'app-polozka-kontejneru',
@@ -22,8 +24,9 @@ import {PolozkaKontejneruDataService} from './data/polozka-kontejneru-data.servi
   templateUrl: './polozka-kontejneru.component.html',
   styleUrl: './polozka-kontejneru.component.scss'
 })
-export class PolozkaKontejneruComponent extends BaseContentComponent<any, any> implements OnInit  {
-  @ViewChild(DynamicTableComponent) tableComponent!: DynamicTableComponent<any>;
+export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerItemDto, PolozkaKontejneruDataService> implements OnInit  {
+
+  @ViewChild(DynamicTableComponent) tableComponent!: DynamicTableComponent<ContainerItemDto>;
 
   constructor(
     protected override dataService: PolozkaKontejneruDataService,
@@ -37,17 +40,20 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<any, any> i
   }
 
   form!: FormGroup;
+  entityId: string|null = null;
 
   override ngOnInit() {
     super.ngOnInit();
+    this.entityId = this.route.snapshot.paramMap.get('id');
+
     this.tableSettings = {
       cacheEntityType: "subjektyTableEntity",
-      formFields: [...SUBJEKT_BASE_FIELDS, ...SUBJEKT_ADDRESS_FIELDS],
+      formFields: [...CONTAINER_ITEM_FIELDS],
       clickable: true,
       expandable: false,
       pageSizeOptions: [10, 30, 50, 100],
       defaultPageSize: 10,
-      extraQueryParams: { active: true }
+      extraQueryParams: {id: this.entityId},
     };
   }
 
@@ -56,31 +62,134 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<any, any> i
       {
         id: 'add',
         text: 'Přidat položku',
-        icon: BaseMaterialIcons.ADD_PERSON,
+        icon: BaseMaterialIcons.PLUS,
         class: 'btn-primary',
         visible: true,
         disabled: false,
-        action: () => {}
+        action: () => this.addNewItemContainer()
       },
 
       {
         id: 'edit',
         text: 'Upravit',
-        icon: BaseMaterialIcons.EDIT_PERSON,
+        icon: BaseMaterialIcons.EDIT,
         class: 'btn-secondary',
         disabled: !this.chosenElement,
         visible: true,
-        action: () => {}
+        action: () => this.editItemContainer()
       },
       {
         id: 'delete',
         text: 'Smazat',
-        icon: BaseMaterialIcons.REMOVE_PERSON,
+        icon: BaseMaterialIcons.DELETE,
         class: 'btn-danger',
         disabled: !this.chosenElement,
         visible: true,
-        action: () => {}
+        action: () => this.deleteItemContainer()
       }
     ];
+  }
+
+  async addNewItemContainer() {
+    const requiredFields = CONTAINER_ITEM_CREATE_FIELDS.filter(field =>
+        field.validator?.some(v => v.validator === CustomValidator.REQUIRED)
+    );
+
+    const optionalFields = CONTAINER_ITEM_CREATE_FIELDS.filter(field =>
+        !field.validator?.some(v => v.validator === CustomValidator.REQUIRED)
+    );
+
+    const dialogResult = await this.dialogService.form({
+      headerIcon: BaseMaterialIcons.ADD_CONTAINER,
+      title: "Přidat novou položku do kontejneru",
+      sections: [
+        {
+          sectionId: "main_section",
+          headerIcon: BaseMaterialIcons.ASSIGNMENT,
+          fields: requiredFields,
+          sectionTitle: "Hlavní informace"
+        },
+        {
+          sectionId: "second_section",
+          headerIcon: BaseMaterialIcons.LIST_ICON,
+          fields: optionalFields,
+          sectionTitle: "Doplňující informace"
+        }
+      ],
+      type: DialogType.SUCCESS
+    });
+
+    if (!dialogResult) return;
+    console.log(dialogResult);
+  }
+
+  async deleteItemContainer() { if(!this.chosenElement) return;
+    const res = await this.dialogService.confirmAsync({
+      title: "Potvrzení smazání",
+      icon: BaseMaterialIcons.DELETE,
+      message: `Opravdu chcete odebrat element: <strong>${this.chosenElement.name}</strong> ?`,
+      dialogType: DialogType.ALERT,
+      cancelButton: "Ne",
+      confirmButton: "Ano"
+    })
+    if(!res) return;
+
+    try {
+      //this.dialogService.delete(this.chosenElement.id)
+      const data = this.tableComponent.dataSource.data;
+      const index = data.findIndex(el => el.id === this.chosenElement?.id);
+      if (index !== -1) {
+        data.splice(index, 1);
+        this.tableComponent.dataSource.data = [...data];
+      }
+
+    } catch (e: any) {
+      await this.dialogService.alert({
+        title: "Chyba",
+        message: e,
+        dialogType: DialogType.ERROR
+      })
+    }
+  }
+
+  async editItemContainer() {
+    let requiredFields = CONTAINER_ITEM_FIELDS.filter(field =>
+        field.validator?.some(v => v.validator === CustomValidator.REQUIRED)
+    );
+
+    let optionalFields = CONTAINER_ITEM_FIELDS.filter(field =>
+        !field.validator?.some(v => v.validator === CustomValidator.REQUIRED)
+    );
+
+    requiredFields = populateDefaults(requiredFields, this.chosenElement);
+    optionalFields = populateDefaults(optionalFields, this.chosenElement);
+
+    const dialogResult = await this.dialogService.form({
+      headerIcon: BaseMaterialIcons.PLUS,
+      title: "Editovat položku v kontejneru",
+      sections: [
+        {
+          sectionId: "main_section",
+          headerIcon: BaseMaterialIcons.ASSIGNMENT,
+          fields: requiredFields,
+          sectionTitle: "Hlavní informace"
+        },
+        {
+          sectionId: "second_section",
+          headerIcon: BaseMaterialIcons.LIST_ICON,
+          fields: optionalFields,
+          sectionTitle: "Doplňující informace"
+        }
+      ],
+      type: DialogType.SUCCESS
+    });
+
+  }
+
+  clickedElement(item: ContainerItemDto) {
+    this.chosenElement = item;
+  }
+
+  handleDoubleClick(item: ContainerItemDto) {
   }
 }

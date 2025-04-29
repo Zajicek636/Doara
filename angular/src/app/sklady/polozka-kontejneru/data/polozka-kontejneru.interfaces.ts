@@ -1,0 +1,276 @@
+import {CustomValidator, FormField, FormFieldTypes} from "../../../shared/forms/form.interfaces";
+
+export interface ContainerItemCreateInputDto {
+    quantityType: QuantityType;
+    name: string;
+    description: string;
+    purchaseUrl?: string;
+    quantity: number;
+    realPrice: number;
+    markup?: number;
+    markupRate?: number;
+    discount?: number;
+    discountRate?: number;
+    containerId: string;
+}
+
+export interface ContainerItemUpdateInputDto { //todo dodelat az bude na BE
+    id: string;
+    name: string;
+}
+
+export interface ContainerItemDto {
+    id: string;
+    state: ContainerItemState;
+    quantityType: QuantityType;
+    name: string;
+    description: string;
+    purchaseUrl?: string;
+    quantity: number;
+    realPrice: number;
+    presentationPrice: number;
+    markup: number;
+    markupRate: number;
+    discount: number;
+    discountRate: number;
+    containerId: string;
+}
+
+export enum ContainerItemState {
+    New = 'N',
+    Used = 'U',
+    Canceled = 'C'
+}
+
+export enum QuantityType {
+    Unknown = 'X',
+    None = 'N',
+
+    Milligrams = 'k',
+    Grams = 'g',
+    Kilograms = 'K',
+
+    Millimeters = 'm',
+    Centimeters = 'c',
+    Decimeters = 'd',
+    Meters = 'M',
+
+    Milliliters = 'l',
+    Liters = 'L'
+}
+
+export const QuantityTypeLabels: Record<QuantityType, string> = {
+    [QuantityType.Unknown]: 'Neznámé',
+    [QuantityType.None]: 'Žádné',
+    [QuantityType.Milligrams]: 'Miligramy',
+    [QuantityType.Grams]: 'Gramy',
+    [QuantityType.Kilograms]: 'Kilogramy',
+    [QuantityType.Millimeters]: 'Milimetry',
+    [QuantityType.Centimeters]: 'Centimetry',
+    [QuantityType.Decimeters]: 'Decimetery',
+    [QuantityType.Meters]: 'Metry',
+    [QuantityType.Milliliters]: 'Mililitry',
+    [QuantityType.Liters]: 'Litry',
+};
+
+export const ContainerItemStateLabels: Record<ContainerItemState, string> = {
+    [ContainerItemState.New]: 'New',
+    [ContainerItemState.Used]: 'Used',
+    [ContainerItemState.Canceled]: 'Canceled',
+};
+
+export const CONTAINER_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
+    {
+        label: 'ID',
+        formControlName: 'id',
+        visible: false,
+        type: FormFieldTypes.TEXT,
+        defaultValueGetter: (item: ContainerItemDto) => item.id,
+    },
+    {
+        label: 'Stav položky',
+        formControlName: 'state',
+        visible: true,
+        type: FormFieldTypes.LOOKUP,
+        options: Object.values(ContainerItemState).map(s => ({
+            value: s,
+            displayValue: ContainerItemStateLabels[s]
+        })),
+        defaultValueGetter: (item: ContainerItemDto) => ContainerItemStateLabels[item.state],
+    },
+    {
+        label: 'Název položky',
+        formControlName: 'name',
+        visible: true,
+        type: FormFieldTypes.TEXT,
+        validator: [{ validator: CustomValidator.REQUIRED }],
+        defaultValueGetter: (item: ContainerItemDto) => item.name,
+    },
+    {
+        label: 'Popis položky',
+        formControlName: 'description',
+        visible: true,
+        type: FormFieldTypes.TEXTAREA,
+        defaultValueGetter: (item: ContainerItemDto) => item.description,
+    },
+    {
+        label: 'Množství',
+        formControlName: 'quantity',
+        visible: true,
+        type: FormFieldTypes.NUMBER,
+        validator: [{ validator: CustomValidator.REQUIRED }],
+        defaultValueGetter: (item: ContainerItemDto) => item.quantity,
+    },
+    {
+        label: 'Typ množství',
+        formControlName: 'quantityType',
+        visible: true,
+        type: FormFieldTypes.LOOKUP,
+        options: Object.values(QuantityType).map(q => ({
+            value: q,
+            displayValue: QuantityTypeLabels[q]
+        })),
+        defaultValueGetter: (item: ContainerItemDto) =>  QuantityTypeLabels[item.quantityType],
+        validator: [{ validator: CustomValidator.REQUIRED }],
+    },
+    {
+        label: 'Reálná cena',
+        formControlName: 'realPrice',
+        visible: true,
+        type: FormFieldTypes.NUMBER,
+        validator: [{ validator: CustomValidator.REQUIRED }],
+        defaultValueGetter: (item: ContainerItemDto) => item.realPrice,
+    },
+    {
+        label: 'Prezentace cena',
+        formControlName: 'presentationPrice',
+        visible: true,
+        type: FormFieldTypes.NUMBER,
+        defaultValueGetter: (item: ContainerItemDto) => item.presentationPrice,
+    },
+    {
+        label: 'Přirážka',
+        formControlName: 'markup',
+        visible: true,
+        type: FormFieldTypes.NUMBER,
+        defaultValueGetter: (item: ContainerItemDto) => item.markup,
+    },
+    {
+        label: 'Přirážka - Sazba',
+        formControlName: 'markupRate',
+        visible: true,
+        type: FormFieldTypes.NUMBER,
+        defaultValueGetter: (item: ContainerItemDto) => item.markupRate,
+    },
+    {
+        label: 'Sleva',
+        formControlName: 'discount',
+        visible: true,
+        type: FormFieldTypes.NUMBER,
+        defaultValueGetter: (item: ContainerItemDto) => item.discount,
+    },
+    {
+        label: 'Sleva - Sazba',
+        formControlName: 'discountRate',
+        visible: true,
+        type: FormFieldTypes.NUMBER,
+        defaultValueGetter: (item: ContainerItemDto) => item.discountRate,
+    },
+    {
+        label: 'URL nákupu',
+        formControlName: 'purchaseUrl',
+        visible: true,
+        type: FormFieldTypes.TEXT,
+        defaultValueGetter: (item: ContainerItemDto) => item.purchaseUrl,
+    },
+    {
+        label: 'Kontejner ID',
+        formControlName: 'containerId',
+        visible: false,
+        type: FormFieldTypes.TEXT,
+        defaultValueGetter: (item: ContainerItemDto) => item.containerId,
+    }
+];
+
+export const CONTAINER_ITEM_CREATE_FIELDS: Omit<FormField, 'defaultValue'>[] = [
+    {
+        label: 'Název položky',
+        formControlName: 'name',
+        visible: true,
+        type: FormFieldTypes.TEXT,
+        validator: [{ validator: CustomValidator.REQUIRED },{ validator: CustomValidator.MAX, params: 255}],
+        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.name,
+    },
+    {
+        label: 'Popis položky',
+        formControlName: 'description',
+        visible: true,
+        type: FormFieldTypes.TEXTAREA,
+        validator: [{ validator: CustomValidator.MAX, params: 255}],
+        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.description,
+    },
+    {
+        label: 'Množství',
+        formControlName: 'quantity',
+        visible: true,
+        type: FormFieldTypes.NUMBER,
+        validator: [{ validator: CustomValidator.REQUIRED }],
+        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.quantity,
+    },
+    {
+        label: 'Typ množství',
+        formControlName: 'quantityType',
+        visible: true,
+        type: FormFieldTypes.LOOKUP,
+        options: Object.values(QuantityType).map(q => ({
+            value: q,
+            displayValue: QuantityTypeLabels[q]
+        })),
+        defaultValueGetter: (item: ContainerItemDto) =>  QuantityTypeLabels[item.quantityType],
+        validator: [{ validator: CustomValidator.REQUIRED }],
+    },
+    {
+        label: 'Reálná cena',
+        formControlName: 'realPrice',
+        visible: true,
+        type: FormFieldTypes.NUMBER,
+        validator: [{ validator: CustomValidator.REQUIRED }],
+        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.realPrice,
+    },
+    {
+        label: 'Přirážka',
+        formControlName: 'markup',
+        visible: true,
+        type: FormFieldTypes.NUMBER,
+        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.markup,
+    },
+    {
+        label: 'Přirážka - Sazba',
+        formControlName: 'markupRate',
+        visible: true,
+        type: FormFieldTypes.NUMBER,
+        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.markupRate,
+    },
+    {
+        label: 'Sleva',
+        formControlName: 'discount',
+        visible: true,
+        type: FormFieldTypes.NUMBER,
+        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.discount,
+    },
+    {
+        label: 'Sleva - Sazba',
+        formControlName: 'discountRate',
+        visible: true,
+        type: FormFieldTypes.NUMBER,
+        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.discountRate,
+    },
+    {
+        label: 'URL nákupu',
+        formControlName: 'purchaseUrl',
+        visible: true,
+        type: FormFieldTypes.TEXT,
+        validator: [{ validator: CustomValidator.MAX, params: 2048}],
+        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.purchaseUrl,
+    }
+];

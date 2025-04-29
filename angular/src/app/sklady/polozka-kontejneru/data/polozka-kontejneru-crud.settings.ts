@@ -1,15 +1,17 @@
 ﻿import {Injectable} from '@angular/core';
 import {CrudSettings, QueryParams} from '../../../shared/crud/base-crud-service';
+import {ContainerDto} from "../../sklady-polozky/data/sklady-polozky.interfaces";
+import {ContainerItemDto} from "./polozka-kontejneru.interfaces";
 
 @Injectable({
   providedIn: 'root',
 })
-export class PolozkaKontejneruCrudSettings implements CrudSettings<string, any> {
-  baseUrl: string = 'https://example.com/api/SkladyPolozky/SkladyPolozky';
+export class PolozkaKontejneruCrudSettings implements CrudSettings<string, ContainerItemDto> {
+  baseUrl: string = 'api/Sklady/ContainerItem';
   postUrl?: string;
   queryParam?: string;
 
-  idGetter(entity: any): string {
+  idGetter(entity: ContainerItemDto): string {
     return entity.id;
   }
 
