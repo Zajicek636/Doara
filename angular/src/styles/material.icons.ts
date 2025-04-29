@@ -7,6 +7,10 @@
   REFRESH = "sync",
   CANCEL = "undo",
   SAVE = "save",
+  OPEN_IN_NEW = "open_in_new",
+  EDIT = "edit",
+  DELETE = "delete",
+
 
 
 
@@ -28,5 +32,10 @@
   PERSON_LOCATION = "person_pin_circle",
 
   //Containers
-  CATEGORY = "category"
+  CATEGORY = "category",
+  ADD_CONTAINER = "add_box",
+
+  //CONTAINER ITEMS
+
+
 }

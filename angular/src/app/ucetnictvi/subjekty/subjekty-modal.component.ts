@@ -81,8 +81,8 @@ export class SubjektyModalComponent<T> extends DefaultDialogComponent {
   formBase: FormGroup = new FormGroup({});
   formAdditional: FormGroup = new FormGroup({});
 
-  baseResult?: FormComponentResult<any>;
-  addressResult?: FormComponentResult<any>;
+  baseResult?: FormComponentResult;
+  addressResult?: FormComponentResult;
 
   subjektBaseFields: FormField[];
   additionalSubjektFields: FormField[];
@@ -109,13 +109,13 @@ export class SubjektyModalComponent<T> extends DefaultDialogComponent {
     this.dialogRef.close(result);
   }
 
-  valueBaseChanged(form: FormComponentResult<T>): void {
+  valueBaseChanged(form: FormComponentResult): void {
     this.formBase = form.form
     this.baseResult = form
     this.updateSubmitState();
   }
 
-  valueAdditionalChanged(form: FormComponentResult<T>) {
+  valueAdditionalChanged(form: FormComponentResult) {
     this.formAdditional = form.form
     this.addressResult = form
     this.updateSubmitState();

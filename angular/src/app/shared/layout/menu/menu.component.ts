@@ -20,7 +20,7 @@ export class MenuComponent implements OnInit {
   menuItems = signal<MenuItem[]>([
     { name: 'Sklady', link: 'sklady', icon: BaseMaterialIcons.CONTAINER, items:
         [
-          { name: 'Skladové položky', link: 'polozky', icon: BaseMaterialIcons.CATEGORY},
+          { name: 'Sklad', link: 'polozky', icon: BaseMaterialIcons.CATEGORY},
           { name: 'Test2', link: 'editace-skladu', icon: BaseMaterialIcons.GRAPH_INCREASE}
         ]
     },

@@ -1,52 +1,134 @@
 import {Component, OnInit} from '@angular/core';
-import {BreadcrumbService} from "../../shared/breadcrumb/breadcrumb.service";
-import {Router} from "@angular/router";
+import {BreadcrumbService, IBreadCrumb} from "../../shared/breadcrumb/breadcrumb.service";
+import {ActivatedRoute, Router} from "@angular/router";
 import {DialogService} from "../../shared/dialog/dialog.service";
-import {FormComponentResult} from '../../shared/forms/any-form/any-form.component';
+
 import {FormGroup} from '@angular/forms';
-import {DialogType} from '../../shared/dialog/dialog.interfaces';
+import {DialogType, DynamicDialogResult} from '../../shared/dialog/dialog.interfaces';
 import {SkladyPolozkyDataService} from './data/sklady-polozky-data.service';
 import {SharedModule} from '../../shared/shared.module';
-import {SUBJEKT_BASE_FIELDS} from '../../ucetnictvi/subjekty/data/subjekty.interfaces';
-import {ContainerDto} from './data/sklady-polozky.interfaces';
+import {ContainerDto, CREATE_CONTAINER_FIELDS} from './data/sklady-polozky.interfaces';
+import {BaseMaterialIcons} from '../../../styles/material.icons';
+import {BaseContentComponent} from '../../shared/layout/base-component';
+import {ToolbarButton} from '../../shared/context-toolbar/context-toolbar.interfaces';
+import {FormField} from '../../shared/forms/form.interfaces';
+import {populateDefaults} from '../../shared/forms/form-field.utils';
+
 @Component({
   selector: 'app-sklady-polozky',
   imports: [SharedModule],
   templateUrl: './sklady-polozky.component.html',
   styleUrl: './sklady-polozky.component.scss'
 })
-export class SkladyPolozkyComponent implements OnInit {
-  items!: ContainerDto[];
+export class SkladyPolozkyComponent extends BaseContentComponent<ContainerDto,SkladyPolozkyDataService> implements OnInit {
+  items: ContainerDto[] = [];
   form: FormGroup;
+  containerFields!: FormField[];
+
   constructor(
-      private dataService: SkladyPolozkyDataService,
-      private breadcrumbService: BreadcrumbService,
-      private router: Router,
-      private dialogService: DialogService,
-  ) {
+    protected override dataService: SkladyPolozkyDataService,
+    protected override  breadcrumbService: BreadcrumbService,
+    protected override  router: Router,
+    protected override route: ActivatedRoute,
+    protected override  dialogService: DialogService,
+    ) {
+    super(route, router,breadcrumbService, dialogService, dataService);
     this.form = new FormGroup({});
   }
 
-  ngOnInit() {
+  override ngOnInit() {
+    super.ngOnInit();
     this.loadData()
   }
 
-  public handleChange(res: FormComponentResult<ContainerDto>) {
-    this.form = res.form
-    console.log(res.data);
-  }
-
-
   async loadData() {
     try {
-      //await this.dataService.get("test")
-      this.items = [{id: "1", name: "Container1"},{id: "2", name: "Container2"},{id: "3", name: "Container3"}]
+      //await this.dataService.getAll("test")
+      for (let i = 0; i < 10; i++) {
+        this.items.push({id: `${i}`, name: `TEST-${i}`, description: `DESCRIPTIONDESCRIPTION-${i}`});
+      }
     } catch (e) {
       await this.dialogService.alert({title: "Titulek", message:`${e}`, dialogType: DialogType.WARNING})
     }
   }
 
-  async route() {
+
+
+  protected buildToolbarButtons(): ToolbarButton<ContainerDto>[] {
+    return [
+      {
+        id: 'addContainer',
+        text: 'Přidat kontejner',
+        icon: BaseMaterialIcons.ADD_CONTAINER,
+        class: 'btn-primary',
+        visible: true,
+        disabled: false,
+        action: () => this.addNewContainer()
+      },
+    ];
   }
 
+  async handleEditClick(item: ContainerDto) {
+    this.containerFields = populateDefaults(CREATE_CONTAINER_FIELDS, item)
+
+    const a = await this.dialogService.form({
+      headerIcon: BaseMaterialIcons.EDIT_PERSON,
+      title: `Editace kontejneru - ${item.name}`,
+      sections: [
+        {
+          sectionId: "main_section",
+          headerIcon: BaseMaterialIcons.ASSIGNMENT,
+          fields: this.containerFields,
+          sectionTitle: "Základní informace"
+        }],
+      type: DialogType.SUCCESS
+    })
+    const res = this.mapToDto(a,"main_section")
+    this.items = this.items.map(x => x.id == res.id ? res : x)
+  }
+
+  async handleDeleteClick(item: ContainerDto) {
+    await this.dialogService.confirmAsync({
+      title: "Potvrzení operace",
+      message: `Opravdu chcete odebrat kontejner ${item.name} a jeho položky?`,
+      dialogType: DialogType.ALERT,
+    })
+    this.items.splice(this.items.indexOf(item), 1);
+  }
+
+  async handleClickContainer(item: ContainerDto) {
+    const prev: IBreadCrumb[] = this.breadcrumbService.breadcrumbsValue;
+    await this.router.navigate(['polozky', item.id], { relativeTo: this.route.parent, state: { previousBreadcrumbs: prev } });
+  }
+
+  async addNewContainer() {
+    this.containerFields = CREATE_CONTAINER_FIELDS;
+
+    const a = await this.dialogService.form({
+      headerIcon: BaseMaterialIcons.ADD_CONTAINER,
+      title: "Nový kontejner",
+      sections: [
+        {
+          sectionId: "main_section",
+          headerIcon: BaseMaterialIcons.ASSIGNMENT,
+          fields: this.containerFields,
+          sectionTitle: "Základní informace"
+        }],
+      type: DialogType.SUCCESS
+    })
+    if(!a) return;
+
+    const res = this.mapToDto(a,"main_section")
+    this.items.push(res)
+  }
+
+  mapToDto(result: DynamicDialogResult, key: string): ContainerDto {
+    return {
+      name: result[key].data.ContainerName,
+      id: this.items.length.toString(),
+      description: result[key].data.ContainerLabel
+    }
+  }
+
+  protected readonly BaseMaterialIcons = BaseMaterialIcons;
 }

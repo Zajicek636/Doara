@@ -19,6 +19,7 @@ import {DialogType} from '../../shared/dialog/dialog.interfaces';
 import {DynamicTableComponent} from '../../shared/table/table/table.component';
 import {populateDefaults} from '../../shared/forms/form-field.utils';
 import {SubjektyModalComponent} from './subjekty-modal.component';
+import {MatDivider} from '@angular/material/divider';
 
 @Component({
   selector: 'app-subjekty',

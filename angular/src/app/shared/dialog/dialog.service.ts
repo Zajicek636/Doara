@@ -2,7 +2,13 @@
 import { MatDialog } from '@angular/material/dialog';
 import {AlertDialogComponent} from './components/alert-dialog.component';
 import {DefaultDialogComponent} from './components/default-dialog.component';
-import {AlertDialogParams, ConfirmDialogParams, DialogType, FormDialogParams} from './dialog.interfaces';
+import {
+  AlertDialogParams,
+  ConfirmDialogParams,
+  DialogType,
+  DynamicDialogResult,
+  FormDialogParams
+} from './dialog.interfaces';
 import {ConfirmDialogComponent} from './components/confirm-dialog.component';
 import {FormDialogComponent} from './components/form-dialog.component';
 
@@ -32,21 +38,22 @@ export class DialogService {
 
   async confirmAsync(params: ConfirmDialogParams): Promise<boolean> {
     const result = await this.open(ConfirmDialogComponent, {
-      title: params.title,
+      title: params.title ?? "Potvrdit operaci",
       icon: params.icon,
       message: params.message,
       type: params.dialogType,
-      cancelButton: params.cancelButton,
-      confirmButton: params.confirmButton
+      cancelButton: params.cancelButton ?? "Zrušit",
+      confirmButton: params.confirmButton ?? "Potvrdit"
     });
     return result;
   }
 
-  async form<T>(params: FormDialogParams): Promise<T | undefined> {
+  async form<T>(params: FormDialogParams): Promise<DynamicDialogResult> {
     return this.open(FormDialogComponent, {
+      headerIcon: params.headerIcon,
       title: params.title,
-      fields: params.fields,
-      type: DialogType.ALERT,
+      fields: params.sections,
+      type: params.type ?? DialogType.SUCCESS,
     });
   }
 }

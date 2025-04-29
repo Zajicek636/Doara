@@ -3,6 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {SkladyMainComponent} from './sklady-main/sklady-main.component';
 import {SkladyPolozkyComponent} from './sklady-polozky/sklady-polozky.component';
 import {SkladyEditaceComponent} from './sklady-editace/sklady-editace.component';
+import {PolozkaKontejneruComponent} from './polozka-kontejneru/polozka-kontejneru.component';
 
 const routes: Routes = [
   {
@@ -19,13 +20,11 @@ const routes: Routes = [
         path: 'polozky',
         component: SkladyPolozkyComponent,
         data: { basePath: 'sklady', breadcrumb: 'Skladové položky'},
-        children: [
-       /*   {
-            path: 'nastaveni',
-            component: SkladyEditaceComponent,
-            data: { basePath: 'sklady', breadcrumb: 'Nastaveni'}
-          },*/
-        ]
+      },
+      {
+        path: 'polozky/:id',
+        component: PolozkaKontejneruComponent,
+        data: { basePath: 'sklady', breadcrumb: 'Položky kontejneru' },
       },
       {
         path: 'editace-skladu',

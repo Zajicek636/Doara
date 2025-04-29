@@ -1,12 +1,12 @@
 ﻿import { NgModule } from '@angular/core';
-import {CommonModule, NgIf} from '@angular/common';
+import {CommonModule, NgForOf, NgIf} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {LayoutModule} from "./layout/layout.module";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {MatIconModule} from '@angular/material/icon';
+import {MatIcon, MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -17,7 +17,15 @@ import {DynamicTableComponent} from './table/table/table.component';
 import {AnyFormModule} from './forms/any-form/any-form.module';
 import {ContextToolbarComponent} from './context-toolbar/context-toolbar.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatDivider} from '@angular/material/divider';
+import {MatDivider, MatDividerModule} from '@angular/material/divider';
+import {
+  MatCard,
+  MatCardAvatar,
+  MatCardContent,
+  MatCardHeader,
+  MatCardModule,
+  MatCardTitle
+} from '@angular/material/card';
 
 @NgModule({
     declarations: [
@@ -42,7 +50,7 @@ import {MatDivider} from '@angular/material/divider';
     MatSortModule,
     MatPaginatorModule,
     MatToolbarModule,
-    MatDivider,
+    MatDividerModule,
   ],
   exports: [
     NgIf,
@@ -50,7 +58,12 @@ import {MatDivider} from '@angular/material/divider';
     LayoutModule,
     DynamicTableComponent,
     AnyFormModule,
-    ContextToolbarComponent
+    ContextToolbarComponent,
+    MatDividerModule,
+    NgForOf,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule
   ],
     providers: [
     ],

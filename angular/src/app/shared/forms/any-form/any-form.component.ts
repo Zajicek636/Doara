@@ -9,9 +9,9 @@ import {FormGroup} from '@angular/forms';
 import {FormField, FormFieldTypes} from '../form.interfaces';
 import {FormService} from '../form.service';
 
-export interface FormComponentResult<T> {
+export interface FormComponentResult {
   valid: boolean;
-  data: T;
+  data: any;
   modified: boolean;
   form: FormGroup
 }
@@ -25,7 +25,7 @@ export interface FormComponentResult<T> {
 export class AnyFormComponent<T> implements OnInit {
   @Input() fields!: FormField[];
 
-  @Output() formChanged: EventEmitter<FormComponentResult<T>> = new EventEmitter<FormComponentResult<T>>();
+  @Output() formChanged: EventEmitter<FormComponentResult> = new EventEmitter<FormComponentResult>();
 
   @Input() defaults: any = {}
 

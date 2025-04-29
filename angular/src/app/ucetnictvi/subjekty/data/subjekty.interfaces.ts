@@ -25,8 +25,8 @@ export interface CountryDto {
 }
 
 export interface SubjektyDialogResult<T = any> {
-  subjektBaseResult: FormComponentResult<T>;
-  subjektAddressResult: FormComponentResult<T>;
+  subjektBaseResult: FormComponentResult;
+  subjektAddressResult: FormComponentResult;
 }
 
 export const SUBJEKT_BASE_FIELDS: Omit<FormField, 'defaultValue'>[] = [
