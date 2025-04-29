@@ -1,5 +1,7 @@
 ﻿using Localization.Resources.AbpUi;
 using Doara.Localization;
+using Doara.Sklady;
+using Doara.Ucetnictvi;
 using Volo.Abp.Account;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
@@ -18,7 +20,9 @@ namespace Doara;
     typeof(AbpPermissionManagementHttpApiModule),
     typeof(AbpTenantManagementHttpApiModule),
     typeof(AbpFeatureManagementHttpApiModule),
-    typeof(AbpSettingManagementHttpApiModule)
+    typeof(AbpSettingManagementHttpApiModule),
+    typeof(SkladyHttpApiModule),
+    typeof(UcetnictviHttpApiModule)
     )]
 public class DoaraHttpApiModule : AbpModule
 {

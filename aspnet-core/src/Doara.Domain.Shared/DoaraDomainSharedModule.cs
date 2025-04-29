@@ -43,7 +43,7 @@ public class DoaraDomainSharedModule : AbpModule
         Configure<AbpLocalizationOptions>(options =>
         {
             options.Resources
-                .Add<DoaraResource>("en")
+                .Add<DoaraResource>("cs")
                 .AddBaseTypes(typeof(AbpValidationResource))
                 .AddVirtualJson("/Localization/Doara");
 

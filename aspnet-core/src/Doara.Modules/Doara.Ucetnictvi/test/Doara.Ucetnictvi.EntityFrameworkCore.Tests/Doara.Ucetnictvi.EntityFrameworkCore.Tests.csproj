@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Doara.Ucetnictvi</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.0" />
+    <ProjectReference Include="..\..\..\..\Doara.Shared\Services\TestHelper\TestHelper.csproj" />
+    <ProjectReference Include="..\..\src\Doara.Ucetnictvi.EntityFrameworkCore\Doara.Ucetnictvi.EntityFrameworkCore.csproj" />
+    <PackageReference Include="Volo.Abp.EntityFrameworkCore.Sqlite" Version="9.1.1" />
+    <ProjectReference Include="..\Doara.Ucetnictvi.TestBase\Doara.Ucetnictvi.TestBase.csproj" />
+
+  </ItemGroup>
+
+</Project>
