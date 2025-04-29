@@ -21,7 +21,7 @@ tr:active {
 
 .table-responsive {
   width: 100%;
-  height: calc(100vh - 300px);
+  height: calc(100vh - 200px);
   overflow: auto;
 }
 .full-width-table {
@@ -31,4 +31,10 @@ tr:active {
 
 .table-header {
   background-color: $lightenBaseGreen;
+}
+
+.sticky-paginator {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
 }

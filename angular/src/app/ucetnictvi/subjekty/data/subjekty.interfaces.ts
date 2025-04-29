@@ -107,23 +107,11 @@ export const SUBJEKT_ADDRESS_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     validator: [{ validator: CustomValidator.REQUIRED }]
   },
   {
-    label: 'PSČ',
-    visible: true,
-    formControlName: 'SubjektPSC',
-    defaultValueGetter: (a: SubjektDetailDto) => a.AddressDetailDto.PostalCode,
-    type: FormFieldTypes.TEXT,
-    validator: [{ validator: CustomValidator.REQUIRED }]
-  },
-  {
     label: 'Kód země',
     formControlName: 'SubjektCountryCode',
     visible: true,
-    defaultValueGetter: (a: SubjektDetailDto) => a.AddressDetailDto.CountryDto.Name,
+    defaultValueGetter: (a: SubjektDetailDto) => a.AddressDetailDto.CountryDto.Code,
     type: FormFieldTypes.LOOKUP,
-    options: [
-      { value: 'CZ', displayValue: 'CZ' },
-      { value: 'SK', displayValue: 'SK' }
-    ],
     validator: [{ validator: CustomValidator.REQUIRED }]
   }
 ];

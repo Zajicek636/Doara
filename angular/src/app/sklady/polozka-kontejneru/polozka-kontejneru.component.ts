@@ -190,6 +190,8 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
     this.chosenElement = item;
   }
 
-  handleDoubleClick(item: ContainerItemDto) {
+  async handleDoubleClick(item: ContainerItemDto) {
+    this.chosenElement = item;
+    await this.editItemContainer();
   }
 }

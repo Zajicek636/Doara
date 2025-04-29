@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {BaseContentComponent} from '../../shared/layout/base-component';
 import {
+  CountryDto,
   SUBJEKT_ADDRESS_FIELDS,
   SUBJEKT_BASE_FIELDS,
   SubjektDetailDto,
@@ -19,7 +20,8 @@ import {DialogType} from '../../shared/dialog/dialog.interfaces';
 import {DynamicTableComponent} from '../../shared/table/table/table.component';
 import {populateDefaults} from '../../shared/forms/form-field.utils';
 import {SubjektyModalComponent} from './subjekty-modal.component';
-import {MatDivider} from '@angular/material/divider';
+import {ZemeDataService} from "../zeme/data/zeme-data.service";
+import {PagedList} from "../../shared/crud/base-crud-service";
 
 @Component({
   selector: 'app-subjekty',
@@ -34,6 +36,7 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
 
   constructor(
     protected override dataService: SubjektyDataService,
+    protected countryDataService: ZemeDataService,
     protected override breadcrumbService: BreadcrumbService,
     protected override router: Router,
     protected override dialogService: DialogService,
@@ -46,11 +49,13 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
   form!: FormGroup;
   subjektInfoFields!: FormField[];
   subjektAddressFields!: FormField[];
+  countries!: PagedList<CountryDto>;
 
 
   override ngOnInit() {
 
     super.ngOnInit();
+
     this.tableSettings = {
       cacheEntityType: "subjektyTableEntity",
       formFields: [...SUBJEKT_BASE_FIELDS, ...SUBJEKT_ADDRESS_FIELDS],
@@ -60,6 +65,11 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
       defaultPageSize: 10,
       extraQueryParams: { active: true }
     };
+    this.loadData()
+  }
+
+  async loadData() {
+    this.countries = await this.countryDataService.getAll()
   }
 
   protected buildToolbarButtons(): ToolbarButton[] {
@@ -108,7 +118,7 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
     if(!res) return;
 
     try {
-      //this.dialogService.delete(this.chosenElement.id)
+      //await this.dataService.delete(this.chosenElement.id)
       const data = this.tableComponent.dataSource.data;
       const index = data.findIndex(el => el.id === this.chosenElement?.id);
       if (index !== -1) {
@@ -131,6 +141,14 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
     this.subjektInfoFields = populateDefaults(SUBJEKT_BASE_FIELDS,this.chosenElement)
     this.subjektAddressFields = populateDefaults(SUBJEKT_ADDRESS_FIELDS,this.chosenElement)
 
+    const codeField = this.subjektAddressFields
+        .find(f => f.formControlName === 'SubjektCountryCode');
+    if (codeField) {
+      codeField.options = this.countries.items.map(c => ({
+        value: c.Code,
+        displayValue: c.Name
+      }));
+    }
     const dialogResult: SubjektyDialogResult = await this.dialogService.open(
       SubjektyModalComponent<SubjektyDialogResult>,
       {
@@ -145,7 +163,7 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
     if(!dialogResult) return;
     try {
       const result = this.mapToDto(dialogResult);
-      //this.dialogService.put(this.chosenElement.id,)
+      //const res = await this.dataService.put('',result);
       this.tableComponent.dataSource.data = this.tableComponent.dataSource.data.map(x =>
         x.id === result.id ? result : x
       );
@@ -161,6 +179,14 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
   async addSubjekt() {
     this.subjektInfoFields = SUBJEKT_BASE_FIELDS
     this.subjektAddressFields = SUBJEKT_ADDRESS_FIELDS
+    const codeField = this.subjektAddressFields
+        .find(f => f.formControlName === 'SubjektCountryCode');
+    if (codeField) {
+      codeField.options = this.countries.items.map(c => ({
+        value: c.Code,
+        displayValue: c.Name
+      }));
+    }
 
     const dialogResult: SubjektyDialogResult = await this.dialogService.open(
       SubjektyModalComponent<SubjektyDialogResult>,
@@ -174,15 +200,16 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
     )
     if(!dialogResult) return;
 
-    console.log(dialogResult)
+
     const newSubjekt = this.mapToDto(dialogResult);
+    //const res = await this.dataService.post<SubjektDetailDto>('', newSubjekt);
     const data = this.tableComponent.dataSource.data;
     this.tableComponent.dataSource.data = [...data, newSubjekt];
-    //await this.dataService.post("123",a)
 
   }
 
   public async handleDoubleClick(row: SubjektDetailDto) {
+    this.chosenElement = row
     await this.editSubjekt()
   }
 
@@ -195,6 +222,7 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
     const { subjektBaseResult, subjektAddressResult } = dialogResult;
     const base = subjektBaseResult.data;
     const addr = subjektAddressResult.data;
+    const selectedCountry = this.countries.items.find(c => c.Code === addr.SubjektCountryCode);
 
     const newSubjekt: SubjektDetailDto = {
       id: base.SubjektId,
@@ -208,9 +236,9 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
         City:   addr.SubjektCity,
         PostalCode: addr.SubjektPSC,
         CountryDto: {
-          id: addr.CountryId,
-          Name: addr.SubjektCountryName,
-          Code: addr.SubjektCountryCode
+          id:   selectedCountry?.id   ?? '',
+          Code: selectedCountry?.Code ?? addr.SubjektCountryCode,
+          Name: selectedCountry?.Name ?? ''
         }
       }
     };

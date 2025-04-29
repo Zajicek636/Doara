@@ -47,8 +47,8 @@ export class BaseCrud<TId, TDto, TCreateDto, TEditDto> {
     return await lastValueFrom(res$);
   }
 
-  public async getAll(): Promise<TDto[]> {
-    const res$ = this.client.get<TDto[]>(`${this.settings.baseUrl}`);
+  public async getAll(): Promise<PagedList<TDto>> {
+    const res$ = this.client.get<PagedList<TDto>>(`${this.settings.baseUrl}`);
     return await lastValueFrom(res$);
   }
 

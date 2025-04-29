@@ -42,6 +42,6 @@ export interface  FormField {
   validator?: ValidatorConfig[];
 
   visible?: boolean;
-  //helpingy pro default values z dto pro table a mapovani
+  //helpingy pro default values z dto pro table a mapovani a asynchronni operace
   defaultValueGetter: (dto: any) => any;
 }
