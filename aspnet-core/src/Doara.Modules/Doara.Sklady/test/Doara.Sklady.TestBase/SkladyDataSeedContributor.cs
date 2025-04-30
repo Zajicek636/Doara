@@ -47,10 +47,10 @@ public class SkladyDataSeedContributor : IDataSeedContributor, ITransientDepende
             "ContainerItem11", "ContainerItem11Description", 10, 10, 10, 10, 10, "url1", TestData.Container1Id, 10,
             QuantityType.Grams));
         await _containerItemRepository.CreateAsync(new ContainerItem(TestData.ContainerItem21Id,
-            "ContainerItem21", "ContainerItem21Description", 10, 10, 10, 10, 10, null, TestData.Container1Id, 10,
+            "ContainerItem21", "ContainerItem21Description", 10, 10, 10, 10, 10, null, TestData.Container2Id, 10,
             QuantityType.Liters));
         await _containerItemRepository.CreateAsync(new ContainerItem(TestData.ContainerItem22Id,
-            "ContainerItem22", "ContainerItem22Description", 10, 10, 10, 10, 10, "url3", TestData.Container1Id, 10,
+            "ContainerItem22", "ContainerItem22Description", 10, 10, 10, 10, 10, "url3", TestData.Container2Id, 10,
             QuantityType.None));
     }
 }

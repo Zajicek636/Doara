@@ -39,9 +39,10 @@ public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
     public ContainerItem CalculateAndSetPresentationPrice()
     {
         var percentage = MarkupRate - DiscountRate;
+        PresentationPrice = RealPrice;
         if (percentage != 0)
         {
-            PresentationPrice = RealPrice * (100 + percentage) / 100;
+            PresentationPrice *= (100 + percentage) / 100;
         }
         PresentationPrice += Markup - Discount;
         return this;
