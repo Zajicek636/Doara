@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Doara.Sklady;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
 using Volo.Abp.Application;
@@ -9,7 +10,8 @@ namespace Doara.Ucetnictvi;
     typeof(UcetnictviDomainModule),
     typeof(UcetnictviApplicationContractsModule),
     typeof(AbpDddApplicationModule),
-    typeof(AbpAutoMapperModule)
+    typeof(AbpAutoMapperModule),
+    typeof(SkladyApplicationContractsModule)
     )]
 public class UcetnictviApplicationModule : AbpModule
 {

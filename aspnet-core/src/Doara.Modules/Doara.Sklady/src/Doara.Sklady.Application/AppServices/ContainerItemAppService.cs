@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Doara.Sklady.Dto.ContainerItem;
 using Doara.Sklady.Entities;
@@ -15,26 +16,44 @@ namespace Doara.Sklady.AppServices;
 public class ContainerItemAppService(IContainerItemRepository containerItemRepository, IContainerRepository containerRepository) : SkladyAppService, IContainerItemAppService
 {
     [Authorize(SkladyPermissions.ReadContainerItemPermission)]
-    public async Task<ContainerItemDto> GetAsync(Guid id)
+    public async Task<ContainerItemDetailDto> GetAsync(Guid id)
     {
         var res = await containerItemRepository.GetAsync(id);
-        return ObjectMapper.Map<ContainerItem, ContainerItemDto>(res); 
+        return ObjectMapper.Map<ContainerItem, ContainerItemDetailDto>(res); 
     }
 
     [Authorize(SkladyPermissions.ReadContainerItemPermission)]
-    public async Task<PagedResultDto<ContainerItemDto>> GetAllAsync(PagedAndSortedResultRequestDto input)
+    public async Task<PagedResultDto<ContainerItemDto>> GetAllAsync(ContainerItemGetAllDto input)
     {
-        var res = await containerItemRepository.GetAllAsync(input.SkipCount, input.MaxResultCount, input.Sorting ?? nameof(ContainerItem.Id));
-        var totalCount = await containerItemRepository.GetCountAsync();
+        Expression<Func<ContainerItem, bool>>? filter =
+            input.ContainerId != null ? i => i.ContainerId == input.ContainerId : null;
+        var res = await containerItemRepository.GetAllAsync(input.SkipCount, input.MaxResultCount, input.Sorting ?? nameof(ContainerItem.Id), false,
+            filter);
+        var totalCount = await containerItemRepository.GetCountAsync(filter);
         return new PagedResultDto<ContainerItemDto>
         {
             Items = ObjectMapper.Map<List<ContainerItem>, List<ContainerItemDto>>(res),
             TotalCount = totalCount
         };
     }
+    
+    [Authorize(SkladyPermissions.ReadContainerItemPermission)]
+    public async Task<PagedResultDto<ContainerItemDetailDto>> GetAllWithDetailAsync(ContainerItemGetAllDto input)
+    {
+        Expression<Func<ContainerItem, bool>>? filter =
+            input.ContainerId != null ? i => i.ContainerId == input.ContainerId : null;
+        var res = await containerItemRepository.GetAllAsync(input.SkipCount, input.MaxResultCount, input.Sorting ?? nameof(ContainerItem.Id), true,
+            filter);
+        var totalCount = await containerItemRepository.GetCountAsync(filter);
+        return new PagedResultDto<ContainerItemDetailDto>
+        {
+            Items = ObjectMapper.Map<List<ContainerItem>, List<ContainerItemDetailDto>>(res),
+            TotalCount = totalCount
+        };
+    }
 
     [Authorize(SkladyPermissions.CreateContainerItemPermission)]
-    public async Task<ContainerItemDto> CreateAsync(ContainerItemCreateInputDto input)
+    public async Task<ContainerItemDetailDto> CreateAsync(ContainerItemCreateInputDto input)
     {
         if (!await containerRepository.AnyAsync(x => x.Id == input.ContainerId))
         {
@@ -47,16 +66,16 @@ public class ContainerItemAppService(IContainerItemRepository containerItemRepos
             input.DiscountRate ?? 0, input.PurchaseUrl, input.ContainerId, 
             input.Quantity, input.QuantityType);
         var res = await containerItemRepository.CreateAsync(containerItem);
-        return ObjectMapper.Map<ContainerItem, ContainerItemDto>(res); 
+        return ObjectMapper.Map<ContainerItem, ContainerItemDetailDto>(res); 
     }
 
     [Authorize(SkladyPermissions.UpdateContainerItemPermission)]
-    public async Task<ContainerItemDto> UpdateAsync(ContainerItemUpdateInputDto input)
+    public async Task<ContainerItemDetailDto> UpdateAsync(Guid id, ContainerItemUpdateInputDto input)
     {
-        var container = await containerItemRepository.GetAsync(input.Id);
+        var container = await containerItemRepository.GetAsync(id);
         container.SetName(input.Name);
         var res = await containerItemRepository.UpdateAsync(container);
-        return ObjectMapper.Map<ContainerItem, ContainerItemDto>(res); 
+        return ObjectMapper.Map<ContainerItem, ContainerItemDetailDto>(res); 
     }
 
     [Authorize(SkladyPermissions.DeleteContainerItemPermission)]
@@ -67,14 +86,5 @@ public class ContainerItemAppService(IContainerItemRepository containerItemRepos
             throw new EntityNotFoundException(typeof(ContainerItem), id);
         }
         await containerItemRepository.DeleteAsync(id);
-    }
-
-    [Authorize(SkladyPermissions.UpdateContainerItemPermission)]
-    public async Task<ContainerItemDto> ChangeStateAsync(ContainerItemChangeStateInputDto input)
-    {
-        var container = await containerItemRepository.GetAsync(input.Id);
-        container.SetName(input.Name);
-        var res = await containerItemRepository.UpdateAsync(container);
-        return ObjectMapper.Map<ContainerItem, ContainerItemDto>(res); 
     }
 }

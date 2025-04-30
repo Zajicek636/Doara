@@ -17,45 +17,45 @@ namespace Doara.Sklady.Controllers;
 public class ContainerItemController(IContainerItemAppService containerItemAppService)
     : SkladyController, IContainerItemAppService
 {
-    [HttpGet]
+    [HttpGet("{id:guid}")]
     [Authorize(SkladyPermissions.ReadContainerItemPermission)]
-    public async Task<ContainerItemDto> GetAsync([Required] Guid id)
+    public async Task<ContainerItemDetailDto> GetAsync([Required] Guid id)
     {
         return await containerItemAppService.GetAsync(id);
     }
     
     [HttpGet("GetAll")]
     [Authorize(SkladyPermissions.ReadContainerItemPermission)]
-    public async Task<PagedResultDto<ContainerItemDto>> GetAllAsync(PagedAndSortedResultRequestDto input)
+    public async Task<PagedResultDto<ContainerItemDto>> GetAllAsync(ContainerItemGetAllDto input)
     {
         return await containerItemAppService.GetAllAsync(input);
+    }
+    
+    [HttpGet("GetAllWithDetail")]
+    [Authorize(SkladyPermissions.ReadContainerItemPermission)]
+    public async Task<PagedResultDto<ContainerItemDetailDto>> GetAllWithDetailAsync(ContainerItemGetAllDto input)
+    {
+        return await containerItemAppService.GetAllWithDetailAsync(input);
     }
 
     [HttpPost]
     [Authorize(SkladyPermissions.CreateContainerItemPermission)]
-    public async Task<ContainerItemDto> CreateAsync(ContainerItemCreateInputDto input)
+    public async Task<ContainerItemDetailDto> CreateAsync(ContainerItemCreateInputDto input)
     {
         return await containerItemAppService.CreateAsync(input);
     }
     
-    [HttpPut]
+    [HttpPut("{id:guid}")]
     [Authorize(SkladyPermissions.UpdateContainerItemPermission)]
-    public async Task<ContainerItemDto> UpdateAsync(ContainerItemUpdateInputDto input)
+    public async Task<ContainerItemDetailDto> UpdateAsync([Required] Guid id, ContainerItemUpdateInputDto input)
     {
-        return await containerItemAppService.UpdateAsync(input);
+        return await containerItemAppService.UpdateAsync(id, input);
     }
     
-    [HttpDelete]
+    [HttpDelete("{id:guid}")]
     [Authorize(SkladyPermissions.DeleteContainerItemPermission)]
     public async Task DeleteAsync([Required] Guid id)
     {
         await containerItemAppService.DeleteAsync(id);
-    }
-    
-    [HttpPatch]
-    [Authorize(SkladyPermissions.UpdateContainerItemPermission)]
-    public async Task<ContainerItemDto> ChangeStateAsync(ContainerItemChangeStateInputDto input)
-    {
-        return await containerItemAppService.ChangeStateAsync(input);
     }
 }

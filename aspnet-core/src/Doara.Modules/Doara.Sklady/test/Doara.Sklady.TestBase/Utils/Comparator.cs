@@ -25,4 +25,14 @@ public static class Comparator
         exShould.ShouldBe(entity.ContainerId, data.ContainerId);
         exShould.ShouldBe(entity.TenantId, data.TenantId);
     }
+    
+    public static void CheckIfSame(this FakeContainer data, Container entity)
+    {
+        var exShould = new ExtendedShould<Container>(data);
+        exShould.ShouldBe(entity.Id, data.Id);
+        exShould.ShouldBe(entity.IsDeleted, data.IsDeleted);
+        exShould.ShouldBe(entity.Name, data.Name);
+        exShould.ShouldBe(entity.Description, data.Description);
+        exShould.ShouldBe(entity.TenantId, data.TenantId);
+    }
 }

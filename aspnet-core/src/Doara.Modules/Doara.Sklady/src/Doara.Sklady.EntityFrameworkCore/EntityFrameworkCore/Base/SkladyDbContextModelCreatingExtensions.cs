@@ -22,7 +22,8 @@ public static class SkladyDbContextModelCreatingExtensions
 
             //Properties
             b.Property(c => c.Name).IsRequired().HasMaxLength(ContainerConstants.MaxNameLength);
-
+            b.Property(c => c.Description).IsRequired().HasMaxLength(ContainerConstants.MaxDescriptionLength);
+            
             //Relations
             b.HasMany(c => c.WarehouseWorkers).WithOne(ww => ww.Container).HasForeignKey(ww => ww.ContainerId)
                 .OnDelete(DeleteBehavior.Restrict);

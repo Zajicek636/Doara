@@ -11,7 +11,9 @@ public class SkladyApplicationAutoMapperProfile : Profile
     public SkladyApplicationAutoMapperProfile()
     {
         CreateMap<Container, ContainerDto>();
+        CreateMap<Container, ContainerDetailDto>();
         CreateMap<ContainerItem, ContainerItemDto>();
+        CreateMap<ContainerItem, ContainerItemDetailDto>();
         CreateMap<WarehouseWorker, WarehouseWorkerDto>();
     }
 }

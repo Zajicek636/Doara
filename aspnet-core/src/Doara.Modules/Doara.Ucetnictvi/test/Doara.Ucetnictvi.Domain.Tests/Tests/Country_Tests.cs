@@ -15,6 +15,13 @@ public class Country_Tests : UcetnictviDomainModule
         _data = RandomFakeEntityGenerator.RandomFakeCountry();
     }
     
+    [Fact]
+    public void Test_Country()
+    {
+        var entity = _data.CreateOriginalEntity();
+        _data.CheckIfSame(entity);
+    }
+    
     [Theory]
     [MemberData(nameof(PropertyTester.GetStringPropertyTestData), [false, FakeCountry.MaxNameLength], MemberType = typeof(PropertyTester))]
     public void Test_Country_Name(string name, bool shouldThrow)

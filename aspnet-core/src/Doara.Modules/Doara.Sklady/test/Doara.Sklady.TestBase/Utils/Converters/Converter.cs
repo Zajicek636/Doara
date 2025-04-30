@@ -12,4 +12,9 @@ public static partial class Converter
             data.RealPrice, data.Markup, data.MarkupRate, data.Discount, data.DiscountRate, data.PurchaseUrl,
             data.ContainerId, data.Quantity, data.QuantityType), checkIfNotThrow);
     }
+    
+    public static Container CreateOriginalEntity(this FakeContainer data, bool checkIfNotThrow = true)
+    {
+        return data.DoActionWithNotThrowCheck(() => new Container(data.Id, data.Name, data.Description), checkIfNotThrow);
+    }
 }

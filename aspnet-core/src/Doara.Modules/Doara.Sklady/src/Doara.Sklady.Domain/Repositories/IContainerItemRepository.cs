@@ -9,7 +9,7 @@ namespace Doara.Sklady.Repositories;
 public interface IContainerItemRepository
 {
     Task<ContainerItem> GetAsync(Guid id);
-    Task<List<ContainerItem>> GetAllAsync(int skip, int take, string sortBy, Expression<Func<ContainerItem, bool>>? filter = null);
+    Task<List<ContainerItem>> GetAllAsync(int skip, int take, string sortBy, bool withDetail, Expression<Func<ContainerItem, bool>>? filter = null);
     Task<long> GetCountAsync(Expression<Func<ContainerItem, bool>>? filter = null);
     Task<ContainerItem> CreateAsync(ContainerItem containerItem);
     Task<ContainerItem> UpdateAsync(ContainerItem containerItem);
