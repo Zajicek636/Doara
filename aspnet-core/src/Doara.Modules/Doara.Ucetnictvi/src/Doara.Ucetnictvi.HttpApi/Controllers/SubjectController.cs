@@ -44,11 +44,27 @@ public class SubjectController(ISubjectAppService subjectAppService) : Ucetnictv
         return await subjectAppService.CreateAsync(input);
     }
     
+    [HttpPost("CreateWithAddress")]
+    [Authorize(UcetnictviPermissions.CreateSubjectPermission)]
+    [Authorize(UcetnictviPermissions.CreateAddressPermission)]
+    public async Task<SubjectDetailDto> CreateWithAddressAsync(SubjectWithAddressCreateInputDto input)
+    {
+        return await subjectAppService.CreateWithAddressAsync(input);
+    }
+
     [HttpPut]
     [Authorize(UcetnictviPermissions.UpdateSubjectPermission)]
     public async Task<SubjectDetailDto> UpdateAsync(SubjectUpdateInputDto input)
     {
         return await subjectAppService.UpdateAsync(input);
+    }
+    
+    [HttpPut("UpdateWithAddress")]
+    [Authorize(UcetnictviPermissions.UpdateSubjectPermission)]
+    [Authorize(UcetnictviPermissions.UpdateAddressPermission)]
+    public async Task<SubjectDetailDto> UpdateWithAddressAsync(SubjectWithAddressUpdateInputDto input)
+    {
+        return await subjectAppService.UpdateWithAddressAsync(input);
     }
     
     [HttpDelete]

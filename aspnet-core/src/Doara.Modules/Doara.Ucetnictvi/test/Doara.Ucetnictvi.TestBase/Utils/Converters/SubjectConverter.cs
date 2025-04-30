@@ -1,4 +1,5 @@
 ﻿using System;
+using Doara.Ucetnictvi.Dto.Address;
 using Doara.Ucetnictvi.Dto.Subject;
 
 namespace Doara.Ucetnictvi.Utils.Converters;
@@ -23,6 +24,19 @@ public static partial class Converter
         };
     }
     
+    public static SubjectWithAddressCreateInputDto CreateSubjectWithAddressInput(AddressCreateInputDto addressInput, string name = DefaultSubjectName, string? ic = DefaultSubjectIc,
+        string? dic = DefaultSubjectDic, bool isVatPayer = DefaultSubjectIsVatPayer)
+    {
+        return new SubjectWithAddressCreateInputDto
+        {
+            Name = name,
+            Ic = ic,
+            Dic = dic,
+            IsVatPayer = isVatPayer,
+            Address = addressInput
+        };
+    }
+    
     public static SubjectUpdateInputDto Convert2UpdateInput(SubjectDetailDto input)
     {
         return new SubjectUpdateInputDto
@@ -33,6 +47,19 @@ public static partial class Converter
             Dic = input.Dic,
             IsVatPayer = input.IsVatPayer,
             AddressId = input.Address.Id
+        };
+    }
+    
+    public static SubjectWithAddressUpdateInputDto Convert2UpdateInput(SubjectDetailDto input, bool setAddress)
+    {
+        return new SubjectWithAddressUpdateInputDto
+        {
+            Id = input.Id,
+            Name = input.Name,
+            Ic = input.Ic,
+            Dic = input.Dic,
+            IsVatPayer = input.IsVatPayer,
+            Address = setAddress ? Convert2UpdateInput(input.Address) : null!
         };
     }
 }
