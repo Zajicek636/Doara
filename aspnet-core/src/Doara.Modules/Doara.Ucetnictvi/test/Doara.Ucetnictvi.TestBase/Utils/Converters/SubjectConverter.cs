@@ -41,7 +41,6 @@ public static partial class Converter
     {
         return new SubjectUpdateInputDto
         {
-            Id = input.Id,
             Name = input.Name,
             Ic = input.Ic,
             Dic = input.Dic,
@@ -54,7 +53,6 @@ public static partial class Converter
     {
         return new SubjectWithAddressUpdateInputDto
         {
-            Id = input.Id,
             Name = input.Name,
             Ic = input.Ic,
             Dic = input.Dic,

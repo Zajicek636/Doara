@@ -84,7 +84,7 @@ public class AddressAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         address.City = Converter.DefaultAddressCity;
         address.PostalCode = Converter.DefaultAddressPostalCode;
         
-        var updatedAddress = await _addressAppService.UpdateAsync(Converter.Convert2UpdateInput(address));
+        var updatedAddress = await _addressAppService.UpdateAsync(address.Id, Converter.Convert2UpdateInput(address));
         
         updatedAddress.Id.ShouldBe(address.Id);
         updatedAddress.Street.ShouldBe(address.Street);
@@ -104,11 +104,10 @@ public class AddressAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         address.Street = Converter.DefaultAddressStreet;
         address.City = Converter.DefaultAddressCity;
         address.PostalCode = Converter.DefaultAddressPostalCode;
-        address.Id = id;
         
         var exception = await Should.ThrowAsync<EntityNotFoundException>(async () =>
         {
-            await _addressAppService.UpdateAsync(Converter.Convert2UpdateInput(address));
+            await _addressAppService.UpdateAsync(id, Converter.Convert2UpdateInput(address));
         });
         exception.Message.ShouldContain(nameof(Entities.Address));
         exception.Message.ShouldContain(id.ToString());
@@ -126,7 +125,7 @@ public class AddressAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         
         var exception = await Should.ThrowAsync<EntityNotFoundException>(async () =>
         {
-            await _addressAppService.UpdateAsync(Converter.Convert2UpdateInput(address));
+            await _addressAppService.UpdateAsync(id, Converter.Convert2UpdateInput(address));
         });
         exception.Message.ShouldContain(nameof(Entities.Country));
         exception.Message.ShouldContain(id.ToString());

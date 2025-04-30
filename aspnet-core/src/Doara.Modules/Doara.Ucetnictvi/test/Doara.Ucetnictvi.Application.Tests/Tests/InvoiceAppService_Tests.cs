@@ -197,9 +197,9 @@ public class InvoiceAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         invoice.ConstantSymbol = Converter.DefaultInvoiceConstantSymbol;
         invoice.SpecificSymbol = Converter.DefaultInvoiceSpecificSymbol;
         var input = Converter.Convert2UpdateInput(invoice);
-        var updatedInvoice = await _invoiceAppService.UpdateAsync(input);
+        var updatedInvoice = await _invoiceAppService.UpdateAsync(invoice.Id, input);
         
-        updatedInvoice.Id.ShouldBe(input.Id);
+        updatedInvoice.Id.ShouldBe(invoice.Id);
         updatedInvoice.InvoiceNumber.ShouldBe(input.InvoiceNumber);
         updatedInvoice.IssueDate.ShouldBe(input.IssueDate);
         updatedInvoice.TaxDate.ShouldBe(input.TaxDate);
@@ -262,11 +262,10 @@ public class InvoiceAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         invoice.VariableSymbol = Converter.DefaultInvoiceVariableSymbol;
         invoice.ConstantSymbol = Converter.DefaultInvoiceConstantSymbol;
         invoice.SpecificSymbol = Converter.DefaultInvoiceSpecificSymbol;
-        invoice.Id = id;
 
         var exception = await Should.ThrowAsync<EntityNotFoundException>(async () =>
         {
-            await _invoiceAppService.UpdateAsync(Converter.Convert2UpdateInput(invoice));
+            await _invoiceAppService.UpdateAsync(id, Converter.Convert2UpdateInput(invoice));
         });
         exception.Message.ShouldContain(nameof(Entities.Invoice));
         exception.Message.ShouldContain(id.ToString());
@@ -294,7 +293,7 @@ public class InvoiceAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
 
         var exception = await Should.ThrowAsync<BusinessException>(async () =>
         {
-            await _invoiceAppService.UpdateAsync(Converter.Convert2UpdateInput(invoice));
+            await _invoiceAppService.UpdateAsync(invoice.Id, Converter.Convert2UpdateInput(invoice));
         });
         exception.Code.ShouldBe(UcetnictviErrorCodes.SupplierDoesNotExist);
     }
@@ -321,7 +320,7 @@ public class InvoiceAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         
         var exception = await Should.ThrowAsync<BusinessException>(async () =>
         {
-            await _invoiceAppService.UpdateAsync(Converter.Convert2UpdateInput(invoice));
+            await _invoiceAppService.UpdateAsync(invoice.Id, Converter.Convert2UpdateInput(invoice));
         });
         
         exception.Code.ShouldBe(UcetnictviErrorCodes.CustomerDoesNotExist);
@@ -348,7 +347,7 @@ public class InvoiceAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         
         var exception = await Should.ThrowAsync<BusinessException>(async () =>
         {
-            await _invoiceAppService.UpdateAsync(Converter.Convert2UpdateInput(invoice));
+            await _invoiceAppService.UpdateAsync(invoice.Id, Converter.Convert2UpdateInput(invoice));
         });
         
         exception.Code.ShouldBe(UcetnictviErrorCodes.SupplierIsSameAsCustomer);
