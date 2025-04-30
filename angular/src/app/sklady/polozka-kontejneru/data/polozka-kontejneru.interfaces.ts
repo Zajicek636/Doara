@@ -74,9 +74,9 @@ export const QuantityTypeLabels: Record<QuantityType, string> = {
 };
 
 export const ContainerItemStateLabels: Record<ContainerItemState, string> = {
-    [ContainerItemState.New]: 'New',
-    [ContainerItemState.Used]: 'Used',
-    [ContainerItemState.Canceled]: 'Canceled',
+    [ContainerItemState.New]: 'Nový',
+    [ContainerItemState.Used]: 'Použité',
+    [ContainerItemState.Canceled]: 'Zrušeno',
 };
 
 export const CONTAINER_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
@@ -96,7 +96,7 @@ export const CONTAINER_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
             value: s,
             displayValue: ContainerItemStateLabels[s]
         })),
-        defaultValueGetter: (item: ContainerItemDto) => ContainerItemStateLabels[item.state],
+        defaultValueGetter: (item: ContainerItemDto) => item.state,
     },
     {
         label: 'Název položky',
@@ -130,7 +130,7 @@ export const CONTAINER_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
             value: q,
             displayValue: QuantityTypeLabels[q]
         })),
-        defaultValueGetter: (item: ContainerItemDto) =>  QuantityTypeLabels[item.quantityType],
+        defaultValueGetter: (item: ContainerItemDto) =>  item.quantityType,
         validator: [{ validator: CustomValidator.REQUIRED }],
     },
     {

@@ -1,5 +1,5 @@
 ﻿import { NgModule } from '@angular/core';
-import {CommonModule, NgForOf, NgIf} from '@angular/common';
+import {AsyncPipe, CommonModule, NgForOf, NgIf} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {LayoutModule} from "./layout/layout.module";
@@ -17,22 +17,18 @@ import {DynamicTableComponent} from './table/table/table.component';
 import {AnyFormModule} from './forms/any-form/any-form.module';
 import {ContextToolbarComponent} from './context-toolbar/context-toolbar.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatDivider, MatDividerModule} from '@angular/material/divider';
-import {
-  MatCard,
-  MatCardAvatar,
-  MatCardContent,
-  MatCardHeader,
-  MatCardModule,
-  MatCardTitle
-} from '@angular/material/card';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatCardModule,} from '@angular/material/card';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
 
 @NgModule({
     declarations: [
       DynamicTableComponent,
-      ContextToolbarComponent
+      ContextToolbarComponent,
     ],
   imports: [
+    MatProgressSpinnerModule,
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
@@ -51,6 +47,7 @@ import {
     MatPaginatorModule,
     MatToolbarModule,
     MatDividerModule,
+    AsyncPipe
   ],
   exports: [
     NgIf,
@@ -63,7 +60,7 @@ import {
     NgForOf,
     MatCardModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
   ],
     providers: [
     ],

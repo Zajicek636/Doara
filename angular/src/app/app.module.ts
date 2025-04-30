@@ -4,7 +4,8 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routes';
 import {LayoutModule} from '@angular/cdk/layout';
 import {SharedModule} from './shared/shared.module';
-import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClient, withInterceptors} from '@angular/common/http';
+import {loadingInterceptor} from './shared/loading/loading.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -14,7 +15,9 @@ import {provideHttpClient} from '@angular/common/http';
     LayoutModule,
     SharedModule
   ],
-  providers: [provideHttpClient()],
+  providers: [
+    provideHttpClient( withInterceptors([loadingInterceptor])),
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

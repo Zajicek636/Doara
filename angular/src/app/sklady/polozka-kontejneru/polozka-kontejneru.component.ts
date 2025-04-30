@@ -5,18 +5,19 @@ import {DynamicTableComponent} from '../../shared/table/table/table.component';
 import {BreadcrumbService} from '../../shared/breadcrumb/breadcrumb.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DialogService} from '../../shared/dialog/dialog.service';
-import {FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {ToolbarButton} from '../../shared/context-toolbar/context-toolbar.interfaces';
 import {BaseMaterialIcons} from '../../../styles/material.icons';
 import {PolozkaKontejneruDataService} from './data/polozka-kontejneru-data.service';
 import {
   CONTAINER_ITEM_CREATE_FIELDS,
-  CONTAINER_ITEM_FIELDS,
+  CONTAINER_ITEM_FIELDS, ContainerItemCreateInputDto,
   ContainerItemDto
 } from "./data/polozka-kontejneru.interfaces";
-import {DialogType} from "../../shared/dialog/dialog.interfaces";
+import {DialogType, DynamicDialogResult} from "../../shared/dialog/dialog.interfaces";
 import {CustomValidator} from "../../shared/forms/form.interfaces";
 import {populateDefaults} from "../../shared/forms/form-field.utils";
+import {LoadingService} from '../../shared/loading/loading.service';
 
 @Component({
   selector: 'app-polozka-kontejneru',
@@ -33,7 +34,8 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
     protected override breadcrumbService: BreadcrumbService,
     protected override router: Router,
     protected override dialogService: DialogService,
-    protected override route: ActivatedRoute
+    protected override route: ActivatedRoute,
+    protected loadingService: LoadingService,
   ) {
     super(route, router,breadcrumbService, dialogService, dataService);
 
@@ -120,7 +122,9 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
     });
 
     if (!dialogResult) return;
-    console.log(dialogResult);
+    const newObj = this.mapToDto(dialogResult);
+    const res = await this.dataService.post<ContainerItemDto>('', newObj)
+    //this.tableComponent.dataSource.data.push(res);
   }
 
   async deleteItemContainer() { if(!this.chosenElement) return;
@@ -184,6 +188,25 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
       type: DialogType.SUCCESS
     });
 
+  }
+
+  mapToDto(dialogResult: DynamicDialogResult): ContainerItemCreateInputDto {
+    const main = dialogResult["main_section"]?.data || {};
+    const second = dialogResult["second_section"]?.data || {};
+
+    return {
+      name: main.name,
+      description: second.description ?? '',
+      quantity: main.quantity,
+      quantityType: main.quantityType,
+      realPrice: main.realPrice,
+      markup: second.markup ?? 0,
+      markupRate: second.markupRate ?? 0,
+      discount: second.discount ?? 0,
+      discountRate: second.discountRate ?? 0,
+      purchaseUrl: second.purchaseUrl ?? '',
+      containerId: this.entityId!
+    };
   }
 
   clickedElement(item: ContainerItemDto) {
