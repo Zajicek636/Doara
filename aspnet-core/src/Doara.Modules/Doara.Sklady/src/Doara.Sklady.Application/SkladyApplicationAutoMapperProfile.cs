@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Doara.Sklady.Dto.Container;
 using Doara.Sklady.Dto.ContainerItem;
-using Doara.Sklady.Dto.WarehouseWorker;
 using Doara.Sklady.Entities;
 
 namespace Doara.Sklady;
@@ -14,6 +13,5 @@ public class SkladyApplicationAutoMapperProfile : Profile
         CreateMap<Container, ContainerDetailDto>();
         CreateMap<ContainerItem, ContainerItemDto>();
         CreateMap<ContainerItem, ContainerItemDetailDto>();
-        CreateMap<WarehouseWorker, WarehouseWorkerDto>();
     }
 }

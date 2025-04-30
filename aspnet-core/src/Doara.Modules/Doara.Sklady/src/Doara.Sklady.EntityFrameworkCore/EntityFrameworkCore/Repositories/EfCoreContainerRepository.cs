@@ -71,7 +71,6 @@ public class EfCoreContainerRepository(IDbContextProvider<SkladyDbContext> dbCon
     public override async Task<IQueryable<Container>> WithDetailsAsync()
     {
         return (await base.WithDetailsAsync())
-            .Include(x => x.WarehouseWorkers)
             .Include(x => x.Items);
     }
 }
