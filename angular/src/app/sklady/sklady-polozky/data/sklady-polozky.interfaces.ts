@@ -6,10 +6,6 @@ export interface ContainerDto {
   description: string
 }
 
-export interface ContainerCreateDto {
-  name: string
-}
-
 export const CREATE_CONTAINER_FIELDS: Omit<FormField, 'defaultValue'>[] = [
   {
     label: 'Id',

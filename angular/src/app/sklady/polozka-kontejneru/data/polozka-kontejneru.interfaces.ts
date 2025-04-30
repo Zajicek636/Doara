@@ -1,17 +1,18 @@
 import {CustomValidator, FormField, FormFieldTypes} from "../../../shared/forms/form.interfaces";
 
-export interface ContainerItemCreateInputDto {
-    quantityType: QuantityType;
-    name: string;
-    description: string;
-    purchaseUrl?: string;
-    quantity: number;
-    realPrice: number;
-    markup?: number;
-    markupRate?: number;
-    discount?: number;
-    discountRate?: number;
-    containerId: string;
+export interface ContainerItemCreateEditDto {
+  id?: string;
+  quantityType: QuantityType;
+  name: string;
+  description: string;
+  purchaseUrl?: string;
+  quantity: number;
+  realPrice: number;
+  markup?: number;
+  markupRate?: number;
+  discount?: number;
+  discountRate?: number;
+  containerId: string;
 }
 
 export interface ContainerItemUpdateInputDto { //todo dodelat az bude na BE
@@ -149,28 +150,28 @@ export const CONTAINER_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
         defaultValueGetter: (item: ContainerItemDto) => item.presentationPrice,
     },
     {
-        label: 'Přirážka',
+        label: 'Přirážka (Kč)',
         formControlName: 'markup',
         visible: true,
         type: FormFieldTypes.NUMBER,
         defaultValueGetter: (item: ContainerItemDto) => item.markup,
     },
     {
-        label: 'Přirážka - Sazba',
+        label: 'Přirážka - Sazba  (%)',
         formControlName: 'markupRate',
         visible: true,
         type: FormFieldTypes.NUMBER,
         defaultValueGetter: (item: ContainerItemDto) => item.markupRate,
     },
     {
-        label: 'Sleva',
+        label: 'Sleva (Kč)',
         formControlName: 'discount',
         visible: true,
         type: FormFieldTypes.NUMBER,
         defaultValueGetter: (item: ContainerItemDto) => item.discount,
     },
     {
-        label: 'Sleva - Sazba',
+        label: 'Sleva - Sazba  (%)',
         formControlName: 'discountRate',
         visible: true,
         type: FormFieldTypes.NUMBER,
@@ -199,7 +200,7 @@ export const CONTAINER_ITEM_CREATE_FIELDS: Omit<FormField, 'defaultValue'>[] = [
         visible: true,
         type: FormFieldTypes.TEXT,
         validator: [{ validator: CustomValidator.REQUIRED },{ validator: CustomValidator.MAX, params: 255}],
-        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.name,
+        defaultValueGetter: (item: ContainerItemCreateEditDto) => item.name,
     },
     {
         label: 'Popis položky',
@@ -207,7 +208,7 @@ export const CONTAINER_ITEM_CREATE_FIELDS: Omit<FormField, 'defaultValue'>[] = [
         visible: true,
         type: FormFieldTypes.TEXTAREA,
         validator: [{ validator: CustomValidator.MAX, params: 255}],
-        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.description,
+        defaultValueGetter: (item: ContainerItemCreateEditDto) => item.description,
     },
     {
         label: 'Množství',
@@ -215,7 +216,7 @@ export const CONTAINER_ITEM_CREATE_FIELDS: Omit<FormField, 'defaultValue'>[] = [
         visible: true,
         type: FormFieldTypes.NUMBER,
         validator: [{ validator: CustomValidator.REQUIRED }],
-        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.quantity,
+        defaultValueGetter: (item: ContainerItemCreateEditDto) => item.quantity,
     },
     {
         label: 'Typ množství',
@@ -235,35 +236,35 @@ export const CONTAINER_ITEM_CREATE_FIELDS: Omit<FormField, 'defaultValue'>[] = [
         visible: true,
         type: FormFieldTypes.NUMBER,
         validator: [{ validator: CustomValidator.REQUIRED }],
-        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.realPrice,
+        defaultValueGetter: (item: ContainerItemCreateEditDto) => item.realPrice,
     },
     {
-        label: 'Přirážka',
+        label: 'Přirážka (%)',
         formControlName: 'markup',
         visible: true,
         type: FormFieldTypes.NUMBER,
-        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.markup,
+        defaultValueGetter: (item: ContainerItemCreateEditDto) => item.markup,
     },
     {
         label: 'Přirážka - Sazba',
         formControlName: 'markupRate',
         visible: true,
         type: FormFieldTypes.NUMBER,
-        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.markupRate,
+        defaultValueGetter: (item: ContainerItemCreateEditDto) => item.markupRate,
     },
     {
-        label: 'Sleva',
+        label: 'Sleva (%)',
         formControlName: 'discount',
         visible: true,
         type: FormFieldTypes.NUMBER,
-        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.discount,
+        defaultValueGetter: (item: ContainerItemCreateEditDto) => item.discount,
     },
     {
         label: 'Sleva - Sazba',
         formControlName: 'discountRate',
         visible: true,
         type: FormFieldTypes.NUMBER,
-        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.discountRate,
+        defaultValueGetter: (item: ContainerItemCreateEditDto) => item.discountRate,
     },
     {
         label: 'URL nákupu',
@@ -271,6 +272,6 @@ export const CONTAINER_ITEM_CREATE_FIELDS: Omit<FormField, 'defaultValue'>[] = [
         visible: true,
         type: FormFieldTypes.TEXT,
         validator: [{ validator: CustomValidator.MAX, params: 2048}],
-        defaultValueGetter: (item: ContainerItemCreateInputDto) => item.purchaseUrl,
+        defaultValueGetter: (item: ContainerItemCreateEditDto) => item.purchaseUrl,
     }
 ];

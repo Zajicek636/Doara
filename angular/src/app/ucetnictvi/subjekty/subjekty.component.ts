@@ -3,7 +3,7 @@ import {BaseContentComponent} from '../../shared/layout/base-component';
 import {
   CountryDto,
   SUBJEKT_ADDRESS_FIELDS,
-  SUBJEKT_BASE_FIELDS,
+  SUBJEKT_BASE_FIELDS, SubjektCreateEditDto,
   SubjektDetailDto,
   SubjektyDialogResult
 } from './data/subjekty.interfaces';
@@ -110,7 +110,7 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
     const res = await this.dialogService.confirmAsync({
       title: "Potvrzení smazání",
       icon: BaseMaterialIcons.REMOVE_PERSON,
-      message: `Opravdu chcete odebrat subjekt: <strong>${this.chosenElement.Name} - ${this.chosenElement.Ic}</strong> ?`,
+      message: `Opravdu chcete odebrat subjekt: <strong>${this.chosenElement.name} - ${this.chosenElement.ic}</strong> ?`,
       dialogType: DialogType.ALERT,
       cancelButton: "Ne",
       confirmButton: "Ano"
@@ -118,7 +118,7 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
     if(!res) return;
 
     try {
-      //await this.dataService.delete(this.chosenElement.id)
+      await this.dataService.delete(this.chosenElement.id)
       const data = this.tableComponent.dataSource.data;
       const index = data.findIndex(el => el.id === this.chosenElement?.id);
       if (index !== -1) {
@@ -145,8 +145,8 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
         .find(f => f.formControlName === 'SubjektCountryCode');
     if (codeField) {
       codeField.options = this.countries.items.map(c => ({
-        value: c.Code,
-        displayValue: c.Name
+        value: c.code,
+        displayValue: c.name
       }));
     }
     const dialogResult: SubjektyDialogResult = await this.dialogService.open(
@@ -163,10 +163,10 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
     if(!dialogResult) return;
     try {
       const result = this.mapToDto(dialogResult);
-      //const res = await this.dataService.put('',result);
-      this.tableComponent.dataSource.data = this.tableComponent.dataSource.data.map(x =>
+      const res = await this.dataService.put(result.id!,result, {useSuffix: true});
+     /* this.tableComponent.dataSource.data = this.tableComponent.dataSource.data.map(x =>
         x.id === result.id ? result : x
-      );
+      );*/
     } catch (e: any) {
       await this.dialogService.alert({
         title: "Chyba",
@@ -183,8 +183,8 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
         .find(f => f.formControlName === 'SubjektCountryCode');
     if (codeField) {
       codeField.options = this.countries.items.map(c => ({
-        value: c.Code,
-        displayValue: c.Name
+        value: c.code,
+        displayValue: c.name
       }));
     }
 
@@ -200,11 +200,10 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
     )
     if(!dialogResult) return;
 
-
     const newSubjekt = this.mapToDto(dialogResult);
-    //const res = await this.dataService.post<SubjektDetailDto>('', newSubjekt);
+    const res = await this.dataService.post('', newSubjekt, {useSuffix: true});
     const data = this.tableComponent.dataSource.data;
-    this.tableComponent.dataSource.data = [...data, newSubjekt];
+    this.tableComponent.dataSource.data = [...data, res];
 
   }
 
@@ -218,30 +217,23 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
     this.chosenElement = row;
   }
 
-  private mapToDto(dialogResult: SubjektyDialogResult) {
-    const { subjektBaseResult, subjektAddressResult } = dialogResult;
-    const base = subjektBaseResult.data;
-    const addr = subjektAddressResult.data;
-    const selectedCountry = this.countries.items.find(c => c.Code === addr.SubjektCountryCode);
-
-    const newSubjekt: SubjektDetailDto = {
+  private mapToDto(dialogResult: SubjektyDialogResult): SubjektCreateEditDto {
+    const base = dialogResult.subjektBaseResult.data;
+    const addr = dialogResult.subjektAddressResult.data;
+    const selectedCountry = this.countries.items.find(c => c.code === addr.SubjektCountryCode);
+    return {
       id: base.SubjektId,
-      Name: base.SubjektName,
-      Ic:   base.SubjektIc,
-      Dic:  base.SubjektDic,
-      IsVatPayer: base.SubjektPayer,
-      AddressDetailDto: {
-        id: addr.AddressId,
-        Street: addr.SubjektStreet,
-        City:   addr.SubjektCity,
-        PostalCode: addr.SubjektPSC,
-        CountryDto: {
-          id:   selectedCountry?.id   ?? '',
-          Code: selectedCountry?.Code ?? addr.SubjektCountryCode,
-          Name: selectedCountry?.Name ?? ''
-        }
+      name: base.SubjektName,
+      ic:   base.SubjektIc,
+      dic:  base.SubjektDic,
+      isVatPayer: base.SubjektPayer,
+      address: {
+        id: addr.AddressId ?? '',
+        street: addr.SubjektStreet,
+        city:   addr.SubjektCity,
+        postalCode: addr.SubjektPSC,
+        countryId: selectedCountry?.id!
       }
     };
-    return newSubjekt;
   }
 }

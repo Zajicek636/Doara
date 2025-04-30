@@ -15,6 +15,6 @@ export class ZemeDataService extends BaseCrud<string, CountryDto, CountryDto, Co
 
 
   override async getAll(): Promise<PagedList<CountryDto>> {
-    return {items: [{Name: "Česká republika", Code: "CZ", id: "ID"}, {Name: "Slovensko", Code: "SK", id: "IDD"}], totalCount: 2}
+    return {items: [{name: "Česká republika", code: "CZ", id: "ID"}, {name: "Slovensko", code: "SK", id: "IDD"}], totalCount: 2}
   }
 }

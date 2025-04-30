@@ -9,6 +9,7 @@ export class SkladyPolozkyCrudSettings implements CrudSettings<string, Container
   baseUrl: string = 'https://example.com/api/SkladyPolozky/SkladyPolozky';
   postUrl?: string;
   queryParam?: string;
+  getAllSuffix: string = "GetAll"
 
   idGetter(entity: ContainerDto): string {
     return entity.id;

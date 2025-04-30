@@ -13,6 +13,7 @@ import {BaseContentComponent} from '../../shared/layout/base-component';
 import {ToolbarButton} from '../../shared/context-toolbar/context-toolbar.interfaces';
 import {FormField} from '../../shared/forms/form.interfaces';
 import {populateDefaults} from '../../shared/forms/form-field.utils';
+import {PagedList} from '../../shared/crud/base-crud-service';
 
 @Component({
   selector: 'app-sklady-polozky',
@@ -43,7 +44,8 @@ export class SkladyPolozkyComponent extends BaseContentComponent<ContainerDto,Sk
 
   async loadData() {
     try {
-      //await this.dataService.getAll("test")
+      //const res = await this.dataService.getAll({useSuffix: true})
+      //this.items = res.items ?? []
       for (let i = 0; i < 10; i++) {
         this.items.push({id: `${i}`, name: `TEST-${i}`, description: `DESCRIPTIONDESCRIPTION-${i}`});
       }
@@ -84,6 +86,7 @@ export class SkladyPolozkyComponent extends BaseContentComponent<ContainerDto,Sk
       type: DialogType.SUCCESS
     })
     const res = this.mapToDto(a,"main_section")
+    await this.dataService.put(res.id, res)
     this.items = this.items.map(x => x.id == res.id ? res : x)
   }
 
@@ -93,6 +96,7 @@ export class SkladyPolozkyComponent extends BaseContentComponent<ContainerDto,Sk
       message: `Opravdu chcete odebrat kontejner ${item.name} a jeho položky?`,
       dialogType: DialogType.ALERT,
     })
+    await this.dataService.delete(item.id);
     this.items.splice(this.items.indexOf(item), 1);
   }
 
@@ -118,14 +122,15 @@ export class SkladyPolozkyComponent extends BaseContentComponent<ContainerDto,Sk
     })
     if(!a) return;
 
-    const res = this.mapToDto(a,"main_section")
+    const obj = this.mapToDto(a,"main_section")
+    const res = await this.dataService.post('',obj)
     this.items.push(res)
   }
 
   mapToDto(result: DynamicDialogResult, key: string): ContainerDto {
     return {
       name: result[key].data.ContainerName,
-      id: this.items.length.toString(),
+      id: result[key].data.ContainerId ?? '',
       description: result[key].data.ContainerLabel
     }
   }

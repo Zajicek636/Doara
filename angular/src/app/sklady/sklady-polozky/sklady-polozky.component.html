@@ -1,6 +1,6 @@
 <app-context-toolbar [buttons]="toolbarButtons"></app-context-toolbar>
 <div class="content-scroll-wrapper">
-  <div class="card-grid">
+  <div class="card-grid" *ngIf="items">
     <ng-container *ngFor="let item of items">
       <mat-card appearance="outlined" class="card">
         <mat-card-header class="container-header">

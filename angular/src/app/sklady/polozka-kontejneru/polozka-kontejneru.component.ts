@@ -5,13 +5,13 @@ import {DynamicTableComponent} from '../../shared/table/table/table.component';
 import {BreadcrumbService} from '../../shared/breadcrumb/breadcrumb.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DialogService} from '../../shared/dialog/dialog.service';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
 import {ToolbarButton} from '../../shared/context-toolbar/context-toolbar.interfaces';
 import {BaseMaterialIcons} from '../../../styles/material.icons';
 import {PolozkaKontejneruDataService} from './data/polozka-kontejneru-data.service';
 import {
   CONTAINER_ITEM_CREATE_FIELDS,
-  CONTAINER_ITEM_FIELDS, ContainerItemCreateInputDto,
+  CONTAINER_ITEM_FIELDS, ContainerItemCreateEditDto,
   ContainerItemDto
 } from "./data/polozka-kontejneru.interfaces";
 import {DialogType, DynamicDialogResult} from "../../shared/dialog/dialog.interfaces";
@@ -123,7 +123,7 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
 
     if (!dialogResult) return;
     const newObj = this.mapToDto(dialogResult);
-    const res = await this.dataService.post<ContainerItemDto>('', newObj)
+    const res = await this.dataService.post('', newObj)
     //this.tableComponent.dataSource.data.push(res);
   }
 
@@ -139,7 +139,7 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
     if(!res) return;
 
     try {
-      //this.dialogService.delete(this.chosenElement.id)
+      await this.dataService.delete(this.chosenElement.id)
       const data = this.tableComponent.dataSource.data;
       const index = data.findIndex(el => el.id === this.chosenElement?.id);
       if (index !== -1) {
@@ -188,13 +188,16 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
       type: DialogType.SUCCESS
     });
 
+    const newObj = this.mapToDto(dialogResult);
+    const res = await this.dataService.put(this.chosenElement?.id!, newObj)
   }
 
-  mapToDto(dialogResult: DynamicDialogResult): ContainerItemCreateInputDto {
+  mapToDto(dialogResult: DynamicDialogResult): ContainerItemCreateEditDto {
     const main = dialogResult["main_section"]?.data || {};
     const second = dialogResult["second_section"]?.data || {};
 
     return {
+      id: this.chosenElement?.id! ?? '',
       name: main.name,
       description: second.description ?? '',
       quantity: main.quantity,

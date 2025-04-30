@@ -4,12 +4,13 @@ import {BreadcrumbService, IBreadCrumb} from '../../shared/breadcrumb/breadcrumb
 import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {DialogService} from '../../shared/dialog/dialog.service';
 import {BaseContentComponent} from '../../shared/layout/base-component';
-import {SeznamFakturDto} from './data/seznam-faktur.interfaces';
+import {INVOICE_COLUMNS, InvoiceDto} from './data/seznam-faktur.interfaces';
 import {SeznamFakurDataService} from './data/seznam-fakur-data.service';
 import {DialogType} from '../../shared/dialog/dialog.interfaces';
 import {DynamicTableComponent} from '../../shared/table/table/table.component';
 import {ToolbarButton} from '../../shared/context-toolbar/context-toolbar.interfaces';
 import {ColumnSetting} from '../../shared/table/table/table.settings';
+import {PagedList} from '../../shared/crud/base-crud-service';
 
 @Component({
   selector: 'app-seznam-faktur',
@@ -17,9 +18,10 @@ import {ColumnSetting} from '../../shared/table/table/table.settings';
   templateUrl: './seznam-faktur.component.html',
   styleUrl: './seznam-faktur.component.scss'
 })
-export class SeznamFakturComponent extends BaseContentComponent<SeznamFakturDto, SeznamFakurDataService> implements OnInit {
+export class SeznamFakturComponent extends BaseContentComponent<InvoiceDto, SeznamFakurDataService> implements OnInit {
+  dataSource: InvoiceDto[] = [];
 
-  @ViewChild(DynamicTableComponent) tableComponent!: DynamicTableComponent<SeznamFakturDto>;
+  @ViewChild(DynamicTableComponent) tableComponent!: DynamicTableComponent<InvoiceDto>;
   constructor(
     protected override dataService: SeznamFakurDataService,
     protected override breadcrumbService: BreadcrumbService,
@@ -33,28 +35,23 @@ export class SeznamFakturComponent extends BaseContentComponent<SeznamFakturDto,
 
   override ngOnInit() {
     super.ngOnInit();
-
-    const columnSettings: ColumnSetting<SeznamFakturDto>[] = [
-      { key: 'id', header: 'ID', valueGetter: r => r.id  },
-      { key: 'subjektname', header: 'Název subjektu', valueGetter: r => r.subjektname },
-    ];
-
     this.tableSettings = {
       cacheEntityType: "entity",
-      columns: columnSettings,
+      columns: INVOICE_COLUMNS,
       clickable: true,
       expandable: false,
       pageSizeOptions: [10, 30, 50, 100],
       defaultPageSize: 10,
       extraQueryParams: { active: true }
     };
+    this.loadData()
   }
 
-  protected override buildToolbarButtons(): ToolbarButton<SeznamFakturDto>[] {
+  protected override buildToolbarButtons(): ToolbarButton<InvoiceDto>[] {
     return [
       {
         id: 'add',
-        text: 'Přidat',
+        text: 'Nová faktura',
         icon: 'add',
         class: 'btn-primary',
         visible: true,
@@ -86,6 +83,10 @@ export class SeznamFakturComponent extends BaseContentComponent<SeznamFakturDto,
   }
 
   loadData(): void {
+    if(this.tableComponent.data) {
+      this.dataSource = this.tableComponent.data
+
+    }
   }
 
   onAdd(): void {
@@ -125,7 +126,7 @@ export class SeznamFakturComponent extends BaseContentComponent<SeznamFakturDto,
     }
   }
 
-  clickedElement(element: SeznamFakturDto) {
+  clickedElement(element: InvoiceDto) {
     console.log("clickedElement", element);
     this.chosenElement = element
   }

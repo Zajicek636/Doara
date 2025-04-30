@@ -7,9 +7,10 @@ import {ContainerItemDto} from "./polozka-kontejneru.interfaces";
   providedIn: 'root',
 })
 export class PolozkaKontejneruCrudSettings implements CrudSettings<string, ContainerItemDto> {
-  baseUrl: string = 'https://cat-fact.herokuapp.com/users';
+  baseUrl: string = 'api/Sklady/ContainerItem';
   postUrl?: string;
   queryParam?: string;
+  getAllSuffix: string = "GetAll"
 
   idGetter(entity: ContainerItemDto): string {
     return entity.id;

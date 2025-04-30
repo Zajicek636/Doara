@@ -1,27 +1,44 @@
 ﻿import {FormComponentResult} from '../../../shared/forms/any-form/any-form.component';
 import {CustomValidator, FormField, FormFieldTypes} from '../../../shared/forms/form.interfaces';
 
+export interface SubjektCreateEditDto {
+  id?: string;
+  name: string;
+  ic: string;
+  dic: string;
+  isVatPayer: boolean;
+  address: AddressCreateDto;
+}
+
+export interface AddressCreateDto {
+  id?: string;
+  street: string;
+  city: string;
+  postalCode: string;
+  countryId: string;
+}
+
 export interface SubjektDetailDto {
   id: string;
-  Name: string;
-  Ic: string;
-  Dic: string;
-  IsVatPayer: boolean;
-  AddressDetailDto: AddressDetailDto;
+  name: string;
+  ic: string;
+  dic: string;
+  isVatPayer: boolean;
+  address: AddressDetailDto;
 }
 
 export interface AddressDetailDto {
   id:string;
-  Street: string;
-  City: string;
-  PostalCode: string;
-  CountryDto: CountryDto;
+  street: string;
+  city: string;
+  postalCode: string;
+  countryDto: CountryDto;
 }
 
 export interface CountryDto {
   id: string;
-  Name: string;
-  Code: string;
+  name: string;
+  code: string;
 }
 
 export interface SubjektyDialogResult<T = any> {
@@ -42,7 +59,7 @@ export const SUBJEKT_BASE_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     formControlName: 'SubjektName',
     visible: true,
     type: FormFieldTypes.TEXT,
-    defaultValueGetter: (s: SubjektDetailDto) => s.Name,
+    defaultValueGetter: (s: SubjektDetailDto) => s.name,
     validator: [{ validator: CustomValidator.REQUIRED}],
   },
   {
@@ -50,7 +67,7 @@ export const SUBJEKT_BASE_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     formControlName: 'SubjektIc',
     visible: true,
     type: FormFieldTypes.TEXT,
-    defaultValueGetter: (s: SubjektDetailDto) => s.Ic,
+    defaultValueGetter: (s: SubjektDetailDto) => s.ic,
     validator: [{ validator: CustomValidator.REQUIRED},{validator: CustomValidator.PATTERN, params: '^\\d{8}$'}]
   },
   {
@@ -58,7 +75,7 @@ export const SUBJEKT_BASE_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     formControlName: 'SubjektDic',
     visible: true,
     type: FormFieldTypes.TEXT,
-    defaultValueGetter: (s: SubjektDetailDto) => s.Dic,
+    defaultValueGetter: (s: SubjektDetailDto) => s.dic,
     validator: [{ validator: CustomValidator.REQUIRED }, {validator: CustomValidator.PATTERN, params: '^(CZ\\d{8,10}|SK\\d{10})$'}]
   },
   {
@@ -66,7 +83,7 @@ export const SUBJEKT_BASE_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     visible: true,
     formControlName: 'SubjektPayer',
     type: FormFieldTypes.LOOKUP,
-    defaultValueGetter: (s: SubjektDetailDto) => s.IsVatPayer,
+    defaultValueGetter: (s: SubjektDetailDto) => s.isVatPayer,
     options: [
       { value: true, displayValue: 'Ano' },
       { value: false, displayValue: 'Ne' }
@@ -81,20 +98,20 @@ export const SUBJEKT_ADDRESS_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     formControlName: 'AddressId',
     visible: false,
     type: FormFieldTypes.TEXT,
-    defaultValueGetter: (s: SubjektDetailDto) => s.AddressDetailDto.id,
+    defaultValueGetter: (s: SubjektDetailDto) => s.address.id,
   },
   {
     label: 'CountryId',
     formControlName: 'CountryId',
     visible: false,
     type: FormFieldTypes.TEXT,
-    defaultValueGetter: (s: SubjektDetailDto) => s.AddressDetailDto.CountryDto.id,
+    defaultValueGetter: (s: SubjektDetailDto) => s.address.countryDto.id,
   },
   {
     label: 'Ulice',
     visible: true,
     formControlName: 'SubjektStreet',
-    defaultValueGetter: (a: SubjektDetailDto) => a.AddressDetailDto.Street,
+    defaultValueGetter: (a: SubjektDetailDto) => a.address.street,
     type: FormFieldTypes.TEXT,
     validator: [{ validator: CustomValidator.REQUIRED }]
   },
@@ -102,7 +119,15 @@ export const SUBJEKT_ADDRESS_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     label: 'Město',
     visible: true,
     formControlName: 'SubjektCity',
-    defaultValueGetter: (a: SubjektDetailDto) => a.AddressDetailDto.City,
+    defaultValueGetter: (a: SubjektDetailDto) => a.address.city,
+    type: FormFieldTypes.TEXT,
+    validator: [{ validator: CustomValidator.REQUIRED }]
+  },
+  {
+    label: 'PSČ',
+    visible: true,
+    formControlName: 'SubjektPSC',
+    defaultValueGetter: (a: SubjektDetailDto) => a.address.postalCode,
     type: FormFieldTypes.TEXT,
     validator: [{ validator: CustomValidator.REQUIRED }]
   },
@@ -110,7 +135,7 @@ export const SUBJEKT_ADDRESS_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     label: 'Kód země',
     formControlName: 'SubjektCountryCode',
     visible: true,
-    defaultValueGetter: (a: SubjektDetailDto) => a.AddressDetailDto.CountryDto.Code,
+    defaultValueGetter: (a: SubjektDetailDto) => a.address.countryDto.code,
     type: FormFieldTypes.LOOKUP,
     validator: [{ validator: CustomValidator.REQUIRED }]
   }

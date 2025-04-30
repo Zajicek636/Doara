@@ -2,21 +2,18 @@
 import {BaseCrud, PagedList, PagedRequest} from '../../../shared/crud/base-crud-service';
 import {HttpClient} from '@angular/common/http';
 import {PolozkaKontejneruCrudSettings} from './polozka-kontejneru-crud.settings';
-import {SubjektDetailDto} from '../../../ucetnictvi/subjekty/data/subjekty.interfaces';
 import {
-  ContainerItemCreateInputDto,
+  ContainerItemCreateEditDto,
   ContainerItemDto,
   ContainerItemState,
-  ContainerItemUpdateInputDto,
   QuantityType
 } from "./polozka-kontejneru.interfaces";
-import {ContainerCreateDto} from "../../sklady-polozky/data/sklady-polozky.interfaces";
-import {delay, lastValueFrom} from "rxjs";
+
 
 @Injectable({
   providedIn: 'root',
 })
-export class PolozkaKontejneruDataService extends BaseCrud<string, ContainerItemDto, ContainerItemCreateInputDto, ContainerItemUpdateInputDto> {
+export class PolozkaKontejneruDataService extends BaseCrud<string, ContainerItemDto, ContainerItemCreateEditDto, ContainerItemCreateEditDto> {
   constructor(client: HttpClient, settings: PolozkaKontejneruCrudSettings) {
     super(client, settings);
   }
