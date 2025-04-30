@@ -11,6 +11,8 @@ public interface ISubjectAppService
     Task<PagedResultDto<SubjectDto>> GetAllAsync(PagedAndSortedResultRequestDto input);
     Task<PagedResultDto<SubjectDetailDto>> GetAllWithDetailAsync(PagedAndSortedResultRequestDto input);
     Task<SubjectDetailDto> CreateAsync(SubjectCreateInputDto input);
+    Task<SubjectDetailDto> CreateWithAddressAsync(SubjectWithAddressCreateInputDto input);
     Task<SubjectDetailDto> UpdateAsync(SubjectUpdateInputDto input);
+    Task<SubjectDetailDto> UpdateWithAddressAsync(SubjectWithAddressUpdateInputDto input);
     Task DeleteAsync(Guid id);
 }
