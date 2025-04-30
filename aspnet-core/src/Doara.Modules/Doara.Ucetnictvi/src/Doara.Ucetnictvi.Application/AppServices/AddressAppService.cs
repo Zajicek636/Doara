@@ -57,10 +57,10 @@ public class AddressAppService(IAddressRepository addressRepository, ICountryRep
     }
 
     [Authorize(UcetnictviPermissions.UpdateAddressPermission)]
-    public async Task<AddressDetailDto> UpdateAsync(AddressUpdateInputDto input)
+    public async Task<AddressDetailDto> UpdateAsync(Guid id, AddressUpdateInputDto input)
     {
         var country = await countryRepository.GetAsync(input.CountryId);
-        var address = await addressRepository.GetAsync(input.Id);
+        var address = await addressRepository.GetAsync(id);
         address.SetCity(input.City).SetStreet(input.Street)
             .SetPostalCode(input.PostalCode).SetCountry(input.CountryId);
         var res = await addressRepository.UpdateAsync(address);

@@ -60,7 +60,7 @@ public class CountryAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         country.Code = Converter.DefaultCountryCode;
         country.Name = Converter.DefaultCountryName;
         
-        var updatedCountry = await _countryAppService.UpdateAsync(Converter.Convert2UpdateInput(country));
+        var updatedCountry = await _countryAppService.UpdateAsync(country.Id, Converter.Convert2UpdateInput(country));
         
         updatedCountry.Id.ShouldBe(country.Id);
         updatedCountry.Code.ShouldBe(country.Code);
@@ -74,11 +74,10 @@ public class CountryAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         var country = await _countryAppService.GetAsync(TestData.CzCountryId);
         country.Code = Converter.DefaultCountryCode;
         country.Name = Converter.DefaultCountryName;
-        country.Id = id;
         
         var exception = await Should.ThrowAsync<EntityNotFoundException>(async () =>
         {
-            await _countryAppService.UpdateAsync(Converter.Convert2UpdateInput(country));
+            await _countryAppService.UpdateAsync(id, Converter.Convert2UpdateInput(country));
         });
         exception.Message.ShouldContain(nameof(Entities.Country));
         exception.Message.ShouldContain(id.ToString());

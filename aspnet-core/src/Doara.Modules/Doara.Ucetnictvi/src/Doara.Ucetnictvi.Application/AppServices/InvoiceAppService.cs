@@ -80,7 +80,7 @@ public class InvoiceAppService(IInvoiceRepository invoiceRepository, ISubjectRep
     }
 
     [Authorize(UcetnictviPermissions.UpdateInvoicePermission)]
-    public async Task<InvoiceDetailDto> UpdateAsync(InvoiceUpdateInputDto input)
+    public async Task<InvoiceDetailDto> UpdateAsync(Guid id, InvoiceUpdateInputDto input)
     {
         if (input.CustomerId == input.SupplierId)
         {
@@ -101,7 +101,7 @@ public class InvoiceAppService(IInvoiceRepository invoiceRepository, ISubjectRep
                 .WithData("Id", input.SupplierId);
         }
         
-        var invoice = await invoiceRepository.GetAsync(input.Id);
+        var invoice = await invoiceRepository.GetAsync(id);
         invoice.SetInvoiceNumber(input.InvoiceNumber).SetSupplier(input.SupplierId)
             .SetCustomer(input.CustomerId).SetIssueDate(input.IssueDate)
             .SetTaxDate(input.TaxDate).SetDeliveryDate(input.DeliveryDate)

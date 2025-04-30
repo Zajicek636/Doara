@@ -43,9 +43,9 @@ public class CountryAppService(ICountryRepository countryRepository) : Ucetnictv
     }
 
     [Authorize(UcetnictviPermissions.UpdateCountryPermission)]
-    public async Task<CountryDto> UpdateAsync(CountryUpdateInputDto input)
+    public async Task<CountryDto> UpdateAsync(Guid id, CountryUpdateInputDto input)
     {
-        var country = await countryRepository.GetAsync(input.Id);
+        var country = await countryRepository.GetAsync(id);
         country.SetName(input.Name).SetCode(input.Code);
         var res = await countryRepository.UpdateAsync(country);
         return ObjectMapper.Map<Country, CountryDto>(res); 

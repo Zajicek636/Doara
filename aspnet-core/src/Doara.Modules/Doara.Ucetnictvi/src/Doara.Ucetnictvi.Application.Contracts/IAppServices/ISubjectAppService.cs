@@ -12,7 +12,7 @@ public interface ISubjectAppService
     Task<PagedResultDto<SubjectDetailDto>> GetAllWithDetailAsync(PagedAndSortedResultRequestDto input);
     Task<SubjectDetailDto> CreateAsync(SubjectCreateInputDto input);
     Task<SubjectDetailDto> CreateWithAddressAsync(SubjectWithAddressCreateInputDto input);
-    Task<SubjectDetailDto> UpdateAsync(SubjectUpdateInputDto input);
-    Task<SubjectDetailDto> UpdateWithAddressAsync(SubjectWithAddressUpdateInputDto input);
+    Task<SubjectDetailDto> UpdateAsync(Guid id, SubjectUpdateInputDto input);
+    Task<SubjectDetailDto> UpdateWithAddressAsync(Guid id, Guid addressId, SubjectWithAddressUpdateInputDto input);
     Task DeleteAsync(Guid id);
 }

@@ -22,8 +22,7 @@ public static partial class Converter
         return new CountryUpdateInputDto
         {
             Name = input.Name,
-            Code = input.Code,
-            Id = input.Id
+            Code = input.Code
         };
     }
 }

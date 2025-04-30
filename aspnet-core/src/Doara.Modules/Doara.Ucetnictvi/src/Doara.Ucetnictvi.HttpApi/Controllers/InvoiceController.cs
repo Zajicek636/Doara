@@ -16,7 +16,7 @@ namespace Doara.Ucetnictvi.Controllers;
 [Route("api/Ucetnictvi/Invoice")]
 public class InvoiceController(IInvoiceAppService invoiceAppService) : UcetnictviController, IInvoiceAppService
 {
-    [HttpGet]
+    [HttpGet("{id:guid}")]
     [Authorize(UcetnictviPermissions.ReadInvoicePermission)]
     public async Task<InvoiceDetailDto> GetAsync([Required] Guid id)
     {
@@ -44,14 +44,14 @@ public class InvoiceController(IInvoiceAppService invoiceAppService) : Ucetnictv
         return await invoiceAppService.CreateAsync(input);
     }
     
-    [HttpPut]
+    [HttpPut("{id:guid}")]
     [Authorize(UcetnictviPermissions.UpdateInvoicePermission)]
-    public async Task<InvoiceDetailDto> UpdateAsync(InvoiceUpdateInputDto input)
+    public async Task<InvoiceDetailDto> UpdateAsync([Required] Guid id, InvoiceUpdateInputDto input)
     {
-        return await invoiceAppService.UpdateAsync(input);
+        return await invoiceAppService.UpdateAsync(id, input);
     }
     
-    [HttpDelete]
+    [HttpDelete("{id:guid}")]
     [Authorize(UcetnictviPermissions.DeleteInvoicePermission)]
     public async Task DeleteAsync([Required] Guid id)
     {

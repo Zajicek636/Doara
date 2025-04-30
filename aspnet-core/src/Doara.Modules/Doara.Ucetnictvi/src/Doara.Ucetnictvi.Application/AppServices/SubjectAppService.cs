@@ -73,10 +73,10 @@ public class SubjectAppService(ISubjectRepository subjectRepository, IAddressRep
     }
 
     [Authorize(UcetnictviPermissions.UpdateSubjectPermission)]
-    public async Task<SubjectDetailDto> UpdateAsync(SubjectUpdateInputDto input)
+    public async Task<SubjectDetailDto> UpdateAsync(Guid id, SubjectUpdateInputDto input)
     {
         var address = await addressRepository.GetAsync(input.AddressId);
-        var subject = await subjectRepository.GetAsync(input.Id);
+        var subject = await subjectRepository.GetAsync(id);
         subject.SetName(input.Name).SetAddress(input.AddressId)
             .SetIc(input.Ic).SetDic(input.Dic).SetIsVatPayer(input.IsVatPayer);
         var res = await subjectRepository.UpdateAsync(subject);
@@ -86,15 +86,15 @@ public class SubjectAppService(ISubjectRepository subjectRepository, IAddressRep
     
     [Authorize(UcetnictviPermissions.UpdateAddressPermission)]
     [Authorize(UcetnictviPermissions.UpdateSubjectPermission)]
-    public async Task<SubjectDetailDto> UpdateWithAddressAsync(SubjectWithAddressUpdateInputDto input)
+    public async Task<SubjectDetailDto> UpdateWithAddressAsync(Guid id, Guid addressId, SubjectWithAddressUpdateInputDto input)
     {
         var country = await countryRepository.GetAsync(input.Address.CountryId);
-        var a = await addressRepository.GetAsync(input.Address.Id);
+        var a = await addressRepository.GetAsync(addressId);
         a.SetCity(input.Address.City).SetStreet(input.Address.Street)
             .SetPostalCode(input.Address.PostalCode).SetCountry(input.Address.CountryId);
         
-        var subject = await subjectRepository.GetAsync(input.Id);
-        subject.SetName(input.Name).SetAddress(input.Address.Id)
+        var subject = await subjectRepository.GetAsync(id);
+        subject.SetName(input.Name).SetAddress(addressId)
             .SetIc(input.Ic).SetDic(input.Dic).SetIsVatPayer(input.IsVatPayer);
         var address = (await addressRepository.UpdateAsync(a)).SetCountry(country);
         var res = (await subjectRepository.UpdateAsync(subject)).SetAddress(address);

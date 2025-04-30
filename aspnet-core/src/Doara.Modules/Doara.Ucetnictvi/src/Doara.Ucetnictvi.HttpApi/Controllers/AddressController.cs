@@ -16,9 +16,9 @@ namespace Doara.Ucetnictvi.Controllers;
 [Route("api/Ucetnictvi/Address")]
 public class AddressController(IAddressAppService addressAppService) : UcetnictviController, IAddressAppService
 {
-    [HttpGet]
+    [HttpGet("{id:guid}")]
     [Authorize(UcetnictviPermissions.ReadAddressPermission)]
-    public async Task<AddressDetailDto> GetAsync([Required] Guid id)
+    public async Task<AddressDetailDto> GetAsync([FromRoute][Required] Guid id)
     {
         return await addressAppService.GetAsync(id);
     }
@@ -37,7 +37,6 @@ public class AddressController(IAddressAppService addressAppService) : Ucetnictv
         return await addressAppService.GetAllWithDetailAsync(input);
     }
     
-
     [HttpPost]
     [Authorize(UcetnictviPermissions.CreateAddressPermission)]
     public async Task<AddressDetailDto> CreateAsync(AddressCreateInputDto input)
@@ -45,14 +44,14 @@ public class AddressController(IAddressAppService addressAppService) : Ucetnictv
         return await addressAppService.CreateAsync(input);
     }
     
-    [HttpPut]
+    [HttpPut("{id:guid}")]
     [Authorize(UcetnictviPermissions.UpdateAddressPermission)]
-    public async Task<AddressDetailDto> UpdateAsync(AddressUpdateInputDto input)
+    public async Task<AddressDetailDto> UpdateAsync([Required] Guid id, AddressUpdateInputDto input)
     {
-        return await addressAppService.UpdateAsync(input);
+        return await addressAppService.UpdateAsync(id, input);
     }
     
-    [HttpDelete]
+    [HttpDelete("{id:guid}")]
     [Authorize(UcetnictviPermissions.DeleteAddressPermission)]
     public async Task DeleteAsync([Required] Guid id)
     {
