@@ -1,3 +1,8 @@
-﻿namespace Doara.Sklady.Dto.ContainerItem;
+﻿using Doara.Sklady.Enums;
 
-public class ContainerItemUpdateInputDto : ContainerItemCreateInputDto;
+namespace Doara.Sklady.Dto.ContainerItem;
+
+public class ContainerItemUpdateInputDto : ContainerItemCreateInputDto
+{
+    public ContainerItemState? State { get; set; }
+}

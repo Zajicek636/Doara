@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Doara.Sklady.Dto.ContainerItem;
 using Doara.Sklady.Entities;
+using Doara.Sklady.Enums;
 using Doara.Sklady.IAppServices;
 using Doara.Sklady.Permissions;
 using Doara.Sklady.Repositories;
@@ -55,26 +56,29 @@ public class ContainerItemAppService(IContainerItemRepository containerItemRepos
     [Authorize(SkladyPermissions.CreateContainerItemPermission)]
     public async Task<ContainerItemDetailDto> CreateAsync(ContainerItemCreateInputDto input)
     {
-        if (!await containerRepository.AnyAsync(x => x.Id == input.ContainerId))
-        {
-            throw new EntityNotFoundException(typeof(Container), input.ContainerId);
-        }
-        
+        var container = await containerRepository.GetAsync(input.ContainerId);
         var guid = GuidGenerator.Create();
         var containerItem = new ContainerItem(guid, input.Name, input.Description, 
             input.RealPrice, input.Markup ?? 0, input.MarkupRate ?? 0, input.Discount ?? 0, 
-            input.DiscountRate ?? 0, input.PurchaseUrl, input.ContainerId, 
+            input.DiscountRate ?? 0, input.PurchaseUrl, container.Id, 
             input.Quantity, input.QuantityType);
         var res = await containerItemRepository.CreateAsync(containerItem);
+        res.SetContainer(container);
         return ObjectMapper.Map<ContainerItem, ContainerItemDetailDto>(res); 
     }
 
     [Authorize(SkladyPermissions.UpdateContainerItemPermission)]
     public async Task<ContainerItemDetailDto> UpdateAsync(Guid id, ContainerItemUpdateInputDto input)
     {
-        var container = await containerItemRepository.GetAsync(id);
-        container.SetName(input.Name);
-        var res = await containerItemRepository.UpdateAsync(container);
+        var container = await containerRepository.GetAsync(input.ContainerId);
+        var containerItem = await containerItemRepository.GetAsync(id);
+        containerItem.SetState(input.State ?? ContainerItemState.New).SetName(input.Name).SetDescription(input.Description)
+            .SetRealPrice(input.RealPrice).SetMarkup(input.Markup ?? 0).SetMarkupRate(input.MarkupRate ?? 0)
+            .SetDiscount(input.Discount ?? 0).SetDiscountRate(input.DiscountRate ?? 0)
+            .SetPurchaseUrl(input.PurchaseUrl).SetContainer(container.Id)
+            .SetQuantity(input.Quantity).SetQuantityType(input.QuantityType);
+        var res = await containerItemRepository.UpdateAsync(containerItem);
+        res.SetContainer(container);
         return ObjectMapper.Map<ContainerItem, ContainerItemDetailDto>(res); 
     }
 
