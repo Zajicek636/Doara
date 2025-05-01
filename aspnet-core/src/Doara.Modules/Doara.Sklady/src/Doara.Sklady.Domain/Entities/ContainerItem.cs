@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Doara.Sklady.Constants;
 using Doara.Sklady.Enums;
 using Volo.Abp;
+using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
@@ -10,12 +14,23 @@ namespace Doara.Sklady.Entities;
 public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
 {
     public virtual bool IsDeleted { get; private set; }
-    public virtual ContainerItemState State { get; private set; }
     public virtual QuantityType QuantityType { get; private set; }
     public virtual string Name { get; private set; }
     public virtual string Description { get; private set; }
     public virtual string? PurchaseUrl { get; private set; }
-    public virtual decimal Quantity { get; private set; }
+    
+    public decimal OnHand => Movements
+                                 .Where(m => m.MovementCategory == MovementCategory.Unused)
+                                 .Sum(m => m.Quantity)
+                             - Movements
+                                 .Where(m => m.MovementCategory == MovementCategory.Used)
+                                 .Sum(m => m.Quantity);
+    public decimal Reserved => Movements
+        .Where(m => m.MovementCategory == MovementCategory.Reserved)
+        .Sum(m => m.Quantity);
+
+    public decimal Available => OnHand - Reserved;
+    
     public virtual decimal RealPrice { get; private set; }
     public virtual decimal PresentationPrice { get; private set; }
     public virtual decimal Markup { get; private set; } //Marže
@@ -25,15 +40,16 @@ public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
     public virtual Guid ContainerId { get; private set; }
     public virtual Guid? TenantId { get; private set; }
     public virtual Container Container { get; private set; }
+    public virtual ICollection<StockMovement> Movements { get; private set; }
 
     // ReSharper disable once VirtualMemberCallInConstructor
     public ContainerItem(Guid id, string name, string description, decimal realPrice, 
         decimal markup, decimal markupRate, decimal discount, decimal discountRate, string? purchaseUrl,
-            Guid containerId, decimal quantity, QuantityType quantityType) : base(id)
+            Guid containerId, QuantityType quantityType) : base(id)
     {
         SetName(name).SetDescription(description).SetPrice(realPrice, markup, markupRate, discount, discountRate)
-            .SetPurchaseUrl(purchaseUrl).SetState(ContainerItemState.New).SetQuantity(quantity)
-            .SetQuantityType(quantityType).SetContainer(containerId);
+            .SetPurchaseUrl(purchaseUrl).SetQuantityType(quantityType).SetContainer(containerId);
+        Movements = new Collection<StockMovement>();
     }
 
     public ContainerItem CalculateAndSetPresentationPrice()
@@ -65,12 +81,6 @@ public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
         PurchaseUrl = Check.Length(purchaseUrl, nameof(PurchaseUrl), ContainerItemConstants.MaxPurchaseUrlLength);
         return this;
     }
-
-    public ContainerItem SetState(ContainerItemState state)
-    {
-        State = state;
-        return this;
-    }
     
     public ContainerItem SetQuantityType(QuantityType quantityType)
     {
@@ -78,12 +88,80 @@ public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
         return this;
     }
     
-    public ContainerItem SetQuantity(decimal quantity)
+    public ContainerItem Reserve(decimal amount, Guid plannedId, Guid? relatedDocId = null)
     {
-        Quantity = Check.Range(quantity, nameof(Quantity), 0);
+        var available = Available;
+        if (amount > available)
+        {
+            throw new BusinessException(SkladyErrorCodes.LackOfAvailableResources)
+                .WithData("Quantity", available);
+        }
+        Movements.Add(new StockMovement(plannedId, Id, amount, MovementCategory.Reserved, relatedDocId));
+        return this;
+    }
+
+    public ContainerItem Use(decimal amount, Guid plannedId, Guid? relatedDocId = null)
+    {
+        var available = Available;
+        if (amount > available)
+        {
+            throw new BusinessException(SkladyErrorCodes.LackOfAvailableResources)
+                .WithData("Quantity", available);
+        }
+        Movements.Add(new StockMovement(plannedId, Id, amount, MovementCategory.Used, relatedDocId));
         return this;
     }
     
+    public ContainerItem Use(Guid reservedId, Guid plannedId)
+    {
+        var reserved = Movements.FirstOrDefault(x => x.Id == reservedId);
+        if (reserved == null)
+        {
+            throw new EntityNotFoundException(typeof(StockMovement), reservedId);
+        }
+
+        if (reserved.MovementCategory != MovementCategory.Reserved)
+        {
+            throw new BusinessException(SkladyErrorCodes.MovementIsNotReservation);
+        }
+        
+        reserved.SetMovementCategory(MovementCategory.Reserved2Used);
+        Movements.Add(new StockMovement(plannedId, Id, reserved.Quantity, MovementCategory.Used, reserved.RelatedDocumentId));
+        return this;
+    }
+
+    public ContainerItem AddStock(decimal amount, Guid plannedId, Guid? relatedDocId = null)
+    {
+        if (amount < 0)
+        {
+            throw new BusinessException(SkladyErrorCodes.AmountShouldNotBeZeroOrLower);
+        }
+        Movements.Add(new StockMovement(plannedId, Id, amount, MovementCategory.Unused, relatedDocId));
+        return this;
+    }
+    
+    public ContainerItem RemoveMovement(Guid movementId)
+    {
+        var movement = Movements.FirstOrDefault(x => x.Id == movementId);
+        if (movement == null)
+        {
+            throw new EntityNotFoundException(typeof(StockMovement), movementId);
+        }
+        
+        if (movement.MovementCategory == MovementCategory.Unused)
+        {
+            var available = Available;
+            if (Available < movement.Quantity)
+            {
+                throw new BusinessException(SkladyErrorCodes.LackOfAvailableResources)
+                    .WithData("Quantity", available);
+            }
+        }
+
+        Movements.Remove(movement);
+        return this;
+    }
+
     public ContainerItem SetPrice(decimal realPrice, decimal markup, decimal markupRate, decimal discount, decimal discountRate)
     {
         RealPrice = Check.Range(realPrice, nameof(RealPrice), ContainerItemConstants.MinRealPrice);
@@ -129,5 +207,10 @@ public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
     {
         Container = container;
         return SetContainer(container.Id);
+    }
+
+    protected ContainerItem()
+    {
+        Movements = new Collection<StockMovement>();
     }
 }

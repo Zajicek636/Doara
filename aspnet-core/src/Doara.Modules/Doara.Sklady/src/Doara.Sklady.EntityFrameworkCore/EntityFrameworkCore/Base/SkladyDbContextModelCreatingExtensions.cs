@@ -40,10 +40,6 @@ public static class SkladyDbContextModelCreatingExtensions
 
             //Properties
             b.Property(ci => ci.Name).IsRequired().HasMaxLength(ContainerItemConstants.MaxNameLength);
-            b.Property(ci => ci.State).HasConversion(
-                    x => (char)x, 
-                    x => (ContainerItemState)x)
-                .IsRequired();
             b.Property(ci => ci.QuantityType).HasConversion(
                     x => (char)x, 
                     x => (QuantityType)x)
@@ -56,11 +52,27 @@ public static class SkladyDbContextModelCreatingExtensions
             b.Property(ci => ci.MarkupRate).IsRequired();
             b.Property(ci => ci.Discount).IsRequired();
             b.Property(ci => ci.DiscountRate).IsRequired();
-            b.Property(ci => ci.Quantity).IsRequired();
             //Indexes
             b.HasIndex(ci => ci.Id);
             b.HasOne(ci => ci.Container).WithMany(c => c.Items)
                 .HasForeignKey(x => x.ContainerId).OnDelete(DeleteBehavior.Cascade);
+            
+            b.HasMany(c => c.Movements).WithOne(ci => ci.ContainerItem).HasForeignKey(ci => ci.ContainerItemId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<StockMovement>(b =>
+        {
+            b.Property(ci => ci.Quantity).IsRequired();
+            b.Property(ci => ci.MovementCategory).HasConversion(
+                    x => (char)x, 
+                    x => (MovementCategory)x)
+                .IsRequired();
+            b.Property(ci => ci.RelatedDocumentId);
+            
+            b.HasIndex(c => c.Id);
+            b.HasOne(ci => ci.ContainerItem).WithMany(c => c.Movements)
+                .HasForeignKey(x => x.ContainerItemId).OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

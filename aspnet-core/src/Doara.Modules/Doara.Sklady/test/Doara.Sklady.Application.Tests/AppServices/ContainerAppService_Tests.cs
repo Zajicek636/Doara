@@ -33,12 +33,10 @@ public class ContainerAppService_Tests : SkladyApplicationTestBase<SkladyApplica
         container.Items.Count.ShouldBe(1);
         var item = container.Items[0];
         item.Id.ShouldBe(TestData.ContainerItem11Id);
-        item.State.ShouldBe(ContainerItemState.New);
         item.QuantityType.ShouldBe(QuantityType.Grams);
         item.Name.ShouldBe("ContainerItem11");
         item.Description.ShouldBe("ContainerItem11Description");
         item.PurchaseUrl.ShouldBe("url1");
-        item.Quantity.ShouldBe(10);
         item.RealPrice.ShouldBe(10);
         item.PresentationPrice.ShouldBe(10);
         item.Markup.ShouldBe(10);

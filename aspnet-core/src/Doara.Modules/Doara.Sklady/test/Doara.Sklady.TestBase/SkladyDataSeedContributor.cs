@@ -44,13 +44,10 @@ public class SkladyDataSeedContributor : IDataSeedContributor, ITransientDepende
     private async Task SeedContainerItemAsync()
     {
         await _containerItemRepository.CreateAsync(new ContainerItem(TestData.ContainerItem11Id,
-            "ContainerItem11", "ContainerItem11Description", 10, 10, 10, 10, 10, "url1", TestData.Container1Id, 10,
-            QuantityType.Grams));
+            "ContainerItem11", "ContainerItem11Description", 10, 10, 10, 10, 10, "url1", TestData.Container1Id, QuantityType.Grams));
         await _containerItemRepository.CreateAsync(new ContainerItem(TestData.ContainerItem21Id,
-            "ContainerItem21", "ContainerItem21Description", 10, 10, 10, 10, 10, null, TestData.Container2Id, 10,
-            QuantityType.Liters));
+            "ContainerItem21", "ContainerItem21Description", 10, 10, 10, 10, 10, null, TestData.Container2Id, QuantityType.Liters));
         await _containerItemRepository.CreateAsync(new ContainerItem(TestData.ContainerItem22Id,
-            "ContainerItem22", "ContainerItem22Description", 10, 10, 10, 10, 10, "url3", TestData.Container2Id, 10,
-            QuantityType.None));
+            "ContainerItem22", "ContainerItem22Description", 10, 10, 10, 10, 10, "url3", TestData.Container2Id, QuantityType.None));
     }
 }

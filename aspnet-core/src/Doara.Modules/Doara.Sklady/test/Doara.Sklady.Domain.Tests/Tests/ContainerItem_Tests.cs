@@ -93,28 +93,6 @@ public class ContainerItem_Tests : SkladyDomainModule
     
     [Theory]
     [MemberData(nameof(PropertyTester.GetDecimalSignTestData), [false, true, true, 2], MemberType = typeof(PropertyTester))]
-    public void Test_ContainerItem_Quantity(decimal quantity, bool shouldThrow)
-    {
-        _data.Quantity = quantity;
-        _data.TestSetProperty<Entities.ContainerItem, ArgumentException>(shouldThrow, nameof(Entities.ContainerItem.Quantity));
-    }
-    
-    [Theory]
-    [MemberData(nameof(PropertyTester.GetDecimalSignTestData), [false, true, true, 2], MemberType = typeof(PropertyTester))]
-    public void Test_ContainerItem_Quantity_Setter(decimal quantity, bool shouldThrow)
-    {
-        _data.TestSetProperty<Entities.ContainerItem, ArgumentException>((data, _) =>
-        {
-            var ci = data.CreateOriginalEntity();
-            ci.SetQuantity(quantity);
-            _data.Quantity = quantity;
-            ci.PresentationPrice.ShouldBe(CalculatePresentationPrice(_data));
-            return ci;
-        }, shouldThrow, nameof(Entities.ContainerItem.Quantity));
-    }
-
-    [Theory]
-    [MemberData(nameof(PropertyTester.GetDecimalSignTestData), [false, true, true, 2], MemberType = typeof(PropertyTester))]
     public void Test_ContainerItem_RealPrice(decimal realPrice, bool shouldThrow)
     {
         _data.RealPrice = realPrice;
@@ -247,18 +225,5 @@ public class ContainerItem_Tests : SkladyDomainModule
             _data.QuantityType = quantityType;
             return ci;
         }, shouldThrow, nameof(Entities.ContainerItem.QuantityType));
-    }
-    
-    [Theory]
-    [MemberData(nameof(PropertyTester.GetEnumPropertyTestData), [typeof(ContainerItemState)], MemberType = typeof(PropertyTester))]
-    public void Test_ContainerItem_ContainerItemState_Setter(ContainerItemState state, bool shouldThrow)
-    {
-        _data.TestSetProperty<Entities.ContainerItem, ArgumentException>((data, _) =>
-        {
-            var ci = data.CreateOriginalEntity();
-            ci.SetState(state);
-            _data.State = state;
-            return ci;
-        }, shouldThrow, nameof(Entities.ContainerItem.State));
     }
 }

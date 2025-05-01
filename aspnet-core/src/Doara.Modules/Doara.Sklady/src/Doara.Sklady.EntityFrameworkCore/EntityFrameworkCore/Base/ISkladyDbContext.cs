@@ -10,4 +10,5 @@ public interface ISkladyDbContext : IEfCoreDbContext
 {
     DbSet<Container> Containers { get; }
     DbSet<ContainerItem> ContainerItems { get; }
+    DbSet<StockMovement> StockMovements { get; }
 }

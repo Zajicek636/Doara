@@ -34,7 +34,6 @@ public static partial class Converter
             Markup = markup,
             MarkupRate = markupRate,
             RealPrice = realPrice,
-            Quantity = quantity,
             PurchaseUrl = purchaseUrl,
             QuantityType = quantityType,
         };
@@ -44,7 +43,6 @@ public static partial class Converter
     {
         return new ContainerItemUpdateInputDto
         {
-            State = input.State,
             Name = input.Name,
             Description = input.Description,
             ContainerId = input.Container.Id,
@@ -53,7 +51,6 @@ public static partial class Converter
             Markup = input.Markup,
             MarkupRate = input.MarkupRate,
             RealPrice = input.RealPrice,
-            Quantity = input.Quantity,
             PurchaseUrl = input.PurchaseUrl,
             QuantityType = input.QuantityType
         };

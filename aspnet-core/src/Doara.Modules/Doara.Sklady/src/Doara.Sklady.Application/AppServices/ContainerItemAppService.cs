@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Doara.Sklady.Dto.ContainerItem;
+using Doara.Sklady.Dto.StockMovement;
 using Doara.Sklady.Entities;
-using Doara.Sklady.Enums;
 using Doara.Sklady.IAppServices;
 using Doara.Sklady.Permissions;
 using Doara.Sklady.Repositories;
@@ -60,8 +60,7 @@ public class ContainerItemAppService(IContainerItemRepository containerItemRepos
         var guid = GuidGenerator.Create();
         var containerItem = new ContainerItem(guid, input.Name, input.Description, 
             input.RealPrice, input.Markup ?? 0, input.MarkupRate ?? 0, input.Discount ?? 0, 
-            input.DiscountRate ?? 0, input.PurchaseUrl, container.Id, 
-            input.Quantity, input.QuantityType);
+            input.DiscountRate ?? 0, input.PurchaseUrl, container.Id, input.QuantityType);
         var res = await containerItemRepository.CreateAsync(containerItem);
         res.SetContainer(container);
         return ObjectMapper.Map<ContainerItem, ContainerItemDetailDto>(res); 
@@ -72,11 +71,11 @@ public class ContainerItemAppService(IContainerItemRepository containerItemRepos
     {
         var container = await containerRepository.GetAsync(input.ContainerId);
         var containerItem = await containerItemRepository.GetAsync(id);
-        containerItem.SetState(input.State ?? ContainerItemState.New).SetName(input.Name).SetDescription(input.Description)
+        containerItem.SetName(input.Name).SetDescription(input.Description)
             .SetRealPrice(input.RealPrice).SetMarkup(input.Markup ?? 0).SetMarkupRate(input.MarkupRate ?? 0)
             .SetDiscount(input.Discount ?? 0).SetDiscountRate(input.DiscountRate ?? 0)
             .SetPurchaseUrl(input.PurchaseUrl).SetContainer(container.Id)
-            .SetQuantity(input.Quantity).SetQuantityType(input.QuantityType);
+            .SetQuantityType(input.QuantityType);
         var res = await containerItemRepository.UpdateAsync(containerItem);
         res.SetContainer(container);
         return ObjectMapper.Map<ContainerItem, ContainerItemDetailDto>(res); 
@@ -90,5 +89,49 @@ public class ContainerItemAppService(IContainerItemRepository containerItemRepos
             throw new EntityNotFoundException(typeof(ContainerItem), id);
         }
         await containerItemRepository.DeleteAsync(id);
+    }
+
+    public async Task<ContainerItemDetailDto> AddStockAsync(Guid id, StockMovementCreateInputDto input)
+    {
+        var containerItem = await containerItemRepository.GetAsync(id);
+        var guid = GuidGenerator.Create();
+        containerItem.AddStock(input.Quantity, guid, input.RelatedDocumentId);
+        await containerItemRepository.UpdateAsync(containerItem);
+        return ObjectMapper.Map<ContainerItem, ContainerItemDetailDto>(containerItem);
+    }
+
+    public async Task<ContainerItemDetailDto> RemoveMovementAsync(Guid id, Guid stockMovementId)
+    {
+        var containerItem = await containerItemRepository.GetAsync(id);
+        containerItem.RemoveMovement(stockMovementId);
+        await containerItemRepository.UpdateAsync(containerItem);
+        return ObjectMapper.Map<ContainerItem, ContainerItemDetailDto>(containerItem);
+    }
+
+    public async Task<ContainerItemDetailDto> ReserveItemAsync(Guid id, StockMovementCreateInputDto input)
+    {
+        var containerItem = await containerItemRepository.GetAsync(id);
+        var guid = GuidGenerator.Create();
+        containerItem.Reserve(input.Quantity, guid, input.RelatedDocumentId);
+        await containerItemRepository.UpdateAsync(containerItem);
+        return ObjectMapper.Map<ContainerItem, ContainerItemDetailDto>(containerItem);
+    }
+
+    public async Task<ContainerItemDetailDto> UseItemAsync(Guid id, StockMovementCreateInputDto input)
+    {
+        var containerItem = await containerItemRepository.GetAsync(id);
+        var guid = GuidGenerator.Create();
+        containerItem.Use(input.Quantity, guid, input.RelatedDocumentId);
+        await containerItemRepository.UpdateAsync(containerItem);
+        return ObjectMapper.Map<ContainerItem, ContainerItemDetailDto>(containerItem);
+    }
+
+    public async Task<ContainerItemDetailDto> ConvertReservationToUsageAsync(Guid id, Guid stockMovementId)
+    {
+        var containerItem = await containerItemRepository.GetAsync(id);
+        var guid = GuidGenerator.Create();
+        containerItem.Use(stockMovementId, guid);
+        await containerItemRepository.UpdateAsync(containerItem);
+        return ObjectMapper.Map<ContainerItem, ContainerItemDetailDto>(containerItem);
     }
 }

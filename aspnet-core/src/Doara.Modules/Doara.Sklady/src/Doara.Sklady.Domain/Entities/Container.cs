@@ -34,4 +34,6 @@ public class Container : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
         Description = Check.NotNullOrWhiteSpace(description, nameof(Description), ContainerConstants.MaxDescriptionLength);
         return this;
     }
+    
+    protected Container() { }
 }
