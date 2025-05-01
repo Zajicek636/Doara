@@ -1,0 +1,19 @@
+<!--
+<div class="account_header">
+  <img src="" alt="">
+</div>
+
+-->
+<mat-nav-list>
+  @for (item of menuItems(); track item.name) {
+    <app-menu-item [item]="item"></app-menu-item>
+  }
+</mat-nav-list>
+
+<!--
+<mat-list>
+  <ng-container *ngFor="let item of menuItems()">
+    <app-menu-item [item]="item"></app-menu-item>
+  </ng-container>
+</mat-list>
+-->

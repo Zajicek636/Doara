@@ -1,0 +1,39 @@
+@use '../../../../styles/variables' as *;
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.main-container {
+  box-sizing:border-box;
+  display:block;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.mat-drawer-container {
+  height: 100%;
+  width: 100%;
+}
+
+.menu {
+  width: 300px;
+  background-color: $baseWhite;
+  border-right: solid 1px $baseGreen;
+  border-top-right-radius: unset;
+}
+
+.mat-toolbar {
+  background-color: $baseWhite;
+}
+
+.content {
+  height: 100%;
+  overflow: hidden;
+}
+
+.content-scroll-wrapper {
+  height: calc(100vh - 150px);
+  overflow: auto;
+}

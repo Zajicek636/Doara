@@ -1,0 +1,11 @@
+
+<ng-container [formGroup]="form" *ngFor="let field of fields">
+  <ng-container [ngSwitch]="field.type">
+    <app-text-field *ngSwitchCase="formFieldTypes.TEXT" [field]="field" [form]="form"></app-text-field>
+    <app-text-field *ngSwitchCase="formFieldTypes.PASSWORD" [field]="field" [form]="form"></app-text-field>
+    <app-number-field *ngSwitchCase="formFieldTypes.NUMBER" [field]="field" [form]="form"></app-number-field>
+    <app-lookup-field *ngSwitchCase="formFieldTypes.LOOKUP" [field]="field" [form]="form"></app-lookup-field>
+    <app-textarea-field *ngSwitchCase="formFieldTypes.TEXTAREA" [field]="field" [form]="form"></app-textarea-field>
+    <app-autocomplete-field *ngSwitchCase="formFieldTypes.AUTOCOMPLETE" [field]="field" [form]="form"></app-autocomplete-field>
+  </ng-container>
+</ng-container>

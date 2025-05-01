@@ -1,0 +1,27 @@
+<mat-form-field appearance="fill" class="full-width">
+  <mat-label>{{ field.label }}</mat-label>
+
+  <input
+    type="text"
+    matInput
+    [formControlName]="field.formControlName"
+    [matAutocomplete]="auto"/>
+
+  <mat-autocomplete #auto="matAutocomplete">
+    <ng-container *ngIf="isGroupSelection">
+      <mat-optgroup *ngFor="let group of filteredGroupedOptions$ | async" [label]="group.groupName">
+        <mat-option *ngFor="let option of group.val" [value]="option.displayValue">
+          {{ option.displayValue }}
+        </mat-option>
+      </mat-optgroup>
+    </ng-container>
+
+    <ng-container *ngIf="!isGroupSelection">
+      <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option.displayValue">
+        {{ option.displayValue }}
+      </mat-option>
+    </ng-container>
+  </mat-autocomplete>
+
+  <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
+</mat-form-field>

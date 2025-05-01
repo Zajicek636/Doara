@@ -1,0 +1,39 @@
+﻿@use '../../../styles/variables' as *;
+
+.breadcrumb-custom {
+  background:linear-gradient(to bottom, $baseWhite,$baseWhiteDarker);
+  padding: 15px;
+  border-radius: 0px 0px 8px 8px;
+}
+
+.breadcrumb {
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+
+  &:not(:last-child) {
+    margin-right: 8px;
+  }
+
+  .breadcrumb-link {
+    color: $baseBlack;
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+
+    &:hover {
+      color: $baseGreen;
+    }
+  }
+
+  .breadcrumb-label {
+    color: $baseDarkGreen;
+    font-weight: 600;
+  }
+}

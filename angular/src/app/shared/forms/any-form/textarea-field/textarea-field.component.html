@@ -1,0 +1,6 @@
+<mat-form-field appearance="fill" class="full-width">
+  <mat-label>{{ field.label }}</mat-label>
+  <textarea matInput
+    [formControlName]="field.formControlName"></textarea>
+  <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
+</mat-form-field>

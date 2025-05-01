@@ -1,12 +1,17 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
-  standalone: false,
   selector: 'app-root',
-  template: `
-    <abp-loader-bar />
-    <abp-dynamic-layout />
-    <abp-internet-status />
-  `,
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss',
+  standalone: false,
 })
-export class AppComponent {}
+export class AppComponent implements OnInit {
+  constructor() {
+  }
+
+  async ngOnInit() {
+    //todo pro auth subscription
+  }
+}

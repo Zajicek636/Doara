@@ -1,0 +1,5 @@
+<div class="widget" [ngStyle]="{'width': data?.width + 'px', 'height': data?.height + 'px'}" draggable="true" (dragstart)="onDragStart($event)">
+  <span>{{data?.label}}</span>
+  <span>{{data?.content?.nejPolozky}}</span>
+  <span>{{data?.id}}</span>
+</div>
