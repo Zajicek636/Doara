@@ -11,7 +11,6 @@ using Volo.Abp.Uow;
 namespace Doara.Sklady.EntityFrameworkCore;
 
 [DependsOn(
-    typeof(SkladyApplicationTestModule),
     typeof(SkladyEntityFrameworkCoreModule),
     typeof(AbpEntityFrameworkCoreSqliteModule)
 )]

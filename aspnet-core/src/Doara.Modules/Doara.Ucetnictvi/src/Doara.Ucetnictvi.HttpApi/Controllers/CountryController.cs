@@ -16,7 +16,7 @@ namespace Doara.Ucetnictvi.Controllers;
 [Route("api/Ucetnictvi/Country")]
 public class CountryController(ICountryAppService countryAppService) : UcetnictviController, ICountryAppService
 {
-    [HttpGet]
+    [HttpGet("{id:guid}")]
     [Authorize(UcetnictviPermissions.ReadCountryPermission)]
     public async Task<CountryDto> GetAsync([Required] Guid id)
     {
@@ -37,14 +37,14 @@ public class CountryController(ICountryAppService countryAppService) : Ucetnictv
         return await countryAppService.CreateAsync(input);
     }
     
-    [HttpPut]
+    [HttpPut("{id:guid}")]
     [Authorize(UcetnictviPermissions.UpdateCountryPermission)]
-    public async Task<CountryDto> UpdateAsync(CountryUpdateInputDto input)
+    public async Task<CountryDto> UpdateAsync([Required] Guid id, CountryUpdateInputDto input)
     {
-        return await countryAppService.UpdateAsync(input);
+        return await countryAppService.UpdateAsync(id, input);
     }
     
-    [HttpDelete]
+    [HttpDelete("{id:guid}")]
     [Authorize(UcetnictviPermissions.DeleteCountryPermission)]
     public async Task DeleteAsync([Required] Guid id)
     {

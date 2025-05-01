@@ -29,7 +29,6 @@ public static partial class Converter
             City = input.City,
             PostalCode = input.PostalCode,
             CountryId = input.Country.Id,
-            Id = input.Id
         };
     }
 }

@@ -21,6 +21,13 @@ public class ContainerItem_Tests : SkladyDomainModule
         _data = RandomFakeEntityGenerator.RandomFakeContainerItem();
     }
     
+    [Fact]
+    public void Test_ContainerItem()
+    {
+        var entity = _data.CreateOriginalEntity();
+        _data.CheckIfSame(entity);
+    }
+    
     [Theory]
     [MemberData(nameof(PropertyTester.GetStringPropertyTestData), [false, FakeContainerItem.MaxNameLength], MemberType = typeof(PropertyTester))]
     public void Test_ContainerItem_Name(string name, bool shouldThrow)

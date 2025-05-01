@@ -14,7 +14,14 @@ public class Address_Tests : UcetnictviDomainModule
     {
         _data = RandomFakeEntityGenerator.RandomFakeAddress();
     }
-    
+
+    [Fact]
+    public void Test_Address()
+    {
+        var entity = _data.CreateOriginalEntity();
+        _data.CheckIfSame(entity);
+    }
+
     [Theory]
     [MemberData(nameof(PropertyTester.GetStringPropertyTestData), [false, FakeAddress.MaxStreetLength], MemberType = typeof(PropertyTester))]
     public void Test_Address_Name(string street, bool shouldThrow)

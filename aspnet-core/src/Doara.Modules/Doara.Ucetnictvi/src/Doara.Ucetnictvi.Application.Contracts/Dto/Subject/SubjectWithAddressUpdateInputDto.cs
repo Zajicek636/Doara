@@ -1,12 +1,10 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Doara.Ucetnictvi.Constants;
 using Doara.Ucetnictvi.Dto.Address;
-using Volo.Abp.Application.Dtos;
 
 namespace Doara.Ucetnictvi.Dto.Subject;
 
-public class SubjectWithAddressUpdateInputDto : EntityDto<Guid>
+public class SubjectWithAddressUpdateInputDto
 {
     [Required]
     [StringLength(SubjectConstants.MaxNameLength)]

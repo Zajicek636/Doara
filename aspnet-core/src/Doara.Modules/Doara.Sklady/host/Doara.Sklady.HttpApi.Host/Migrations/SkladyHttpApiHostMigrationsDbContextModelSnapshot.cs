@@ -45,6 +45,11 @@ namespace Doara.Sklady.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("CreatorId");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
                     b.Property<string>("ExtraProperties")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -167,47 +172,6 @@ namespace Doara.Sklady.Migrations
                     b.ToTable("Sklady_ContainerItem", (string)null);
                 });
 
-            modelBuilder.Entity("Doara.Sklady.Entities.WarehouseWorker", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ContainerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreationTime");
-
-                    b.Property<Guid?>("CreatorId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("CreatorId");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("LastModificationTime");
-
-                    b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("LastModifierId");
-
-                    b.Property<Guid?>("TenantId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("TenantId");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContainerId");
-
-                    b.HasIndex("Id");
-
-                    b.ToTable("Sklady_WarehouseWorker", (string)null);
-                });
-
             modelBuilder.Entity("Doara.Sklady.Entities.ContainerItem", b =>
                 {
                     b.HasOne("Doara.Sklady.Entities.Container", "Container")
@@ -219,22 +183,9 @@ namespace Doara.Sklady.Migrations
                     b.Navigation("Container");
                 });
 
-            modelBuilder.Entity("Doara.Sklady.Entities.WarehouseWorker", b =>
-                {
-                    b.HasOne("Doara.Sklady.Entities.Container", "Container")
-                        .WithMany("WarehouseWorkers")
-                        .HasForeignKey("ContainerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Container");
-                });
-
             modelBuilder.Entity("Doara.Sklady.Entities.Container", b =>
                 {
                     b.Navigation("Items");
-
-                    b.Navigation("WarehouseWorkers");
                 });
 #pragma warning restore 612, 618
         }

@@ -16,7 +16,7 @@ namespace Doara.Ucetnictvi.Controllers;
 [Route("api/Ucetnictvi/Subject")]
 public class SubjectController(ISubjectAppService subjectAppService) : UcetnictviController, ISubjectAppService
 {
-    [HttpGet]
+    [HttpGet("{id:guid}")]
     [Authorize(UcetnictviPermissions.ReadSubjectPermission)]
     public async Task<SubjectDetailDto> GetAsync([Required] Guid id)
     {
@@ -52,22 +52,22 @@ public class SubjectController(ISubjectAppService subjectAppService) : Ucetnictv
         return await subjectAppService.CreateWithAddressAsync(input);
     }
 
-    [HttpPut]
+    [HttpPut("{id:guid}")]
     [Authorize(UcetnictviPermissions.UpdateSubjectPermission)]
-    public async Task<SubjectDetailDto> UpdateAsync(SubjectUpdateInputDto input)
+    public async Task<SubjectDetailDto> UpdateAsync(Guid id, SubjectUpdateInputDto input)
     {
-        return await subjectAppService.UpdateAsync(input);
+        return await subjectAppService.UpdateAsync(id, input);
     }
     
-    [HttpPut("UpdateWithAddress")]
+    [HttpPut("UpdateWithAddress/{id:guid}/{addressId:guid}")]
     [Authorize(UcetnictviPermissions.UpdateSubjectPermission)]
     [Authorize(UcetnictviPermissions.UpdateAddressPermission)]
-    public async Task<SubjectDetailDto> UpdateWithAddressAsync(SubjectWithAddressUpdateInputDto input)
+    public async Task<SubjectDetailDto> UpdateWithAddressAsync(Guid id, Guid addressId, SubjectWithAddressUpdateInputDto input)
     {
-        return await subjectAppService.UpdateWithAddressAsync(input);
+        return await subjectAppService.UpdateWithAddressAsync(id, addressId, input);
     }
     
-    [HttpDelete]
+    [HttpDelete("{id:guid}")]
     [Authorize(UcetnictviPermissions.DeleteSubjectPermission)]
     public async Task DeleteAsync([Required] Guid id)
     {

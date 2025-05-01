@@ -12,6 +12,6 @@ public interface IAddressAppService : IApplicationService
     Task<PagedResultDto<AddressDto>> GetAllAsync(PagedAndSortedResultRequestDto input);
     Task<PagedResultDto<AddressDetailDto>> GetAllWithDetailAsync(PagedAndSortedResultRequestDto input);
     Task<AddressDetailDto> CreateAsync(AddressCreateInputDto input);
-    Task<AddressDetailDto> UpdateAsync(AddressUpdateInputDto input);
+    Task<AddressDetailDto> UpdateAsync(Guid id, AddressUpdateInputDto input);
     Task DeleteAsync(Guid id);
 }

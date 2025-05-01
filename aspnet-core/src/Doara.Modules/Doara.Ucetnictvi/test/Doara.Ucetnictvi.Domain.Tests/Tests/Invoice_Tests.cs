@@ -16,6 +16,13 @@ public class Invoice_Tests : UcetnictviDomainModule
         _data = RandomFakeEntityGenerator.RandomFakeInvoice();
     }
   
+    [Fact]
+    public void Test_Invoice()
+    {
+        var entity = _data.CreateOriginalEntity();
+        _data.CheckIfSame(entity);
+    }
+    
     [Theory]
     [MemberData(nameof(PropertyTester.GetStringPropertyTestData), [false, FakeInvoice.MaxInvoiceNumberLength], MemberType = typeof(PropertyTester))]
     public void Test_Invoice_InvoiceNumber(string invoiceNumber, bool shouldThrow)

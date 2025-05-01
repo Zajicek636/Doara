@@ -101,7 +101,7 @@ public class SubjectAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         subject.IsVatPayer = Converter.DefaultSubjectIsVatPayer;
         subject.Address.Id = TestData.UsAddressId;
         
-        var updatedSubject = await _subjectAppService.UpdateAsync(Converter.Convert2UpdateInput(subject));
+        var updatedSubject = await _subjectAppService.UpdateAsync(subject.Id, Converter.Convert2UpdateInput(subject));
         
         updatedSubject.Id.ShouldBe(subject.Id);
         updatedSubject.Name.ShouldBe(subject.Name);
@@ -127,11 +127,10 @@ public class SubjectAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         subject.Dic = Converter.DefaultSubjectDic;
         subject.IsVatPayer = Converter.DefaultSubjectIsVatPayer;
         subject.Address.Id = TestData.UsAddressId;
-        subject.Id = id;
         
         var exception = await Should.ThrowAsync<EntityNotFoundException>(async () =>
         {
-            await _subjectAppService.UpdateAsync(Converter.Convert2UpdateInput(subject));
+            await _subjectAppService.UpdateAsync(id, Converter.Convert2UpdateInput(subject));
         });
         exception.Message.ShouldContain(nameof(Entities.Subject));
         exception.Message.ShouldContain(id.ToString());
@@ -150,7 +149,7 @@ public class SubjectAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         
         var exception = await Should.ThrowAsync<EntityNotFoundException>(async () =>
         {
-            await _subjectAppService.UpdateAsync(Converter.Convert2UpdateInput(subject));
+            await _subjectAppService.UpdateAsync(subject.Id, Converter.Convert2UpdateInput(subject));
         });
         exception.Message.ShouldContain(nameof(Entities.Address));
         exception.Message.ShouldContain(id.ToString());
@@ -306,7 +305,7 @@ public class SubjectAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         subject.Address.City = "Washington";
         subject.Address.PostalCode = Converter.DefaultAddressPostalCode;
         
-        var updatedSubject = await _subjectAppService.UpdateWithAddressAsync(Converter.Convert2UpdateInput(subject, true));
+        var updatedSubject = await _subjectAppService.UpdateWithAddressAsync(subject.Id, subject.Address.Id, Converter.Convert2UpdateInput(subject, true));
         
         updatedSubject.Id.ShouldBe(subject.Id);
         updatedSubject.Name.ShouldBe(subject.Name);
@@ -327,7 +326,6 @@ public class SubjectAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
     {
         var id = _guidGenerator.Create();
         var subject = await _subjectAppService.GetAsync(TestData.CzSubjectId);
-        subject.Address.Id = id;
         subject.Name = Converter.DefaultSubjectName;
         subject.Ic = Converter.DefaultSubjectIc;
         subject.Dic = Converter.DefaultSubjectDic;
@@ -335,7 +333,7 @@ public class SubjectAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         
         var exception = await Should.ThrowAsync<EntityNotFoundException>(async () =>
         {
-            await _subjectAppService.UpdateWithAddressAsync(Converter.Convert2UpdateInput(subject, true));
+            await _subjectAppService.UpdateWithAddressAsync(subject.Id, id, Converter.Convert2UpdateInput(subject, true));
         });
         var addresses = await _addressAppService.GetAllAsync(new PagedAndSortedResultRequestDto());
         
@@ -349,7 +347,6 @@ public class SubjectAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
     {
         var id = _guidGenerator.Create();
         var subject = await _subjectAppService.GetAsync(TestData.CzSubjectId);
-        subject.Id = id;
         subject.Name = Converter.DefaultSubjectName;
         subject.Ic = Converter.DefaultSubjectIc;
         subject.Dic = Converter.DefaultSubjectDic;
@@ -357,7 +354,7 @@ public class SubjectAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         
         var exception = await Should.ThrowAsync<EntityNotFoundException>(async () =>
         {
-            await _subjectAppService.UpdateWithAddressAsync(Converter.Convert2UpdateInput(subject, true));
+            await _subjectAppService.UpdateWithAddressAsync(id, subject.Address.Id, Converter.Convert2UpdateInput(subject, true));
         });
         var addresses = await _addressAppService.GetAllAsync(new PagedAndSortedResultRequestDto());
         
@@ -378,7 +375,7 @@ public class SubjectAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         
         var exception = await Should.ThrowAsync<AbpValidationException>(async () =>
         {
-            await _subjectAppService.UpdateWithAddressAsync(Converter.Convert2UpdateInput(subject, true));
+            await _subjectAppService.UpdateWithAddressAsync(subject.Id, subject.Address.Id, Converter.Convert2UpdateInput(subject, true));
         });
         var addresses = await _addressAppService.GetAllAsync(new PagedAndSortedResultRequestDto());
         
@@ -397,7 +394,7 @@ public class SubjectAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         
         var exception = await Should.ThrowAsync<ArgumentException>(async () =>
         {
-            await _subjectAppService.UpdateWithAddressAsync(Converter.Convert2UpdateInput(subject, true));
+            await _subjectAppService.UpdateWithAddressAsync(subject.Id, subject.Address.Id, Converter.Convert2UpdateInput(subject, true));
         });
         var addresses = await _addressAppService.GetAllAsync(new PagedAndSortedResultRequestDto());
         
@@ -417,7 +414,7 @@ public class SubjectAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         
         var exception = await Should.ThrowAsync<EntityNotFoundException>(async () =>
         {
-            await _subjectAppService.UpdateWithAddressAsync(Converter.Convert2UpdateInput(subject, true));
+            await _subjectAppService.UpdateWithAddressAsync(subject.Id, subject.Address.Id, Converter.Convert2UpdateInput(subject, true));
         });
         var addresses = await _addressAppService.GetAllAsync(new PagedAndSortedResultRequestDto());
         

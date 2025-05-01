@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Doara.Sklady.IAppServices;
 using Doara.Ucetnictvi.Dto.InvoiceItem;
 using Doara.Ucetnictvi.Entities;
 using Doara.Ucetnictvi.IAppServices;
@@ -12,13 +13,13 @@ using Doara.Ucetnictvi.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 
 namespace Doara.Ucetnictvi.AppServices;
 
 public class InvoiceItemAppService(IInvoiceItemRepository invoiceItemRepository, IInvoiceRepository invoiceRepository, 
-    ILogger<UcetnictviApplicationModule> logger, IStringLocalizer<UcetnictviResource> localizer) : UcetnictviAppService, IInvoiceItemAppService
+    ILogger<UcetnictviApplicationModule> logger, IStringLocalizer<UcetnictviResource> localizer, 
+    IContainerItemAppService _containerItem) : UcetnictviAppService, IInvoiceItemAppService
 {
     [Authorize(UcetnictviPermissions.ReadInvoiceItemPermission)]
     public async Task<InvoiceItemDto> GetAsync(Guid id)

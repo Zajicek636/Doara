@@ -15,11 +15,11 @@ using Volo.Abp.Domain.Entities;
 namespace Doara.Sklady.EntityFrameworkCore.Repositories;
 
 public class EfCoreContainerItemRepository(IDbContextProvider<SkladyDbContext> dbContextProvider)
-: EfCoreRepository<SkladyDbContext, ContainerItem>(dbContextProvider), IContainerItemRepository
+: EfCoreRepository<SkladyDbContext, ContainerItem, Guid>(dbContextProvider), IContainerItemRepository
 {
     public async Task<ContainerItem> GetAsync(Guid id)
     {
-        var containerItem = await FindAsync(x => x.Id == id);
+        var containerItem = await FindAsync(id);
         if (containerItem == null)
         {
             throw new EntityNotFoundException(typeof(ContainerItem), id);
@@ -28,9 +28,9 @@ public class EfCoreContainerItemRepository(IDbContextProvider<SkladyDbContext> d
         return containerItem;
     }
 
-    public async Task<List<ContainerItem>> GetAllAsync(int skip, int take, string sortBy, Expression<Func<ContainerItem, bool>>? filter = null)
+    public async Task<List<ContainerItem>> GetAllAsync(int skip, int take, string sortBy, bool withDetail, Expression<Func<ContainerItem, bool>>? filter = null)
     {
-        var query = await GetQueryableAsync();
+        var query = withDetail ? await WithDetailsAsync() : await GetQueryableAsync();
         if (filter != null)
         {
             query = query.Where(filter);
@@ -66,12 +66,18 @@ public class EfCoreContainerItemRepository(IDbContextProvider<SkladyDbContext> d
 
     public async Task DeleteAsync(Guid id)
     {
-        await base.DeleteAsync(x => x.Id == id);
+        await base.DeleteAsync(id);
     }
 
     public async Task<bool> AnyAsync(Expression<Func<ContainerItem, bool>> predicate)
     {
         var query = await GetQueryableAsync();
         return await query.AnyAsync(predicate);
+    }
+    
+    public override async Task<IQueryable<ContainerItem>> WithDetailsAsync()
+    {
+        return (await base.WithDetailsAsync())
+            .Include(x => x.Container);
     }
 }

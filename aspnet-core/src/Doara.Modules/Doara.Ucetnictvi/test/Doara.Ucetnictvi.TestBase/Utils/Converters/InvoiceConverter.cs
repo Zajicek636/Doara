@@ -63,7 +63,6 @@ public static partial class Converter
             VariableSymbol = input.VariableSymbol,
             ConstantSymbol = input.ConstantSymbol,
             SpecificSymbol = input.SpecificSymbol,
-            Id = input.Id
         };
     }
 }

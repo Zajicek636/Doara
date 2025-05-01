@@ -12,8 +12,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.0" />
     <ProjectReference Include="..\..\src\Doara.Sklady.EntityFrameworkCore\Doara.Sklady.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\Doara.Sklady.Application.Tests\Doara.Sklady.Application.Tests.csproj" />
     <PackageReference Include="Volo.Abp.EntityFrameworkCore.Sqlite" Version="9.1.1" />
+    <ProjectReference Include="..\Doara.Sklady.TestBase\Doara.Sklady.TestBase.csproj" />
 
   </ItemGroup>
 

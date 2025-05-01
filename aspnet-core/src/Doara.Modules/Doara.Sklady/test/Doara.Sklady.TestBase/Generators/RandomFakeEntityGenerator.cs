@@ -1,7 +1,6 @@
 ﻿using System;
 using Doara.Sklady.Enums;
 using Doara.Sklady.FakeEntities;
-using NSubstitute.ReceivedExtensions;
 using TestHelper.Generators;
 
 namespace Doara.Sklady.Generators;
@@ -12,6 +11,7 @@ public static class RandomFakeEntityGenerator
     {
         return new FakeContainerItem
         {
+            Id = Guid.NewGuid(),
             IsDeleted = false,
             State = ContainerItemState.New,
             QuantityType = RandomGenerator.RandomFromEnum<QuantityType>(),
@@ -24,7 +24,19 @@ public static class RandomFakeEntityGenerator
             MarkupRate = RandomGenerator.RandomNumber(FakeContainerItem.MinMarkupRate),
             Discount = RandomGenerator.RandomNumber(FakeContainerItem.MinDiscount),
             DiscountRate = RandomGenerator.RandomNumber(FakeContainerItem.MinDiscountRate),
-            ContainerId = new Guid(),
+            ContainerId = Guid.NewGuid(),
+            TenantId = null
+        };
+    }
+    
+    public static FakeContainer RandomFakeContainer()
+    {
+        return new FakeContainer
+        {
+            Id = Guid.NewGuid(),
+            IsDeleted = false,
+            Name = RandomGenerator.RandomAlpNum(1, FakeContainer.MaxNameLength),
+            Description = RandomGenerator.RandomAlpNum(1, FakeContainer.MaxDescriptionLength),
             TenantId = null
         };
     }

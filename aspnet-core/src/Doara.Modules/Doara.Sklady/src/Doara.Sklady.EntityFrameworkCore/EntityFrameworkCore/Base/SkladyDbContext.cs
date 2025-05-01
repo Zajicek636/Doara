@@ -10,7 +10,6 @@ public class SkladyDbContext : AbpDbContext<SkladyDbContext>, ISkladyDbContext
 {
     public DbSet<Container> Containers { get; set; }
     public DbSet<ContainerItem> ContainerItems { get; set; }
-    public DbSet<WarehouseWorker> WarehouseWorkers { get; set; }
 
     public SkladyDbContext(DbContextOptions<SkladyDbContext> options)
         : base(options)

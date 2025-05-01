@@ -10,6 +10,6 @@ public interface ICountryAppService
     Task<CountryDto> GetAsync(Guid id);
     Task<PagedResultDto<CountryDto>> GetAllAsync(PagedAndSortedResultRequestDto input);
     Task<CountryDto> CreateAsync(CountryCreateInputDto input);
-    Task<CountryDto> UpdateAsync(CountryUpdateInputDto input);
+    Task<CountryDto> UpdateAsync(Guid id, CountryUpdateInputDto input);
     Task DeleteAsync(Guid id);
 }

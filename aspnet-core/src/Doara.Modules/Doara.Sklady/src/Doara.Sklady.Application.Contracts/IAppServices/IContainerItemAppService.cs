@@ -8,10 +8,10 @@ namespace Doara.Sklady.IAppServices;
 
 public interface IContainerItemAppService : IApplicationService
 {
-    Task<ContainerItemDto> GetAsync(Guid id);
-    Task<PagedResultDto<ContainerItemDto>> GetAllAsync(PagedAndSortedResultRequestDto input);
-    Task<ContainerItemDto> CreateAsync(ContainerItemCreateInputDto input);
-    Task<ContainerItemDto> UpdateAsync(ContainerItemUpdateInputDto input);
+    Task<ContainerItemDetailDto> GetAsync(Guid id);
+    Task<PagedResultDto<ContainerItemDto>> GetAllAsync(ContainerItemGetAllDto input);
+    Task<PagedResultDto<ContainerItemDetailDto>> GetAllWithDetailAsync(ContainerItemGetAllDto input);
+    Task<ContainerItemDetailDto> CreateAsync(ContainerItemCreateInputDto input);
+    Task<ContainerItemDetailDto> UpdateAsync(Guid id, ContainerItemUpdateInputDto input);
     Task DeleteAsync(Guid id);
-    Task<ContainerItemDto> ChangeStateAsync(ContainerItemChangeStateInputDto input);
 }

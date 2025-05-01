@@ -15,6 +15,13 @@ public class Subject_Tests : UcetnictviDomainModule
         _data = RandomFakeEntityGenerator.RandomFakeSubject();
     }
     
+    [Fact]
+    public void Test_Subject()
+    {
+        var entity = _data.CreateOriginalEntity();
+        _data.CheckIfSame(entity);
+    }
+    
     [Theory]
     [MemberData(nameof(PropertyTester.GetStringPropertyTestData), [false, FakeSubject.MaxNameLength], MemberType = typeof(PropertyTester))]
     public void Test_Subject_Name(string name, bool shouldThrow)
