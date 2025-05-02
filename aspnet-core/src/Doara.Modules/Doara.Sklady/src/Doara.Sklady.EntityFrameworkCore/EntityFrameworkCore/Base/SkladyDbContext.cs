@@ -8,9 +8,9 @@ namespace Doara.Sklady.EntityFrameworkCore.Base;
 [ConnectionStringName(SkladyDbProperties.ConnectionStringName)]
 public class SkladyDbContext : AbpDbContext<SkladyDbContext>, ISkladyDbContext
 {
-    public DbSet<Container> Containers { get; set; }
-    public DbSet<ContainerItem> ContainerItems { get; set; }
-    public DbSet<StockMovement> StockMovements { get; set; }
+    public DbSet<Container> ContainerSet { get; set; }
+    public DbSet<ContainerItem> ContainerItemSet { get; set; }
+    public DbSet<StockMovement> StockMovementSet { get; set; }
 
     public SkladyDbContext(DbContextOptions<SkladyDbContext> options)
         : base(options)

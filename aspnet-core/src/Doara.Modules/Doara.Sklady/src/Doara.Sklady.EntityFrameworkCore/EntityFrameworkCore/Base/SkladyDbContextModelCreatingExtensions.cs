@@ -63,6 +63,10 @@ public static class SkladyDbContextModelCreatingExtensions
 
         builder.Entity<StockMovement>(b =>
         {
+            //Configure table & schema name
+            b.ToTable(SkladyDbProperties.DbTablePrefix + "_" + nameof(StockMovement), SkladyDbProperties.DbSchema);
+            b.ConfigureByConvention();
+            
             b.Property(ci => ci.Quantity).IsRequired();
             b.Property(ci => ci.MovementCategory).HasConversion(
                     x => (char)x, 

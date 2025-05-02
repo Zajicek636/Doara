@@ -136,6 +136,7 @@ public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
         {
             throw new BusinessException(SkladyErrorCodes.AmountShouldNotBeZeroOrLower);
         }
+        
         Movements.Add(new StockMovement(plannedId, Id, amount, MovementCategory.Unused, relatedDocId));
         return this;
     }
@@ -211,6 +212,5 @@ public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
 
     protected ContainerItem()
     {
-        Movements = new Collection<StockMovement>();
     }
 }

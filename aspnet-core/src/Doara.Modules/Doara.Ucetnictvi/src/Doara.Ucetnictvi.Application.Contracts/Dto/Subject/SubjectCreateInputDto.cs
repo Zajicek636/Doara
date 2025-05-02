@@ -13,10 +13,10 @@ public class SubjectCreateInputDto
     [Required]
     public Guid AddressId { get; set; }
     
-    [StringLength(SubjectConstants.MaxNameLength)]
+    [StringLength(SubjectConstants.MaxIcLength)]
     public string? Ic { get; set; }
     
-    [StringLength(SubjectConstants.MaxNameLength)]
+    [StringLength(SubjectConstants.MaxDicLength)]
     public string? Dic { get; set; }
     
     [Required]

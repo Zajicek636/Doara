@@ -8,7 +8,7 @@ namespace Doara.Sklady.EntityFrameworkCore.Base;
 [ConnectionStringName(SkladyDbProperties.ConnectionStringName)]
 public interface ISkladyDbContext : IEfCoreDbContext
 {
-    DbSet<Container> Containers { get; }
-    DbSet<ContainerItem> ContainerItems { get; }
-    DbSet<StockMovement> StockMovements { get; }
+    DbSet<Container> ContainerSet { get; }
+    DbSet<ContainerItem> ContainerItemSet { get; }
+    DbSet<StockMovement> StockMovementSet { get; }
 }
