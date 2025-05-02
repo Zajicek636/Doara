@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Doara.Sklady.Dto.ContainerItem;
+using Doara.Sklady.Dto.StockMovement;
 using Doara.Sklady.Enums;
 using Doara.Sklady.IAppServices;
 using Doara.Sklady.Utils.Converters;
@@ -30,12 +31,10 @@ public class ContainerItemItemAppService_Tests : SkladyApplicationTestBase<Sklad
         containerItem.Container.Name.ShouldBe("Container1");
         containerItem.Container.Description.ShouldBe("Container1Description");
         containerItem.Id.ShouldBe(TestData.ContainerItem11Id);
-        containerItem.State.ShouldBe(ContainerItemState.New);
         containerItem.QuantityType.ShouldBe(QuantityType.Grams);
         containerItem.Name.ShouldBe("ContainerItem11");
         containerItem.Description.ShouldBe("ContainerItem11Description");
         containerItem.PurchaseUrl.ShouldBe("url1");
-        containerItem.Quantity.ShouldBe(10);
         containerItem.RealPrice.ShouldBe(10);
         containerItem.PresentationPrice.ShouldBe(10);
         containerItem.Markup.ShouldBe(10);
@@ -67,12 +66,10 @@ public class ContainerItemItemAppService_Tests : SkladyApplicationTestBase<Sklad
         containerItem.Container.Name.ShouldBe("Container2");
         containerItem.Container.Description.ShouldBe("Container2Description");
         containerItem.Id.ShouldNotBe(Guid.Empty);
-        containerItem.State.ShouldBe(ContainerItemState.New);
         containerItem.QuantityType.ShouldBe(Converter.DefaultContainerItemQuantityType);
         containerItem.Name.ShouldBe(Converter.DefaultContainerItemName);
         containerItem.Description.ShouldBe(Converter.DefaultContainerItemDescription);
         containerItem.PurchaseUrl.ShouldBe(Converter.DefaultContainerItemPurchaseUrl);
-        containerItem.Quantity.ShouldBe(Converter.DefaultContainerItemQuantity);
         containerItem.RealPrice.ShouldBe(Converter.DefaultContainerItemRealPrice);
         containerItem.PresentationPrice.ShouldBe(Converter.DefaultContainerItemRealPrice);
         containerItem.Markup.ShouldBe(Converter.DefaultContainerItemMarkup);
@@ -101,12 +98,10 @@ public class ContainerItemItemAppService_Tests : SkladyApplicationTestBase<Sklad
         var containerItem = await _containerItemAppService.GetAsync(TestData.ContainerItem11Id);
         containerItem.Name = Converter.DefaultContainerItemName;
         containerItem.Description = Converter.DefaultContainerItemDescription;
-        containerItem.State = ContainerItemState.Used;
         containerItem.QuantityType = Converter.DefaultContainerItemQuantityType;
         containerItem.Name = Converter.DefaultContainerItemName;
         containerItem.Description = Converter.DefaultContainerItemDescription;
         containerItem.PurchaseUrl = Converter.DefaultContainerItemPurchaseUrl;
-        containerItem.Quantity = Converter.DefaultContainerItemQuantity;
         containerItem.RealPrice = Converter.DefaultContainerItemRealPrice;
         containerItem.Markup = Converter.DefaultContainerItemMarkup;
         containerItem.MarkupRate = Converter.DefaultContainerItemMarkupRate;
@@ -119,10 +114,8 @@ public class ContainerItemItemAppService_Tests : SkladyApplicationTestBase<Sklad
         updatedContainerItem.Id.ShouldBe(containerItem.Id);
         updatedContainerItem.Name.ShouldBe(Converter.DefaultContainerItemName);
         updatedContainerItem.Description.ShouldBe(Converter.DefaultContainerItemDescription);
-        updatedContainerItem.State.ShouldBe(ContainerItemState.Used);
         updatedContainerItem.QuantityType.ShouldBe(Converter.DefaultContainerItemQuantityType);
         updatedContainerItem.PurchaseUrl.ShouldBe(Converter.DefaultContainerItemPurchaseUrl);
-        updatedContainerItem.Quantity.ShouldBe(Converter.DefaultContainerItemQuantity);
         updatedContainerItem.RealPrice.ShouldBe(Converter.DefaultContainerItemRealPrice);
         updatedContainerItem.Markup.ShouldBe(Converter.DefaultContainerItemMarkup);
         updatedContainerItem.MarkupRate.ShouldBe(Converter.DefaultContainerItemMarkupRate);
@@ -207,5 +200,14 @@ public class ContainerItemItemAppService_Tests : SkladyApplicationTestBase<Sklad
         entities.Items[0].Container.Id.ShouldBe(TestData.Container2Id);
         entities.Items[0].Container.Name.ShouldBe("Container2");
         entities.Items[0].Container.Description.ShouldBe("Container2Description");
+    }
+
+    [Fact]
+    public async Task Should_AddStock()
+    {
+        var result = await _containerItemAppService.AddStockAsync(TestData.ContainerItem22Id, new StockMovementCreateInputDto
+        {
+            Quantity = 5
+        });
     }
 }

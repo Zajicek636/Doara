@@ -3,6 +3,8 @@
   "texts": {
     "MyAccount": "Spravovat profil",
     "SamplePageMessage": "Ukázková stránka pro modul Sklady",
-    "Permission:Sklady": "PP"
+    "Sklady:010000": "Nedostatek volných zdrojů. Počet volných zdrojů je {Quantity}.",
+    "Sklady:010001": "Skladový pohyb není rezervací.",
+    "Sklady:010002": "Množství musí být větší než nula."
   }
 }

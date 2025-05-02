@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Doara.Sklady.Dto.ContainerItem;
+using Doara.Sklady.Dto.StockMovement;
 using Doara.Sklady.IAppServices;
 using Doara.Sklady.Permissions;
 using Microsoft.AspNetCore.Authorization;
@@ -17,7 +18,7 @@ namespace Doara.Sklady.Controllers;
 public class ContainerItemController(IContainerItemAppService containerItemAppService)
     : SkladyController, IContainerItemAppService
 {
-    [HttpGet("{id:guid}")]
+    [HttpGet]
     [Authorize(SkladyPermissions.ReadContainerItemPermission)]
     public async Task<ContainerItemDetailDto> GetAsync([Required] Guid id)
     {
@@ -45,17 +46,52 @@ public class ContainerItemController(IContainerItemAppService containerItemAppSe
         return await containerItemAppService.CreateAsync(input);
     }
     
-    [HttpPut("{id:guid}")]
+    [HttpPut]
     [Authorize(SkladyPermissions.UpdateContainerItemPermission)]
     public async Task<ContainerItemDetailDto> UpdateAsync([Required] Guid id, ContainerItemUpdateInputDto input)
     {
         return await containerItemAppService.UpdateAsync(id, input);
     }
     
-    [HttpDelete("{id:guid}")]
+    [HttpDelete]
     [Authorize(SkladyPermissions.DeleteContainerItemPermission)]
     public async Task DeleteAsync([Required] Guid id)
     {
         await containerItemAppService.DeleteAsync(id);
+    }
+
+    [HttpPost("AddStock")]
+    [Authorize(SkladyPermissions.UpdateContainerItemPermission)]
+    public async Task<ContainerItemDetailDto> AddStockAsync([Required] Guid id, StockMovementCreateInputDto input)
+    {
+        return await containerItemAppService.AddStockAsync(id, input);
+    }
+
+    [HttpPost("RemoveMovement")]
+    [Authorize(SkladyPermissions.UpdateContainerItemPermission)]
+    public async Task<ContainerItemDetailDto> RemoveMovementAsync([Required] Guid id, [Required] Guid stockMovementId)
+    {
+        return await containerItemAppService.RemoveMovementAsync(id, stockMovementId);
+    }
+
+    [HttpPost("Reserve")]
+    [Authorize(SkladyPermissions.UpdateContainerItemPermission)]
+    public async Task<ContainerItemDetailDto> ReserveItemAsync([Required] Guid id, StockMovementCreateInputDto input)
+    {
+        return await containerItemAppService.ReserveItemAsync(id, input);
+    }
+
+    [HttpPost("Use")]
+    [Authorize(SkladyPermissions.UpdateContainerItemPermission)]
+    public async Task<ContainerItemDetailDto> UseItemAsync([Required] Guid id, StockMovementCreateInputDto input)
+    {
+        return await containerItemAppService.UseItemAsync(id, input);
+    }
+
+    [HttpPost("ReservationToUsage")]
+    [Authorize(SkladyPermissions.UpdateContainerItemPermission)]
+    public async Task<ContainerItemDetailDto> ConvertReservationToUsageAsync([Required] Guid id, [Required] Guid stockMovementId)
+    {
+        return await containerItemAppService.ConvertReservationToUsageAsync(id, stockMovementId);
     }
 }

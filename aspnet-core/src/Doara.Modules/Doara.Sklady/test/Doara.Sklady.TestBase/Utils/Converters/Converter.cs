@@ -10,7 +10,7 @@ public static partial class Converter
     {
         return data.DoActionWithNotThrowCheck(() => new ContainerItem(data.Id, data.Name, data.Description, 
             data.RealPrice, data.Markup, data.MarkupRate, data.Discount, data.DiscountRate, data.PurchaseUrl,
-            data.ContainerId, data.Quantity, data.QuantityType), checkIfNotThrow);
+            data.ContainerId, data.QuantityType), checkIfNotThrow);
     }
     
     public static Container CreateOriginalEntity(this FakeContainer data, bool checkIfNotThrow = true)
