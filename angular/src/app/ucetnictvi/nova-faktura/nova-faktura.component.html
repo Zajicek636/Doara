@@ -16,6 +16,14 @@
           <app-toolbar-button [btn]="btn"/>
         </ng-container>
       </div>
+
+      <div style="padding-top: 10px">
+        <ng-container *ngFor="let item of invoiceItems; let i = index">
+          <div>
+            <button (click)="editPolozka(item, i)" mat-icon-button><mat-icon>{{BaseMaterialIcons.EDIT}}</mat-icon></button>
+            {{item.description}} - {{item.description}} - {{item.quantity}}</div>
+        </ng-container>
+      </div>
     </div>
   </div>
 </div>

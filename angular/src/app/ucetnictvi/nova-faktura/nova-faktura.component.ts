@@ -11,9 +11,9 @@ import {NovaFakturaDataService} from './data/nova-faktura-data.service';
 import {FormComponentResult} from '../../shared/forms/any-form/any-form.component';
 import {populateDefaults} from '../../shared/forms/form-field.utils';
 import {
-  CREATE_FAKTURA_FIELDS,
+  CREATE_EDIT_FAKTURA_FIELDS,
   CREATE_INVOICE_ITEM_FIELDS,
-  InvoiceCreateEditDto, InvoiceDto,
+  InvoiceCreateEditDto, InvoiceDetailDto, InvoiceDto,
 } from './data/nova-faktura.interfaces';
 import {SubjektDetailDto} from '../subjekty/data/subjekty.interfaces';
 import {FormGroup} from '@angular/forms';
@@ -21,8 +21,7 @@ import {FormField} from '../../shared/forms/form.interfaces';
 import {InvoiceItemDto} from '../polozky-faktury/data/polozky-faktury.interfaces';
 import {PolozkyFakturyDataService} from '../polozky-faktury/data/polozky-faktury-data.service';
 import {PolozkaKontejneruDataService} from '../../sklady/polozka-kontejneru/data/polozka-kontejneru-data.service';
-import {ContainerDto, CREATE_CONTAINER_FIELDS} from '../../sklady/sklady-polozky/data/sklady-polozky.interfaces';
-import {DialogType} from '../../shared/dialog/dialog.interfaces';
+import {DialogType, DynamicDialogResult} from '../../shared/dialog/dialog.interfaces';
 
 @Component({
   selector: 'app-nova-faktura',
@@ -35,12 +34,22 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
 
   baseFormFields: FormField[] = [];
   isBaseFormValid = false;
+  isBaseFormModified = false;
 
   invoiceItemForm: FormField[] = [];
+
   isInvoiceItemFormValid = false;
-  availableInvoiceItems: InvoiceItemDto[] = []
+  invoiceItems: InvoiceItemDto[] = [];
+
 
   invoiceItemSectionToolbarButtons: ToolbarButton[] = []
+
+
+  isNew = true;
+  entity: InvoiceDto | null = null;
+  baseForm!: FormGroup;
+  subjektOptions:any[] = [];
+  loaded: boolean = false;
 
 
   constructor(
@@ -60,18 +69,12 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     super.chosenElement = value;
   }
 
-  defaultValues: any = {};
-  isNew = true;
-  entity: InvoiceDto | null = null;
-  formGroup!: FormGroup;
-  subjektOptions:any[] = [];
-  loaded: boolean = false;
 
   override async ngOnInit() {
     super.ngOnInit();
     this.route.paramMap.subscribe(pm => {
       this.entityId = pm.get('id');
-      this.isNew    = !this.entityId;
+      this.isNew = !this.entityId;
       this.refreshToolbarButtons();
     });
 
@@ -79,31 +82,38 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     await this.initSubjectsForm();
     await this.initInvocieItemsForm();
 
-    if (!this.isNew && this.entityId) {
-      // Mock data pro editaci stávající faktury
-      const mock: InvoiceDto = {
-        id: this.entityId,
-        invoiceNumber: 'F2025EDIT',
-        supplierId: this.subjektOptions[0]?.value!,
-        customerId: this.subjektOptions[1]?.value!,
-        issueDate:    '2025-05-01T00:00:00.000Z',
-        taxDate:      '2025-05-02T00:00:00.000Z',
-        deliveryDate: '2025-05-03T00:00:00.000Z',
-        totalNetAmount:   1234,
-        totalVatAmount:    234,
-        totalGrossAmount:  1468,
-        paymentTerms:   '30 dní',
-        vatRate:        21,
-        variableSymbol: '2025001',
-        constantSymbol: '0308',
-        specificSymbol: '001'
-      };
+    await this.handleNewItem()
 
-      // Naplň defaultValues a přegeneruj baseFormFields
-      this.defaultValues    = mock;
-      this.baseFormFields   = populateDefaults(this.baseFormFields, mock);
-    }
+
     this.loaded = true;
+  }
+
+  private async handleNewItem() {
+    if (!this.isNew && this.entityId) {
+      const faktura = await this.dataService.get(this.entityId)
+      const supplierOption = this.subjektOptions.find(x => x.value === faktura.supplier.id);
+      const customerOption = this.subjektOptions.find(x => x.value === faktura.customer.id);
+
+      const mapped: InvoiceDto = {
+        id: faktura.id,
+        invoiceNumber: faktura.invoiceNumber,
+        supplierId: supplierOption.value,
+        customerId: customerOption.value,
+        issueDate: faktura.issueDate,
+        taxDate: faktura.taxDate,
+        deliveryDate: faktura.deliveryDate,
+        totalNetAmount: faktura.totalNetAmount,
+        totalVatAmount: faktura.totalVatAmount,
+        totalGrossAmount: faktura.totalGrossAmount,
+        paymentTerms: faktura.paymentTerms,
+        vatRate: faktura.vatRate,
+        variableSymbol: faktura.variableSymbol,
+        constantSymbol: faktura.constantSymbol,
+        specificSymbol: faktura.specificSymbol,
+      }
+      this.baseFormFields = populateDefaults(this.baseFormFields, mapped);
+      this.invoiceItems.push(...faktura.items)
+    }
   }
 
   private async loadItemsForInits() {
@@ -121,9 +131,8 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
   }
 
   private async initSubjectsForm() {
-
     //options pro customerField a supplierField
-    this.baseFormFields = CREATE_FAKTURA_FIELDS.map(f => {
+    this.baseFormFields = CREATE_EDIT_FAKTURA_FIELDS.map(f => {
       if (f.formControlName === 'supplierId' || f.formControlName === 'customerId') {
         return { ...f, options: this.subjektOptions };
       }
@@ -176,7 +185,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
   }
 
   onBaseFormReady(form: FormGroup) {
-    this.formGroup = form;
+    this.baseForm = form;
     form.get('supplierId')?.valueChanges.subscribe(val => {
       this.syncFields('supplierId', 'customerId', val);
     });
@@ -187,8 +196,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
   }
   async addNewPolozkaFaktury() {
     const newItem = populateDefaults(CREATE_INVOICE_ITEM_FIELDS, {})
-
-    const a = await this.dialogService.form({
+    const response = await this.dialogService.form({
       headerIcon: BaseMaterialIcons.PLUS,
       title: `Nová položka faktury`,
       sections: [
@@ -201,9 +209,50 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
       type: DialogType.SUCCESS
     })
 
+    if(!response) return;
+
+    const newPolozka: InvoiceItemDto = this.mapToInvoiceCreateDto(response)
+    newPolozka.id = newPolozka.id == '' ? `newPolozka${this.invoiceItems.length}` : newPolozka.id
+    this.invoiceItems.push(newPolozka as InvoiceItemDto)
   }
+
+  async editPolozka(item: InvoiceItemDto, index: number) {
+    const newItem = populateDefaults(CREATE_INVOICE_ITEM_FIELDS, item)
+    const response = await this.dialogService.form({
+      headerIcon: BaseMaterialIcons.PLUS,
+      title: `Nová položka faktury`,
+      sections: [
+        {
+          sectionId: "main_section",
+          headerIcon: BaseMaterialIcons.ASSIGNMENT,
+          fields: newItem,
+          sectionTitle: "Informace o položce"
+        }],
+      type: DialogType.SUCCESS
+    })
+
+    if(!response) return;
+
+    const updatedItem = this.mapToInvoiceCreateDto(response)
+    this.invoiceItems[index] = updatedItem as InvoiceItemDto;
+  }
+
+  private mapToInvoiceCreateDto(response: DynamicDialogResult): InvoiceItemDto {
+    const main =  response["main_section"]?.data || {}
+    return {
+      id: main.id,
+      description: main.description,
+      quantity: main.quantity,
+      unitPrice: main.unitPrice,
+      vatRate: main.vatRate,
+      netAmount: main.netAmount,
+      vatAmount: main.vatAmount,
+      grossAmount: main.grossAmount,
+    }
+  }
+
   private syncFields(changedKey: 'supplierId' | 'customerId', affectedKey: 'supplierId' | 'customerId', changedValue: any) {
-    const affectedValue = this.formGroup.get(affectedKey)?.value;
+    const affectedValue = this.baseForm.get(affectedKey)?.value;
     const updatedOptions = this.subjektOptions.filter(
       s => s.value !== changedValue?.value
     );
@@ -218,16 +267,16 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
       return f;
     });
     if (changedValue?.value && affectedValue === changedValue.value) {
-      this.formGroup.get(affectedKey)?.setValue(null);
+      this.baseForm.get(affectedKey)?.setValue(null);
     }
 
-    this.baseFormFields = populateDefaults(this.baseFormFields, this.formGroup.value);
+    this.baseFormFields = populateDefaults(this.baseFormFields, this.baseForm.value);
   }
 
   onBaseFormChanged(result: FormComponentResult) {
     this.isBaseFormValid = result.valid;
-    this.isBaseFormValid = result.modified;
-    this.formGroup = result.form;
+    this.isBaseFormModified = result.modified;
+    this.baseForm = result.form;
     const data = result.data as InvoiceCreateEditDto;
   }
 
@@ -235,4 +284,5 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     await this.router.navigate(['ucetnictvi', 'faktura', "10"]);
   }
 
+  protected readonly BaseMaterialIcons = BaseMaterialIcons;
 }

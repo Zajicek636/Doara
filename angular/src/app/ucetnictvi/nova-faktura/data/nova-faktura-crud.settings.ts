@@ -10,7 +10,6 @@ export class NovaFakturaCrudSettings implements CrudSettings<string, InvoiceCrea
   postUrl?: string;
   queryParam?: string;
 
-
   idGetter(entity: any): string {
     return entity.id;
   }

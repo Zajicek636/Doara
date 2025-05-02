@@ -1,6 +1,6 @@
 import {SubjektDetailDto} from '../../subjekty/data/subjekty.interfaces';
 import {CustomValidator, FormField, FormFieldTypes} from '../../../shared/forms/form.interfaces';
-import {InvoiceItemCreateDto} from '../../polozky-faktury/data/polozky-faktury.interfaces';
+import {InvoiceItemDto} from '../../polozky-faktury/data/polozky-faktury.interfaces';
 
 export interface InvoiceCreateEditDto {
   invoiceNumber: string;
@@ -21,7 +21,7 @@ export interface InvoiceCreateEditDto {
 
 
 export interface InvoiceDto {
-  id: string;
+  id?: string;
   invoiceNumber: string;
   supplierId: string;
   customerId: string;
@@ -54,15 +54,23 @@ export interface InvoiceDetailDto {
   variableSymbol: string;
   constantSymbol: string;
   specificSymbol: string;
-  items: InvoiceItemCreateDto[];
+  items: InvoiceItemDto[];
 }
 
 export const CREATE_INVOICE_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
   {
+    formControlName: 'id',
+    label: 'ID',
+    type: FormFieldTypes.TEXT,
+    defaultValueGetter: (i: InvoiceItemDto) => i.id,
+    validator: [],
+    visible: false
+  },
+  {
     formControlName: 'description',
     label: 'Popis položky',
     type: FormFieldTypes.TEXT,
-    defaultValueGetter: (i: InvoiceItemCreateDto) => i.description,
+    defaultValueGetter: (i: InvoiceItemDto) => i.description,
     validator: [{ validator: CustomValidator.REQUIRED }],
     visible: true
   },
@@ -70,7 +78,7 @@ export const CREATE_INVOICE_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     formControlName: 'quantity',
     label: 'Množství',
     type: FormFieldTypes.NUMBER,
-    defaultValueGetter: (i: InvoiceItemCreateDto) => i.quantity,
+    defaultValueGetter: (i: InvoiceItemDto) => i.quantity,
     validator: [
       { validator: CustomValidator.REQUIRED },
       { validator: CustomValidator.MIN, params: 0 }
@@ -81,7 +89,7 @@ export const CREATE_INVOICE_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     formControlName: 'unitPrice',
     label: 'Cena za jednotku',
     type: FormFieldTypes.NUMBER,
-    defaultValueGetter: (i: InvoiceItemCreateDto) => i.unitPrice,
+    defaultValueGetter: (i: InvoiceItemDto) => i.unitPrice,
     validator: [
       { validator: CustomValidator.REQUIRED },
       { validator: CustomValidator.MIN, params: 0 }
@@ -92,7 +100,7 @@ export const CREATE_INVOICE_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     formControlName: 'netAmount',
     label: 'Částka bez DPH',
     type: FormFieldTypes.NUMBER,
-    defaultValueGetter: (i: InvoiceItemCreateDto) => i.netAmount,
+    defaultValueGetter: (i: InvoiceItemDto) => i.netAmount,
     validator: [{ validator: CustomValidator.MIN, params: 0 }],
     visible: true
   },
@@ -100,7 +108,7 @@ export const CREATE_INVOICE_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     formControlName: 'vatRate',
     label: 'Sazba DPH (%)',
     type: FormFieldTypes.NUMBER,
-    defaultValueGetter: (i: InvoiceItemCreateDto) => i.vatRate,
+    defaultValueGetter: (i: InvoiceItemDto) => i.vatRate,
     validator: [
       { validator: CustomValidator.REQUIRED },
       { validator: CustomValidator.MIN, params: 0 }
@@ -111,7 +119,7 @@ export const CREATE_INVOICE_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     formControlName: 'vatAmount',
     label: 'Částka DPH',
     type: FormFieldTypes.NUMBER,
-    defaultValueGetter: (i: InvoiceItemCreateDto) => i.vatAmount,
+    defaultValueGetter: (i: InvoiceItemDto) => i.vatAmount,
     validator: [{ validator: CustomValidator.MIN, params: 0 }],
     visible: true
   },
@@ -119,13 +127,13 @@ export const CREATE_INVOICE_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     formControlName: 'grossAmount',
     label: 'Celková částka',
     type: FormFieldTypes.NUMBER,
-    defaultValueGetter: (i: InvoiceItemCreateDto) => i.grossAmount,
+    defaultValueGetter: (i: InvoiceItemDto) => i.grossAmount,
     validator: [{ validator: CustomValidator.MIN, params: 0 }],
     visible: true
   }
 ];
 
-export const CREATE_FAKTURA_FIELDS: Omit<FormField, 'defaultValue'>[] = [
+export const CREATE_EDIT_FAKTURA_FIELDS: Omit<FormField, 'defaultValue'>[] = [
   {
     formControlName: 'invoiceNumber',
     label: 'Číslo faktury',

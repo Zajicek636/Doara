@@ -17,8 +17,8 @@ export class SeznamFakurDataService extends BaseCrud<string, InvoiceDto, Invoice
     const invoices: InvoiceDto[] = Array.from({ length: 1000 }, (_, i) => ({
       id: `INV-${i+1}`,
       invoiceNumber: `2025/00${i+1}`,
-      supplierId: `SUP-${(i%10)+1}`,
-      customerId: `CUST-${(i%20)+1}`,
+      supplierId: `SubId${(i)+1}`,
+      customerId: `SubId-${(i)+2}`,
       issueDate: new Date(2025, 0, (i%30)+1).toISOString(),
       taxDate:   new Date(2025, 1, (i%28)+1).toISOString(),
       deliveryDate: new Date(2025, 2, (i%31)+1).toISOString(),
