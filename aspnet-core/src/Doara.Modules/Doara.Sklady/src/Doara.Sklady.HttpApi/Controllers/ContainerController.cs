@@ -17,7 +17,7 @@ namespace Doara.Sklady.Controllers;
 public class ContainerController(IContainerAppService containerAppService)
     : SkladyController, IContainerAppService
 {
-    [HttpGet("{id:guid}")]
+    [HttpGet]
     [Authorize(SkladyPermissions.ReadContainerPermission)]
     public async Task<ContainerDetailDto> GetAsync([Required] Guid id)
     {
@@ -45,14 +45,14 @@ public class ContainerController(IContainerAppService containerAppService)
         return await containerAppService.CreateAsync(input);
     }
     
-    [HttpPut("{id:guid}")]
+    [HttpPut]
     [Authorize(SkladyPermissions.UpdateContainerPermission)]
     public async Task<ContainerDetailDto> UpdateAsync([Required] Guid id, ContainerUpdateInputDto input)
     {
         return await containerAppService.UpdateAsync(id, input);
     }
     
-    [HttpDelete("{id:guid}")]
+    [HttpDelete]
     [Authorize(SkladyPermissions.DeleteContainerPermission)]
     public async Task DeleteAsync([Required] Guid id)
     {
