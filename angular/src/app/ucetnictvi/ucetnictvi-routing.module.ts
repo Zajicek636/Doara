@@ -24,9 +24,11 @@ const routes: Routes = [
         data: { basePath: 'ucetnictvi', breadcrumb: 'Seznam faktur' },
       },
       {
-        path: 'nova-faktura',
-        component: NovaFakturaComponent,
-        data: { basePath: 'ucetnictvi', breadcrumb: 'Nová faktura' },
+        path: 'faktura',
+        children: [
+          { path: '', component: NovaFakturaComponent, data: { breadcrumb: 'Nová faktura' } },
+          { path: ':id', component: NovaFakturaComponent, data: { breadcrumb: 'Úprava faktury' } }
+        ]
       },
       {
         path: 'subjekty',

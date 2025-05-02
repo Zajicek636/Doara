@@ -1,8 +1,8 @@
 ﻿import {Injectable} from '@angular/core';
 import {BaseCrud, PagedList, PagedRequest} from '../../../shared/crud/base-crud-service';
 import {HttpClient} from '@angular/common/http';
-import {InvoiceDto} from './seznam-faktur.interfaces';
 import {SeznamFakturCrudSettings} from './seznam-faktur-crud.settings';
+import {InvoiceDto} from '../../nova-faktura/data/nova-faktura.interfaces';
 
 @Injectable({
   providedIn: 'root',

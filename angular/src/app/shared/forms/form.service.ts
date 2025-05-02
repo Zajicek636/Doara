@@ -30,7 +30,7 @@ export class FormService {
           validators.push(Validators.required);
           break;
         case CustomValidator.MIN:
-          if (!v.params || typeof v.params !== 'number') break;
+          if (typeof v.params !== 'number') break;
 
           if (field.type === FormFieldTypes.TEXT) {
             validators.push(Validators.minLength(v.params));
@@ -39,7 +39,7 @@ export class FormService {
           }
           break;
         case CustomValidator.MAX:
-          if (!v.params || typeof v.params !== 'number') break;
+          if (typeof v.params !== 'number') break;
 
           if (field.type === FormFieldTypes.TEXT || field.type === FormFieldTypes.TEXTAREA) {
             validators.push(Validators.maxLength(v.params));
@@ -53,6 +53,17 @@ export class FormService {
         case CustomValidator.PATTERN:
           if (typeof v.params === 'string') {
             validators.push(this.validatorService.patternValidator(v.params));
+          }
+          break;
+        case CustomValidator.MIN_DATE:
+          if (v.params instanceof Date) {
+            validators.push(this.validatorService.minDateValidator(v.params));
+          }
+          break;
+
+        case CustomValidator.MAX_DATE:
+          if (v.params instanceof Date) {
+            validators.push(this.validatorService.maxDateValidator(v.params));
           }
           break;
       }

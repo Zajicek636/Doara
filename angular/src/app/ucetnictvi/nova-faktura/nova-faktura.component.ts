@@ -10,11 +10,19 @@ import {SharedModule} from '../../shared/shared.module';
 import {NovaFakturaDataService} from './data/nova-faktura-data.service';
 import {FormComponentResult} from '../../shared/forms/any-form/any-form.component';
 import {populateDefaults} from '../../shared/forms/form-field.utils';
-import {CREATE_FAKTURA_FIELDS, InvoiceCreateDto} from './data/nova-faktura.interfaces';
+import {
+  CREATE_FAKTURA_FIELDS,
+  CREATE_INVOICE_ITEM_FIELDS,
+  InvoiceCreateEditDto, InvoiceDto,
+} from './data/nova-faktura.interfaces';
 import {SubjektDetailDto} from '../subjekty/data/subjekty.interfaces';
 import {FormGroup} from '@angular/forms';
 import {FormField} from '../../shared/forms/form.interfaces';
-import {InvoiceDto} from '../seznam-faktur/data/seznam-faktur.interfaces';
+import {InvoiceItemDto} from '../polozky-faktury/data/polozky-faktury.interfaces';
+import {PolozkyFakturyDataService} from '../polozky-faktury/data/polozky-faktury-data.service';
+import {PolozkaKontejneruDataService} from '../../sklady/polozka-kontejneru/data/polozka-kontejneru-data.service';
+import {ContainerDto, CREATE_CONTAINER_FIELDS} from '../../sklady/sklady-polozky/data/sklady-polozky.interfaces';
+import {DialogType} from '../../shared/dialog/dialog.interfaces';
 
 @Component({
   selector: 'app-nova-faktura',
@@ -23,15 +31,17 @@ import {InvoiceDto} from '../seznam-faktur/data/seznam-faktur.interfaces';
   styleUrl: './nova-faktura.component.scss'
 })
 export class NovaFakturaComponent extends BaseContentComponent<any,any> implements OnInit {
-  formFields: FormField[] = [];
-  defaultValues: any = {};
-  isFormValid = false;
-  isFormModified = false;
-  isNew = true;
-  entity: InvoiceDto | null = null;
-  formGroup!: FormGroup;
-  subjektOptions:any[] = [];
-  loaded: boolean = false;
+  entityId: string | null = null;
+
+  baseFormFields: FormField[] = [];
+  isBaseFormValid = false;
+
+  invoiceItemForm: FormField[] = [];
+  isInvoiceItemFormValid = false;
+  availableInvoiceItems: InvoiceItemDto[] = []
+
+  invoiceItemSectionToolbarButtons: ToolbarButton[] = []
+
 
   constructor(
     private subjektyDataService: SubjektyDataService,
@@ -39,40 +49,110 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     protected override breadcrumbService: BreadcrumbService,
     protected override router: Router,
     protected override dialogService: DialogService,
-    protected override route: ActivatedRoute
+    protected override route: ActivatedRoute,
+    private polozkyFakturyDataService: PolozkyFakturyDataService,
+    private containerItemsDataService: PolozkaKontejneruDataService,
   ) {
     super(route, router, breadcrumbService, dialogService, dataService);
   }
 
+  override set chosenElement(value: any) {
+    super.chosenElement = value;
+  }
+
+  defaultValues: any = {};
+  isNew = true;
+  entity: InvoiceDto | null = null;
+  formGroup!: FormGroup;
+  subjektOptions:any[] = [];
+  loaded: boolean = false;
+
   override async ngOnInit() {
     super.ngOnInit();
-    const id = this.route.snapshot.paramMap.get('id');
-    this.isNew = !id;
-    await this.loadSubjectsAndInitForm();
+    this.route.paramMap.subscribe(pm => {
+      this.entityId = pm.get('id');
+      this.isNew    = !this.entityId;
+      this.refreshToolbarButtons();
+    });
+
+    await this.loadItemsForInits();
+    await this.initSubjectsForm();
+    await this.initInvocieItemsForm();
+
+    if (!this.isNew && this.entityId) {
+      // Mock data pro editaci stávající faktury
+      const mock: InvoiceDto = {
+        id: this.entityId,
+        invoiceNumber: 'F2025EDIT',
+        supplierId: this.subjektOptions[0]?.value!,
+        customerId: this.subjektOptions[1]?.value!,
+        issueDate:    '2025-05-01T00:00:00.000Z',
+        taxDate:      '2025-05-02T00:00:00.000Z',
+        deliveryDate: '2025-05-03T00:00:00.000Z',
+        totalNetAmount:   1234,
+        totalVatAmount:    234,
+        totalGrossAmount:  1468,
+        paymentTerms:   '30 dní',
+        vatRate:        21,
+        variableSymbol: '2025001',
+        constantSymbol: '0308',
+        specificSymbol: '001'
+      };
+
+      // Naplň defaultValues a přegeneruj baseFormFields
+      this.defaultValues    = mock;
+      this.baseFormFields   = populateDefaults(this.baseFormFields, mock);
+    }
     this.loaded = true;
   }
 
-  private async loadSubjectsAndInitForm() {
+  private async loadItemsForInits() {
+    // subjects
     const page = await this.subjektyDataService.getAll();
     const subjects = page.items;
     this.subjektOptions = subjects.map((s: SubjektDetailDto) => ({
       value: s.id,
       displayValue: `${s.name} – ${s.ic} – ${s.dic}`
     }));
+  }
 
-    //options pro subjektField a supplierField
-    this.formFields = CREATE_FAKTURA_FIELDS.map(f => {
+  private async initInvocieItemsForm() {
+    this.invoiceItemForm = CREATE_INVOICE_ITEM_FIELDS
+  }
+
+  private async initSubjectsForm() {
+
+    //options pro customerField a supplierField
+    this.baseFormFields = CREATE_FAKTURA_FIELDS.map(f => {
       if (f.formControlName === 'supplierId' || f.formControlName === 'customerId') {
         return { ...f, options: this.subjektOptions };
       }
       return f;
     });
-
-    this.formFields = populateDefaults(this.formFields, this.isNew ? {} as InvoiceCreateDto : this.entity);
-
   }
 
   override buildToolbarButtons(): ToolbarButton[] {
+    this.invoiceItemSectionToolbarButtons = [
+      {
+        id: 'newPolozka',
+        text: 'Vytvořit položku',
+        icon: BaseMaterialIcons.PLUS,
+        class: 'btn-primary',
+        visible: !this.isNew,
+        disabled: false,
+        action: () => this.addNewPolozkaFaktury()
+      },
+      {
+        id: 'newPolozkaSkladu',
+        text: 'Přidat položku ze skladu',
+        icon: BaseMaterialIcons.ADD_CONTAINER,
+        class: 'btn-primary',
+        visible: !this.isNew,
+        disabled: false,
+        action: () => {  }
+      }
+    ];
+
     return [
       {
         id: 'saveFaktura',
@@ -80,7 +160,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         icon: BaseMaterialIcons.SAVE,
         class: 'btn-primary',
         visible: true,
-        disabled: !this.isFormValid || !this.isFormModified,
+        disabled: false,
         action: () => this.saveFaktura()
       },
       {
@@ -88,36 +168,71 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         text: 'Zrušit',
         icon: BaseMaterialIcons.CANCEL,
         class: 'btn-secondary',
-        disabled: false,
         visible: true,
-        action: () => this.router.navigate(['/seznam-faktur']),
+        disabled: false,
+        action: () => this.router.navigate(['/seznam-faktur'])
       }
     ];
   }
 
-  onFormChanged(result: FormComponentResult) {
-    this.isFormValid = result.valid;
-    this.isFormModified = result.modified;
-    this.formGroup = result.form;
+  onBaseFormReady(form: FormGroup) {
+    this.formGroup = form;
+    form.get('supplierId')?.valueChanges.subscribe(val => {
+      this.syncFields('supplierId', 'customerId', val);
+    });
 
-    // získáme nově vybrané id
-    const data = result.data as InvoiceCreateDto;
-    const selSupplier = data.supplierId;
-    const selCustomer = data.customerId;
+    form.get('customerId')?.valueChanges.subscribe(val => {
+      this.syncFields('customerId', 'supplierId', val);
+    });
+  }
+  async addNewPolozkaFaktury() {
+    const newItem = populateDefaults(CREATE_INVOICE_ITEM_FIELDS, {})
 
-    // upravíme options tak, aby se nevyskytla vybraná hodnota
-    this.formFields = this.formFields.map(f => {
-      if (f.formControlName === 'supplierId') {
-        return { ...f, options: this.subjektOptions.filter(o => o.value !== selCustomer) };
-      }
-      if (f.formControlName === 'customerId') {
-        return { ...f, options: this.subjektOptions.filter(o => o.value !== selSupplier) };
+    const a = await this.dialogService.form({
+      headerIcon: BaseMaterialIcons.PLUS,
+      title: `Nová položka faktury`,
+      sections: [
+        {
+          sectionId: "main_section",
+          headerIcon: BaseMaterialIcons.ASSIGNMENT,
+          fields: newItem,
+          sectionTitle: "Informace o položce"
+        }],
+      type: DialogType.SUCCESS
+    })
+
+  }
+  private syncFields(changedKey: 'supplierId' | 'customerId', affectedKey: 'supplierId' | 'customerId', changedValue: any) {
+    const affectedValue = this.formGroup.get(affectedKey)?.value;
+    const updatedOptions = this.subjektOptions.filter(
+      s => s.value !== changedValue?.value
+    );
+
+    this.baseFormFields = this.baseFormFields.map(f => {
+      if (f.formControlName === affectedKey) {
+        return {
+          ...f,
+          options: updatedOptions
+        };
       }
       return f;
     });
+    if (changedValue?.value && affectedValue === changedValue.value) {
+      this.formGroup.get(affectedKey)?.setValue(null);
+    }
+
+    this.baseFormFields = populateDefaults(this.baseFormFields, this.formGroup.value);
   }
 
-  private saveFaktura() {
+  onBaseFormChanged(result: FormComponentResult) {
+    this.isBaseFormValid = result.valid;
+    this.isBaseFormValid = result.modified;
+    this.formGroup = result.form;
+    const data = result.data as InvoiceCreateEditDto;
+  }
+
+  async saveFaktura() {
+    await this.router.navigate(['ucetnictvi', 'faktura', "10"]);
   }
 
 }

@@ -44,17 +44,12 @@ export class SkladyPolozkyComponent extends BaseContentComponent<ContainerDto,Sk
 
   async loadData() {
     try {
-      //const res = await this.dataService.getAll({useSuffix: true})
-      //this.items = res.items ?? []
-      for (let i = 0; i < 10; i++) {
-        this.items.push({id: `${i}`, name: `TEST-${i}`, description: `DESCRIPTIONDESCRIPTION-${i}`});
-      }
+      const res = await this.dataService.getAll({useSuffix: true})
+      this.items = res.items ?? []
     } catch (e) {
-      await this.dialogService.alert({title: "Titulek", message:`${e}`, dialogType: DialogType.WARNING})
+      await this.dialogService.alert({title: "Chyba", message:`${e}`, dialogType: DialogType.WARNING})
     }
   }
-
-
 
   protected buildToolbarButtons(): ToolbarButton<ContainerDto>[] {
     return [

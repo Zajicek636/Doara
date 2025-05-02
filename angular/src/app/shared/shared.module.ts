@@ -20,12 +20,14 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatCardModule,} from '@angular/material/card';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {ToolbarButtonComponent} from './context-toolbar/toolbar-button/toolbar-button.component';
 
 
 @NgModule({
     declarations: [
       DynamicTableComponent,
       ContextToolbarComponent,
+      ToolbarButtonComponent,
     ],
   imports: [
     MatProgressSpinnerModule,
@@ -56,6 +58,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     DynamicTableComponent,
     AnyFormModule,
     ContextToolbarComponent,
+    ToolbarButtonComponent,
     MatDividerModule,
     NgForOf,
     MatCardModule,

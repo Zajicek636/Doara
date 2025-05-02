@@ -31,9 +31,9 @@ export class SubjektyDataService extends BaseCrud<string, SubjektDetailDto, Subj
         city: `Město ${i + 1}`,
         postalCode: `${10000 + i}`,
         countryDto: {
-          id: `CountryId${i % 3 + 1}`,
+          id: ['ID', 'IDD'][i % 2],
           name: ['Česká republika', 'Slovensko'][i % 2],
-          code: ['CZ', 'SK'][i % 3],
+          code: ['CZ', 'SK'][i % 2],
         } as CountryDto
       } as AddressDetailDto
     }));

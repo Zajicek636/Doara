@@ -18,6 +18,28 @@ import {AutocompleteFieldComponent} from './autocomplete-field/autocomplete-fiel
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {RadiobuttonFieldComponent} from './radiobutton-field/radiobutton-field.component';
 import {MatRadioModule} from '@angular/material/radio';
+import {DateFieldComponent} from './date-field/date-field.component';
+import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+  MatDateFormats,
+  MatNativeDateModule,
+} from '@angular/material/core';
+import {CustomDateAdapter} from './date-field/date.adapter';
+
+export const MY_DATE_FORMATS: MatDateFormats = {
+  parse: {
+    dateInput: 'dd.MM.yyyy',
+  },
+  display: {
+    dateInput: 'dd.MM.yyyy',
+    monthYearLabel: 'MMMM yyyy',
+    dateA11yLabel: 'dd.MM.yyyy',
+    monthYearA11yLabel: 'MMMM yyyy',
+  },
+};
 
 @NgModule({
   declarations: [
@@ -27,7 +49,8 @@ import {MatRadioModule} from '@angular/material/radio';
     TextFieldComponent,
     NumberFieldComponent,
     AutocompleteFieldComponent,
-    RadiobuttonFieldComponent
+    RadiobuttonFieldComponent,
+    DateFieldComponent,
   ],
   imports: [
     CommonModule,
@@ -43,7 +66,11 @@ import {MatRadioModule} from '@angular/material/radio';
     MatButtonModule,
     MatSelectModule,
     MatAutocompleteModule,
-    MatRadioModule
+    MatRadioModule,
+    MatDatepickerToggle,
+    MatDatepicker,
+    MatDatepickerInput,
+    MatNativeDateModule,
   ],
   exports: [
     ReactiveFormsModule,
@@ -53,8 +80,14 @@ import {MatRadioModule} from '@angular/material/radio';
     LookupFieldComponent,
     TextFieldComponent,
     NumberFieldComponent,
+    MatNativeDateModule,
+    DateFieldComponent
   ],
-  providers: [],
+  providers: [
+    { provide: DateAdapter, useClass: CustomDateAdapter },
+    { provide: MAT_DATE_LOCALE, useValue: 'cs-CZ' },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+  ]
 })
 export class AnyFormModule { }
 

@@ -1,19 +1,19 @@
 ﻿import {Injectable} from '@angular/core';
 import {CrudSettings, QueryParams} from '../../../shared/crud/base-crud-service';
-import {InvoiceDto} from '../../nova-faktura/data/nova-faktura.interfaces';
-
-
+import {InvoiceItemDto} from './polozky-faktury.interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SeznamFakturCrudSettings implements CrudSettings<string, InvoiceDto> {
-  baseUrl: string = 'https://example.com/api/SeznamFaktur/SeznamFaktur';
+export class PolozkyFakturyCrudSettings implements CrudSettings<string, InvoiceItemDto> {
+  baseUrl: string = 'api/Ucetnictvi/InvoiceItem';
   postUrl?: string;
-  getAllSuffix?: string = "GetAll";
   queryParam?: string;
 
-  idGetter(entity: any): string {
+  postSuffix?: string = "ManageMany";
+  getAllSuffix: string = "GetAll"
+
+  idGetter(entity: InvoiceItemDto): string {
     return entity.id;
   }
 

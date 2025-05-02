@@ -4,13 +4,14 @@ import {BreadcrumbService, IBreadCrumb} from '../../shared/breadcrumb/breadcrumb
 import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {DialogService} from '../../shared/dialog/dialog.service';
 import {BaseContentComponent} from '../../shared/layout/base-component';
-import {INVOICE_COLUMNS, InvoiceDto} from './data/seznam-faktur.interfaces';
+import {INVOICE_COLUMNS} from './data/seznam-faktur.interfaces';
 import {SeznamFakurDataService} from './data/seznam-fakur-data.service';
 import {DialogType} from '../../shared/dialog/dialog.interfaces';
 import {DynamicTableComponent} from '../../shared/table/table/table.component';
 import {ToolbarButton} from '../../shared/context-toolbar/context-toolbar.interfaces';
 import {ColumnSetting} from '../../shared/table/table/table.settings';
 import {PagedList} from '../../shared/crud/base-crud-service';
+import {InvoiceDto} from '../nova-faktura/data/nova-faktura.interfaces';
 
 @Component({
   selector: 'app-seznam-faktur',
@@ -91,7 +92,7 @@ export class SeznamFakturComponent extends BaseContentComponent<InvoiceDto, Sezn
 
   onAdd(): void {
     const prev: IBreadCrumb[] = this.breadcrumbService.breadcrumbsValue;
-    this.router.navigate([this.basePath,'nova-faktura'], {state: { previousBreadcrumbs: prev }});
+    this.router.navigate([this.basePath,'faktura'], {state: { previousBreadcrumbs: prev }});
   }
 
   onEdit(): void {

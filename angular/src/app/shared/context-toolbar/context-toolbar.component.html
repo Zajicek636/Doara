@@ -1,21 +1,10 @@
 <mat-toolbar color="accent" class="context-toolbar" *ngIf="buttons?.length">
   <ng-container *ngFor="let btn of buttons">
-    <button
-      #toolbarButton
-      mat-flat-button
-      [id]="btn.id"
-      [color]="'primary'"
-      (click)="btn.action(contextItem)"
-      [disabled]="btn.disabled"
-      [style.visibility]="btn.visible"
-      type="button"
-      class="toolbar-button"
-    >
-      <div class="button-content">
-        <mat-icon *ngIf="btn.icon" class="icon">{{ btn.icon }}</mat-icon>
-        <span class="button-text" *ngIf="showText">{{ btn.text }}</span>
-      </div>
-    </button>
+    <app-toolbar-button
+      [btn]="btn"
+      [contextItem]="contextItem"
+      [showText]="showText"
+    ></app-toolbar-button>
   </ng-container>
 </mat-toolbar>
 <mat-divider></mat-divider>

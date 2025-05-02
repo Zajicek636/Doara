@@ -1,24 +1,37 @@
-<mat-form-field appearance="fill">
+<mat-form-field appearance="fill" class="full-width">
   <mat-label>{{ field.label }}</mat-label>
-  <mat-select [formControlName]="field.formControlName" [multiple]="field.multipleSelect">
-    @if (canBeNulled) {
-      <mat-option [value]="null"> --- </mat-option>
-    }
 
-    <ng-container *ngIf="groupedOptions">
-      <mat-optgroup *ngFor="let group of groupedOptions" [label]="group.groupName">
-        <mat-option *ngFor="let option of group.val" [value]="option.value">
+  <mat-select
+    [formControlName]="field.formControlName"
+    [multiple]="field.multipleSelect"
+    [compareWith]="compareWith"
+  >
+    <mat-select-trigger>
+      {{ control?.value['displayValue'] || '---' }}
+    </mat-select-trigger>
+
+    <mat-option *ngIf="canBeNulled" [value]="null">---</mat-option>
+
+    <ng-container *ngIf="isGroupSelection">
+      <mat-optgroup
+        *ngFor="let group of groupedOptions"
+        [label]="group.groupName">
+        <mat-option
+          *ngFor="let option of group.val"
+          [value]="option">
           {{ option.displayValue }}
         </mat-option>
       </mat-optgroup>
     </ng-container>
 
-    <ng-container *ngIf="normalOptions">
-      <mat-option *ngFor="let option of normalOptions" [value]="option.value">
+    <ng-container *ngIf="!isGroupSelection">
+      <mat-option
+        *ngFor="let option of normalOptions"
+        [value]="option">
         {{ option.displayValue }}
       </mat-option>
     </ng-container>
-
   </mat-select>
+
   <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
 </mat-form-field>

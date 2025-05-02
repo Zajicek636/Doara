@@ -83,7 +83,10 @@ export const SUBJEKT_BASE_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     visible: true,
     formControlName: 'SubjektPayer',
     type: FormFieldTypes.LOOKUP,
-    defaultValueGetter: (s: SubjektDetailDto) => s.isVatPayer,
+    defaultValueGetter: (s: SubjektDetailDto) => {
+      return {value: s.isVatPayer, displayValue: s.isVatPayer ? "Ano" : "Ne"};
+
+    },
     options: [
       { value: true, displayValue: 'Ano' },
       { value: false, displayValue: 'Ne' }
@@ -135,7 +138,12 @@ export const SUBJEKT_ADDRESS_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     label: 'Kód země',
     formControlName: 'SubjektCountryCode',
     visible: true,
-    defaultValueGetter: (a: SubjektDetailDto) => a.address.countryDto.code,
+    defaultValueGetter: (a: SubjektDetailDto) => {
+      return {
+        value: a.address.countryDto.id,
+        displayValue: a.address.countryDto.name
+      }
+    },
     type: FormFieldTypes.LOOKUP,
     validator: [{ validator: CustomValidator.REQUIRED }]
   }

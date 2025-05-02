@@ -7,6 +7,7 @@
   LOOKUP = 'lookup',
   PASSWORD = 'password',
   TEXTAREA = 'textarea',
+  DATE = 'date'
 }
 
 export enum CustomValidator {
@@ -15,6 +16,8 @@ export enum CustomValidator {
   MAX = 'max',
   EMAIL = 'email',
   PATTERN = 'pattern',
+  MIN_DATE = 'minDate',
+  MAX_DATE = 'maxDate',
 }
 
 export interface ValidatorConfig {

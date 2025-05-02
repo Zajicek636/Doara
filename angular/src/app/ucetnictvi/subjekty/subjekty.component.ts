@@ -56,6 +56,7 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
 
     super.ngOnInit();
 
+
     this.tableSettings = {
       cacheEntityType: "subjektyTableEntity",
       formFields: [...SUBJEKT_BASE_FIELDS, ...SUBJEKT_ADDRESS_FIELDS],
@@ -138,17 +139,22 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
   async editSubjekt() {
     if(!this.chosenElement) return;
 
-    this.subjektInfoFields = populateDefaults(SUBJEKT_BASE_FIELDS,this.chosenElement)
-    this.subjektAddressFields = populateDefaults(SUBJEKT_ADDRESS_FIELDS,this.chosenElement)
+    const addressFieldsWithOpts = SUBJEKT_ADDRESS_FIELDS.map(f => {
+      if (f.formControlName === 'SubjektCountryCode') {
+        return {
+          ...f,
+          options: this.countries.items.map(c => ({
+            value: c.id,
+            displayValue: c.name
+          }))
+        };
+      }
+      return f;
+    });
 
-    const codeField = this.subjektAddressFields
-        .find(f => f.formControlName === 'SubjektCountryCode');
-    if (codeField) {
-      codeField.options = this.countries.items.map(c => ({
-        value: c.code,
-        displayValue: c.name
-      }));
-    }
+    this.subjektInfoFields = populateDefaults(SUBJEKT_BASE_FIELDS,this.chosenElement)
+    this.subjektAddressFields = populateDefaults(addressFieldsWithOpts,this.chosenElement)
+
     const dialogResult: SubjektyDialogResult = await this.dialogService.open(
       SubjektyModalComponent<SubjektyDialogResult>,
       {
@@ -220,7 +226,7 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
   private mapToDto(dialogResult: SubjektyDialogResult): SubjektCreateEditDto {
     const base = dialogResult.subjektBaseResult.data;
     const addr = dialogResult.subjektAddressResult.data;
-    const selectedCountry = this.countries.items.find(c => c.code === addr.SubjektCountryCode);
+    const selectedCountry = this.countries.items.find(c => c.id === addr.SubjektCountryCode.value);
     return {
       id: base.SubjektId,
       name: base.SubjektName,

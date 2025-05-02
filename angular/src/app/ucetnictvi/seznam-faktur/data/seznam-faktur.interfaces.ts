@@ -1,26 +1,6 @@
-﻿import {CustomValidator, FormField, FormFieldTypes} from '../../../shared/forms/form.interfaces';
-import {SubjektDetailDto} from '../../subjekty/data/subjekty.interfaces';
+﻿
 import {ColumnSetting} from '../../../shared/table/table/table.settings';
-
-export interface InvoiceDto {
-  id: string;
-  invoiceNumber: string;
-  supplierId: string;
-  customerId: string;
-  issueDate: string;// ISO date string
-  taxDate: string;
-  deliveryDate: string;
-  totalNetAmount: number;
-  totalVatAmount: number;
-  totalGrossAmount: number;
-  paymentTerms: string;
-  vatRate: number;
-  variableSymbol: string;
-  constantSymbol: string;
-  specificSymbol: string;
-}
-
-
+import {InvoiceDto} from '../../nova-faktura/data/nova-faktura.interfaces';
 
 export const INVOICE_COLUMNS: ColumnSetting<InvoiceDto>[] = [
   { key: 'invoiceNumber', header: 'Číslo faktury', valueGetter: r => r.invoiceNumber },

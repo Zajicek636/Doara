@@ -41,4 +41,7 @@ export class NovaFakturaDataService extends BaseCrud<string, any, any, any> {
     //await this.get();
   }
 
+  async getInvoiceItems() {
+  }
+
 }

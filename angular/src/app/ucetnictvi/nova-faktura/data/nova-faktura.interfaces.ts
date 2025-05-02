@@ -1,8 +1,8 @@
 import {SubjektDetailDto} from '../../subjekty/data/subjekty.interfaces';
 import {CustomValidator, FormField, FormFieldTypes} from '../../../shared/forms/form.interfaces';
-import {InvoiceDto} from '../../seznam-faktur/data/seznam-faktur.interfaces';
+import {InvoiceItemCreateDto} from '../../polozky-faktury/data/polozky-faktury.interfaces';
 
-export interface InvoiceCreateDto {
+export interface InvoiceCreateEditDto {
   invoiceNumber: string;
   supplierId: string;
   customerId: string;
@@ -19,6 +19,111 @@ export interface InvoiceCreateDto {
   specificSymbol: string;
 }
 
+
+export interface InvoiceDto {
+  id: string;
+  invoiceNumber: string;
+  supplierId: string;
+  customerId: string;
+  issueDate: string;// ISO date string
+  taxDate: string;
+  deliveryDate: string;
+  totalNetAmount: number;
+  totalVatAmount: number;
+  totalGrossAmount: number;
+  paymentTerms: string;
+  vatRate: number;
+  variableSymbol: string;
+  constantSymbol: string;
+  specificSymbol: string;
+}
+
+export interface InvoiceDetailDto {
+  id: string;
+  invoiceNumber: string;
+  supplier: SubjektDetailDto;
+  customer: SubjektDetailDto;
+  issueDate: string;
+  taxDate: string;
+  deliveryDate: string;
+  totalNetAmount: number;
+  totalVatAmount: number;
+  totalGrossAmount: number;
+  paymentTerms: string;
+  vatRate: number;
+  variableSymbol: string;
+  constantSymbol: string;
+  specificSymbol: string;
+  items: InvoiceItemCreateDto[];
+}
+
+export const CREATE_INVOICE_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
+  {
+    formControlName: 'description',
+    label: 'Popis položky',
+    type: FormFieldTypes.TEXT,
+    defaultValueGetter: (i: InvoiceItemCreateDto) => i.description,
+    validator: [{ validator: CustomValidator.REQUIRED }],
+    visible: true
+  },
+  {
+    formControlName: 'quantity',
+    label: 'Množství',
+    type: FormFieldTypes.NUMBER,
+    defaultValueGetter: (i: InvoiceItemCreateDto) => i.quantity,
+    validator: [
+      { validator: CustomValidator.REQUIRED },
+      { validator: CustomValidator.MIN, params: 0 }
+    ],
+    visible: true
+  },
+  {
+    formControlName: 'unitPrice',
+    label: 'Cena za jednotku',
+    type: FormFieldTypes.NUMBER,
+    defaultValueGetter: (i: InvoiceItemCreateDto) => i.unitPrice,
+    validator: [
+      { validator: CustomValidator.REQUIRED },
+      { validator: CustomValidator.MIN, params: 0 }
+    ],
+    visible: true
+  },
+  {
+    formControlName: 'netAmount',
+    label: 'Částka bez DPH',
+    type: FormFieldTypes.NUMBER,
+    defaultValueGetter: (i: InvoiceItemCreateDto) => i.netAmount,
+    validator: [{ validator: CustomValidator.MIN, params: 0 }],
+    visible: true
+  },
+  {
+    formControlName: 'vatRate',
+    label: 'Sazba DPH (%)',
+    type: FormFieldTypes.NUMBER,
+    defaultValueGetter: (i: InvoiceItemCreateDto) => i.vatRate,
+    validator: [
+      { validator: CustomValidator.REQUIRED },
+      { validator: CustomValidator.MIN, params: 0 }
+    ],
+    visible: true
+  },
+  {
+    formControlName: 'vatAmount',
+    label: 'Částka DPH',
+    type: FormFieldTypes.NUMBER,
+    defaultValueGetter: (i: InvoiceItemCreateDto) => i.vatAmount,
+    validator: [{ validator: CustomValidator.MIN, params: 0 }],
+    visible: true
+  },
+  {
+    formControlName: 'grossAmount',
+    label: 'Celková částka',
+    type: FormFieldTypes.NUMBER,
+    defaultValueGetter: (i: InvoiceItemCreateDto) => i.grossAmount,
+    validator: [{ validator: CustomValidator.MIN, params: 0 }],
+    visible: true
+  }
+];
 
 export const CREATE_FAKTURA_FIELDS: Omit<FormField, 'defaultValue'>[] = [
   {
@@ -48,25 +153,53 @@ export const CREATE_FAKTURA_FIELDS: Omit<FormField, 'defaultValue'>[] = [
   {
     formControlName: 'issueDate',
     label: 'Datum vystavení',
-    type: FormFieldTypes.TEXT,
-    defaultValueGetter: (s: InvoiceDto) => s.issueDate,
-    validator: [{ validator: CustomValidator.REQUIRED }],
+    type: FormFieldTypes.DATE,
+    defaultValueGetter: (s: InvoiceDto) => new Date(s.issueDate),
+    validator: [
+      { validator: CustomValidator.REQUIRED },
+      { validator: CustomValidator.MIN_DATE, params: new Date('2025-05-01T15:40:54.115Z') },
+      { validator: CustomValidator.MAX_DATE, params: new Date('2025-06-02T15:40:54.115Z') }
+    ],
     visible: true
   },
   {
     formControlName: 'taxDate',
     label: 'Datum zdanitelného plnění',
-    type: FormFieldTypes.TEXT,
-    defaultValueGetter: (s: InvoiceDto) => s.taxDate,
+    type: FormFieldTypes.DATE,
+    defaultValueGetter: (s: InvoiceDto) => new Date(s.taxDate),
     validator: [{ validator: CustomValidator.REQUIRED }],
     visible: true
   },
   {
     formControlName: 'deliveryDate',
     label: 'Datum dodání',
-    type: FormFieldTypes.TEXT,
-    defaultValueGetter: (s: InvoiceDto) => s.deliveryDate,
+    type: FormFieldTypes.DATE,
+    defaultValueGetter: (s: InvoiceDto) =>  new Date(s.deliveryDate),
     validator: [{ validator: CustomValidator.REQUIRED }],
+    visible: true
+  },
+  {
+    formControlName: 'totalNetAmount',
+    label: 'totalNetAmount',
+    type: FormFieldTypes.NUMBER,
+    defaultValueGetter: (s: InvoiceDto) => s.totalNetAmount,
+    validator: [],
+    visible: true
+  },
+  {
+    formControlName: 'totalVatAmount',
+    label: 'totalvatamount',
+    type: FormFieldTypes.NUMBER,
+    defaultValueGetter: (s: InvoiceDto) => s.totalVatAmount,
+    validator: [],
+    visible: true
+  },
+  {
+    formControlName: 'totalgrossamount',
+    label: 'totalgrossamount',
+    type: FormFieldTypes.NUMBER,
+    defaultValueGetter: (s: InvoiceDto) => s.totalGrossAmount,
+    validator: [],
     visible: true
   },
   {
@@ -82,7 +215,7 @@ export const CREATE_FAKTURA_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     label: 'Sazba DPH (%)',
     type: FormFieldTypes.NUMBER,
     defaultValueGetter: (s: InvoiceDto) => s.vatRate,
-    validator: [{ validator: CustomValidator.MIN, params: 0 }],
+    validator: [{ validator: CustomValidator.REQUIRED},{ validator: CustomValidator.MIN, params:0 }],
     visible: true
   },
   {

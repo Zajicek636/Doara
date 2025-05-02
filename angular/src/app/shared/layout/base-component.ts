@@ -46,7 +46,7 @@ export abstract class BaseContentComponent<T, DataService> implements OnInit {
     this.refreshToolbarButtons();
   }
 
-  private refreshToolbarButtons() {
+  protected refreshToolbarButtons() {
     this.toolbarButtons = this.buildToolbarButtons();
   }
 

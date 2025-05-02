@@ -18,4 +18,34 @@ export class ValidatorService {
       return regex.test(control.value) ? null : { pattern: true }
     }
   }
+
+  stripTime(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
+  minDateValidator(minDate: Date): ValidatorFn {
+    const min = this.stripTime(minDate);
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (!value) return null;
+
+      const controlDate = this.stripTime(value instanceof Date ? value : new Date(value));
+      if (isNaN(controlDate.getTime())) return { invalidDate: true };
+
+      return controlDate >= min ? null : { minDate: { minDate: min } };
+    };
+  }
+
+  maxDateValidator(maxDate: Date): ValidatorFn {
+    const max = this.stripTime(maxDate);
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (!value) return null;
+
+      const controlDate = this.stripTime(value instanceof Date ? value : new Date(value));
+      if (isNaN(controlDate.getTime())) return { invalidDate: true };
+
+      return controlDate <= maxDate ? null : { maxDate: { maxDate: max } };
+    };
+  }
 }

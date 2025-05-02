@@ -1,6 +1,6 @@
 ﻿// form-field.utils.ts
 
-import {FormField} from './form.interfaces';
+import {FormField, FormGroupedSelect, FormSelect} from './form.interfaces';
 import {ColumnSetting} from '../table/table/table.settings';
 
 /**
@@ -15,11 +15,27 @@ export function populateDefaults<T>(
   dto: T
 ): FormField[] {
   return fields.map(f => {
-    let value: any = f.defaultValue;
+    // 1) získej surovou hodnotu
+    let rawValue: any = f.defaultValue;
     if (f.defaultValueGetter) {
-      value = f.defaultValueGetter(dto);
+      rawValue = f.defaultValueGetter(dto);
     }
-    return { ...f, defaultValue: value };
+
+    // 2) pokud má options, najdi odpovídající FormSelect
+    let defaultValue = rawValue;
+    if (f.options) {
+      // sjednotíme grouped i flat options
+      const opts: FormSelect[] = Array.isArray(f.options) &&
+      (f.options as any)[0]?.groupName
+        ? (f.options as FormGroupedSelect[]).flatMap(g => g.val)
+        : (f.options as FormSelect[]);
+      const match = opts.find(o => o.value === rawValue);
+      if (match) {
+        defaultValue = match;
+      }
+    }
+
+    return { ...f, defaultValue };
   });
 }
 
@@ -27,8 +43,17 @@ export function fieldsToColumns<T>(fields: FormField[]): ColumnSetting<T>[] {
   return fields.map(f => ({
     key: f.formControlName,
     header: f.label,
-    valueGetter: f.defaultValueGetter
-      ? (row: T) => f.defaultValueGetter!(row)
-      : (row: any) => row[f.formControlName]
+    valueGetter: (row: any) => {
+      // nejdřív zavoláme defaultValueGetter, pokud je
+      const raw = f.defaultValueGetter
+        ? f.defaultValueGetter(row)
+        : row[f.formControlName];
+
+      // pokud to je FormSelect objekt, vypíšeme displayValue
+      if (raw && typeof raw === 'object' && 'displayValue' in raw) {
+        return (raw as {displayValue: string}).displayValue;
+      }
+      return raw != null ? raw : '';
+    }
   }));
 }

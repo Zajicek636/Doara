@@ -7,5 +7,6 @@
     <app-textarea-field style="width: 100%" *ngSwitchCase="formFieldTypes.TEXTAREA" [field]="field" [form]="form"></app-textarea-field>
     <app-autocomplete-field style="width: 100%" *ngSwitchCase="formFieldTypes.AUTOCOMPLETE" [field]="field" [form]="form"></app-autocomplete-field>
     <app-radiobutton-field style="width: 100%" *ngSwitchCase="formFieldTypes.RADIO" [field]="field" [form]="form"></app-radiobutton-field>
+    <app-date-field *ngSwitchCase="formFieldTypes.DATE"  [form]="form" [field]="field"></app-date-field>
   </ng-container>
 </ng-container>

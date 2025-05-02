@@ -5,19 +5,20 @@
     type="text"
     matInput
     [formControlName]="field.formControlName"
-    [matAutocomplete]="auto"/>
+    [matAutocomplete]="auto"
+    [value]="getDisplayValue()"/>
 
-  <mat-autocomplete #auto="matAutocomplete">
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
     <ng-container *ngIf="isGroupSelection">
       <mat-optgroup *ngFor="let group of filteredGroupedOptions$ | async" [label]="group.groupName">
-        <mat-option *ngFor="let option of group.val" [value]="option.displayValue">
+        <mat-option *ngFor="let option of group.val" [value]="option">
           {{ option.displayValue }}
         </mat-option>
       </mat-optgroup>
     </ng-container>
 
     <ng-container *ngIf="!isGroupSelection">
-      <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option.displayValue">
+      <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">
         {{ option.displayValue }}
       </mat-option>
     </ng-container>

@@ -23,11 +23,11 @@ export interface FormComponentResult {
   styleUrl: './any-form.component.scss',
 })
 export class AnyFormComponent<T> implements OnInit {
+  @Input() defaults: any = {}
   @Input() fields!: FormField[];
 
   @Output() formChanged: EventEmitter<FormComponentResult> = new EventEmitter<FormComponentResult>();
-
-  @Input() defaults: any = {}
+  @Output() formReady: EventEmitter<FormGroup> = new EventEmitter<FormGroup>();
 
   isSmallScreen: boolean = false;
 
@@ -57,6 +57,7 @@ export class AnyFormComponent<T> implements OnInit {
     })
     this.modified = false;
     this.triggerInitialChange();
+    this.formReady.emit(this.form)
   }
 
   private triggerInitialChange() {
