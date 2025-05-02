@@ -43,6 +43,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dependencies", "dependencie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doara.Sklady.Application.Contracts", "..\Doara.Sklady\src\Doara.Sklady.Application.Contracts\Doara.Sklady.Application.Contracts.csproj", "{528A58CE-C9AC-4DEC-9D1E-48D5A7978E20}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doara.Sklady.EntityFrameworkCore", "..\Doara.Sklady\src\Doara.Sklady.EntityFrameworkCore\Doara.Sklady.EntityFrameworkCore.csproj", "{6A94375E-FEB5-40F9-89BB-24E630E8858E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doara.Sklady.Application", "..\Doara.Sklady\src\Doara.Sklady.Application\Doara.Sklady.Application.csproj", "{FE45354B-B24F-4787-BB56-03DC8535560E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doara.Sklady.HttpApi", "..\Doara.Sklady\src\Doara.Sklady.HttpApi\Doara.Sklady.HttpApi.csproj", "{7BF250FC-944B-4264-9091-634966FBAB48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +119,18 @@ Global
 		{528A58CE-C9AC-4DEC-9D1E-48D5A7978E20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{528A58CE-C9AC-4DEC-9D1E-48D5A7978E20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{528A58CE-C9AC-4DEC-9D1E-48D5A7978E20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A94375E-FEB5-40F9-89BB-24E630E8858E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A94375E-FEB5-40F9-89BB-24E630E8858E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A94375E-FEB5-40F9-89BB-24E630E8858E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A94375E-FEB5-40F9-89BB-24E630E8858E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE45354B-B24F-4787-BB56-03DC8535560E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE45354B-B24F-4787-BB56-03DC8535560E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE45354B-B24F-4787-BB56-03DC8535560E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE45354B-B24F-4787-BB56-03DC8535560E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BF250FC-944B-4264-9091-634966FBAB48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BF250FC-944B-4264-9091-634966FBAB48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BF250FC-944B-4264-9091-634966FBAB48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BF250FC-944B-4264-9091-634966FBAB48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -134,6 +152,9 @@ Global
 		{F6AC8D4A-EDD7-4514-8E8A-5BCB019864DB} = {E400416D-2895-4512-9D17-90681EEC7E0A}
 		{E5A5E4EB-AAAC-4D4C-8658-ECDD8CAA8B87} = {F121A7D7-6DB7-4CF3-800B-BF011B26A6D9}
 		{528A58CE-C9AC-4DEC-9D1E-48D5A7978E20} = {F121A7D7-6DB7-4CF3-800B-BF011B26A6D9}
+		{FE45354B-B24F-4787-BB56-03DC8535560E} = {F121A7D7-6DB7-4CF3-800B-BF011B26A6D9}
+		{6A94375E-FEB5-40F9-89BB-24E630E8858E} = {F121A7D7-6DB7-4CF3-800B-BF011B26A6D9}
+		{7BF250FC-944B-4264-9091-634966FBAB48} = {F121A7D7-6DB7-4CF3-800B-BF011B26A6D9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4324B3B4-B60B-4E3C-91D8-59576B4E26DD}

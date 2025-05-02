@@ -27,7 +27,7 @@ public static partial class Converter
     {
         return data.DoActionWithNotThrowCheck(() => new InvoiceItem(data.Id, data.InvoiceId, data.Description, 
             data.Quantity, data.UnitPrice, data.NetAmount, data.VatRate, data.VatAmount, 
-            data.GrossAmount), checkIfNotThrow);
+            data.GrossAmount, data.ContainerItemId), checkIfNotThrow);
     }
     
     public static Invoice CreateOriginalEntity(this FakeInvoice data, bool checkIfNotThrow = true)

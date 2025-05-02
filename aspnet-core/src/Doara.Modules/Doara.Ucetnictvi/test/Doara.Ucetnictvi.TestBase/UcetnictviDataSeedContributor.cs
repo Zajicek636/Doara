@@ -197,7 +197,8 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
             10000m,
             VatRate.Standard21,
             2100m,
-            12100m
+            12100m,
+            null
             ));
 
         await _invoiceItemRepository.CreateAsync(new InvoiceItem(
@@ -209,7 +210,8 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
             1500m,
             VatRate.Reduced12,
             315m,
-            1815m
+            1815m,
+            null
         ));
 
             
@@ -222,7 +224,8 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
             3000m,
             VatRate.Standard21,
             630m,
-            3630m
+            3630m,
+            null
         ));
 
         await _invoiceItemRepository.CreateAsync(new InvoiceItem(
@@ -234,7 +237,8 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
             2000m,
             VatRate.Standard21,
             420m,
-            2420m
+            2420m,
+            null
         ));
 
         await _invoiceItemRepository.CreateAsync(new InvoiceItem(
@@ -246,7 +250,8 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
             2000m,
             VatRate.Standard21,
             420m,
-            2420m
+            2420m,
+            null
         ));
     }
 }

@@ -11,7 +11,8 @@ namespace Doara.Ucetnictvi;
     typeof(UcetnictviApplicationContractsModule),
     typeof(AbpDddApplicationModule),
     typeof(AbpAutoMapperModule),
-    typeof(SkladyApplicationContractsModule)
+    typeof(SkladyApplicationContractsModule),
+    typeof(SkladyDomainSharedModule)
     )]
 public class UcetnictviApplicationModule : AbpModule
 {

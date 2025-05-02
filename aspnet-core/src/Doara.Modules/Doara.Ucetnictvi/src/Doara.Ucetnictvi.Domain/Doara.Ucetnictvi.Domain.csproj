@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Volo.Abp.Ddd.Domain" Version="9.1.1" />
+    <ProjectReference Include="..\..\..\Doara.Sklady\src\Doara.Sklady.Domain\Doara.Sklady.Domain.csproj" />
     <ProjectReference Include="..\Doara.Ucetnictvi.Domain.Shared\Doara.Ucetnictvi.Domain.Shared.csproj" />
   </ItemGroup>
 

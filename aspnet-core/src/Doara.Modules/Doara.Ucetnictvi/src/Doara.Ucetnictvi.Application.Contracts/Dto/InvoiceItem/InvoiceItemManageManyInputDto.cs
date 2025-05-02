@@ -12,5 +12,4 @@ public class InvoiceItemManageManyInputDto
     public List<InvoiceItemManageManyDto> Items { get; set; } = [];
     
     public List<Guid> ItemsForDelete { get; set; } = [];
-    public bool DeleteMissingItems { get; set; }
 }

@@ -13,6 +13,7 @@ public class FakeInvoiceItem : IFakeEntity<InvoiceItem>
     public Guid Id { get; set; }
     public bool IsDeleted { get; set; }
     public Guid? TenantId { get; set; }
+    public Guid? ContainerItemId { get; set; }
     public Guid InvoiceId { get; set; }
     public string Description { get; set; } = null!;
     public decimal Quantity { get; set; }

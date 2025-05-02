@@ -74,7 +74,12 @@ public class EfCoreContainerItemRepository(IDbContextProvider<SkladyDbContext> d
         var query = await GetQueryableAsync();
         return await query.AnyAsync(predicate);
     }
-    
+
+    public async Task<List<ContainerItem>> GetByIdsAsync(IEnumerable<Guid> ids)
+    {
+        return (await WithDetailsAsync()).Where(x => ids.Contains(x.Id)).ToList();
+    }
+
     public override async Task<IQueryable<ContainerItem>> WithDetailsAsync()
     {
         return (await base.WithDetailsAsync())

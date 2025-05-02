@@ -87,6 +87,8 @@ public static class UcetnictviDbContextModelCreatingExtensions
             b.Property(ii => ii.VatRate).IsRequired();
             b.Property(ii => ii.VatAmount).IsRequired();
             b.Property(ii => ii.GrossAmount).IsRequired();
+            b.Property(ii => ii.ContainerItemId);
+            b.Property(ii => ii.StockMovementId);
             
             //Indexes
             b.HasIndex(s => s.Id);

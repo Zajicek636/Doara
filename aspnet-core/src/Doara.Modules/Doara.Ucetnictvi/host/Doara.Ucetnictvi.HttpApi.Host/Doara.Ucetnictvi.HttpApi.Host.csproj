@@ -31,6 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Doara.Sklady\src\Doara.Sklady.Application\Doara.Sklady.Application.csproj" />
+    <ProjectReference Include="..\..\..\Doara.Sklady\src\Doara.Sklady.EntityFrameworkCore\Doara.Sklady.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\..\Doara.Sklady\src\Doara.Sklady.HttpApi\Doara.Sklady.HttpApi.csproj" />
     <ProjectReference Include="..\..\src\Doara.Ucetnictvi.HttpApi\Doara.Ucetnictvi.HttpApi.csproj" />
     <ProjectReference Include="..\..\src\Doara.Ucetnictvi.Application\Doara.Ucetnictvi.Application.csproj" />
     <ProjectReference Include="..\..\src\Doara.Ucetnictvi.EntityFrameworkCore\Doara.Ucetnictvi.EntityFrameworkCore.csproj" />
