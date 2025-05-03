@@ -27,6 +27,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Doara.Shared\Services\TestHelper\TestHelper.csproj" />
+    <ProjectReference Include="..\..\..\Doara.Sklady\src\Doara.Sklady.Application.Contracts\Doara.Sklady.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Doara.Sklady\src\Doara.Sklady.Application\Doara.Sklady.Application.csproj" />
+    <ProjectReference Include="..\..\..\Doara.Sklady\src\Doara.Sklady.EntityFrameworkCore\Doara.Sklady.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\..\src\Doara.Ucetnictvi.Application.Contracts\Doara.Ucetnictvi.Application.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Doara.Ucetnictvi.Domain\Doara.Ucetnictvi.Domain.csproj" />
   </ItemGroup>

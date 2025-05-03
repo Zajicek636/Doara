@@ -8,6 +8,6 @@
     
     "Ucetnictvi:020000": "Položku se nepodařilo vytvořit.",
     "Ucetnictvi:020001": "Položku s id={0} se nepodařilo zpracovat.",
-    "Ucetnictvi:020002": "Položku s id={0} neexistuje na faktuře s id={1}."
+    "Ucetnictvi:020002": "Položka s id={0} neexistuje na faktuře s id={1}."
   }
 }

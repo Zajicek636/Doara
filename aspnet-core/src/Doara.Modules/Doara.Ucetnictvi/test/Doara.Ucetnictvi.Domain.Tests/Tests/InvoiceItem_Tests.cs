@@ -25,6 +25,26 @@ public class InvoiceItem_Tests : UcetnictviDomainModule
     }
     
     [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Test_InvoiceItem_ContainerItemId(bool isNull)
+    {
+        _data.ContainerItemId = isNull ? null : Guid.NewGuid();
+        var entity = _data.CreateOriginalEntity();
+        _data.CheckIfSame(entity);
+    }
+    
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Test_InvoiceItem_StockMovementId(bool isNull)
+    {
+        _data.StockMovementId = isNull ? null : Guid.NewGuid();
+        var entity = _data.CreateOriginalEntity();
+        _data.CheckIfSame(entity);
+    }
+    
+    [Theory]
     [MemberData(nameof(PropertyTester.GetStringPropertyTestData), [false, FakeInvoiceItem.MaxDescriptionLength], MemberType = typeof(PropertyTester))]
     public void Test_InvoiceItem_Description(string description, bool shouldThrow)
     {

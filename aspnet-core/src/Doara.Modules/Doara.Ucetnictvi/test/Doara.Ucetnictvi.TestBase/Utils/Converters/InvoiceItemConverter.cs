@@ -14,7 +14,7 @@ public static partial class Converter
     public const decimal DefaultInvoiceItemVatAmount = 5;
     public const decimal DefaultInvoiceItemGrossAmount = 8;
     
-    public static InvoiceItemManageManyDto CreateInvoiceItemManageMany(Guid? id = null, string description = DefaultInvoiceItemDescription, 
+    public static InvoiceItemManageManyDto CreateInvoiceItemManageMany(Guid? id = null, Guid? containerItemId = null, string description = DefaultInvoiceItemDescription, 
         decimal quantity = DefaultInvoiceItemQuantity, decimal unitPrice = DefaultInvoiceItemUnitPrice, 
         decimal netAmount = DefaultInvoiceItemNetAmount, VatRate? vatRate = DefaultInvoiceItemVatRate,
         decimal vatAmount = DefaultInvoiceItemVatAmount, decimal grossAmount = DefaultInvoiceItemGrossAmount)
@@ -28,7 +28,8 @@ public static partial class Converter
             NetAmount = netAmount,
             VatRate = vatRate,
             VatAmount = vatAmount,
-            GrossAmount = grossAmount
+            GrossAmount = grossAmount,
+            ContainerItemId = containerItemId
         };
     }
 }

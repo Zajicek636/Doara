@@ -216,7 +216,7 @@ public class InvoiceItemAppService(IInvoiceItemRepository invoiceItemRepository,
             .SetVatAmount(input.VatAmount).SetGrossAmount(input.GrossAmount);
         
         StockMovementUpdateInput? stockMovementInput = null;
-        if (invoiceItem.ContainerItemId != input.ContainerItemId)
+        if (invoiceItem.ContainerItemId != null && input.ContainerItemId != null)
         {
             stockMovementInput = new StockMovementUpdateInput { 
                 ContainerItemId = input.ContainerItemId,                     
