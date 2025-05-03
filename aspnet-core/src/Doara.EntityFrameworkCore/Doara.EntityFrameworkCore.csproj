@@ -20,6 +20,7 @@
     <PackageReference Include="Volo.Abp.FeatureManagement.EntityFrameworkCore" Version="9.1.1" />
     <PackageReference Include="Volo.Abp.OpenIddict.EntityFrameworkCore" Version="9.1.1" />
     <ProjectReference Include="..\Doara.Modules\Doara.Sklady\src\Doara.Sklady.EntityFrameworkCore\Doara.Sklady.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\Doara.Modules\Doara.Ucetnictvi\src\Doara.Ucetnictvi.EntityFrameworkCore\Doara.Ucetnictvi.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

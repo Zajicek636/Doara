@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Doara.Data;
+using Doara.Sklady.EntityFrameworkCore.Base;
+using Doara.Ucetnictvi.EntityFrameworkCore.Base;
 using Volo.Abp.DependencyInjection;
 
 namespace Doara.EntityFrameworkCore;
@@ -28,6 +30,16 @@ public class EntityFrameworkCoreDoaraDbSchemaMigrator
 
         await _serviceProvider
             .GetRequiredService<DoaraDbContext>()
+            .Database
+            .MigrateAsync();
+        
+        await _serviceProvider
+            .GetRequiredService<SkladyDbContext>()
+            .Database
+            .MigrateAsync();
+        
+        await _serviceProvider
+            .GetRequiredService<UcetnictviDbContext>()
             .Database
             .MigrateAsync();
     }
