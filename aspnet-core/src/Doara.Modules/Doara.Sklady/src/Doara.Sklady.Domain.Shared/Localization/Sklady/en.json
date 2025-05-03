@@ -2,6 +2,10 @@
   "culture": "en",
   "texts": {
     "MyAccount":  "My account",
-    "SamplePageMessage": "A sample page for the Sklady module"
+    "SamplePageMessage": "A sample page for the Sklady module",
+    "Sklady:010000": "Not enough available resources. Available quantity is {Quantity}.",
+    "Sklady:010001": "The inventory movement is not a reservation.",
+    "Sklady:010002": "Quantity must be greater than zero.",
+    "Sklady:010003": "This movement can't be deleted."
   }
 }

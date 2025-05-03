@@ -2,6 +2,10 @@
   "culture": "sk",
   "texts": {
     "MyAccount": "Môj účet",
-    "SamplePageMessage": "Ukážka stránky pre modul Sklady"
+    "SamplePageMessage": "Ukážka stránky pre modul Sklady",
+    "Sklady:010000": "Nedostatok voľných zdrojov. Počet voľných zdrojov je {Quantity}.",
+    "Sklady:010001": "Skladový pohyb nie je rezerváciou.",
+    "Sklady:010002": "Množstvo musí byť väčšie ako nula.",
+    "Sklady:010003": "Tento pohyb nie je možné odstrániť."
   }
 }
