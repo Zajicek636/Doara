@@ -2,7 +2,7 @@
 
 <div class="content-scroll-wrapper" *ngIf="loaded">
   <div class="forms-row" style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; justify-content: center">
-    <div style="width: 75%; background-color: #e7ecea99; padding:10px 60px; border: 1px solid black; border-radius: 15px">
+    <div style="width: 75%; padding:10px 60px; border: 1px solid black; border-radius: 5px">
       <app-any-form
         [fields]="this.baseFormFields"
         (formChanged)="onBaseFormChanged($event)"
@@ -10,7 +10,7 @@
       ></app-any-form>
     </div>
 
-    <div *ngIf="!this.isNew" style="width: 75%; background-color: #e7ecea99; padding:10px 60px; border: 1px solid black; border-radius: 15px">
+    <div *ngIf="!this.isNew">
       <div style="display: flex; flex-direction: row; gap: 0.25rem">
         <ng-container *ngFor="let btn of invoiceItemSectionToolbarButtons">
           <app-toolbar-button [btn]="btn"/>

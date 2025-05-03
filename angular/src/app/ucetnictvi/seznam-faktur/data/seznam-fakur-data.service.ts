@@ -26,7 +26,7 @@ export class SeznamFakurDataService extends BaseCrud<string, InvoiceDto, Invoice
       totalVatAmount: (100 + i) * 0.21,
       totalGrossAmount: (100 + i) * 1.21,
       paymentTerms: '14 days',
-      vatRate: 21,
+      vatRate: "E",
       variableSymbol: `${100000 + i}`,
       constantSymbol: '0308',
       specificSymbol: `${200000 + i}`

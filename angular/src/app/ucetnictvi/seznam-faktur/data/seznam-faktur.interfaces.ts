@@ -1,6 +1,6 @@
 ﻿
 import {ColumnSetting} from '../../../shared/table/table/table.settings';
-import {InvoiceDto} from '../../nova-faktura/data/nova-faktura.interfaces';
+import {InvoiceDto, VatRate, VatRateLabels} from '../../nova-faktura/data/nova-faktura.interfaces';
 
 export const INVOICE_COLUMNS: ColumnSetting<InvoiceDto>[] = [
   { key: 'invoiceNumber', header: 'Číslo faktury', valueGetter: r => r.invoiceNumber },
@@ -11,7 +11,7 @@ export const INVOICE_COLUMNS: ColumnSetting<InvoiceDto>[] = [
   { key: 'totalVatAmount', header: 'DPH',              valueGetter: r => r.totalVatAmount.toFixed(2) },
   { key: 'totalGrossAmount', header: 'Celkem brutto',  valueGetter: r => r.totalGrossAmount.toFixed(2) },
   { key: 'paymentTerms',   header: 'Platební podmínky', valueGetter: r => r.paymentTerms },
-  { key: 'vatRate',        header: 'Sazba DPH (%)',    valueGetter: r => r.vatRate.toString() },
+  { key: 'vatRate',        header: 'Sazba DPH (%)',    valueGetter: r =>  VatRateLabels[r.vatRate as VatRate] },
   { key: 'variableSymbol', header: 'Variabilní symbol', valueGetter: r => r.variableSymbol },
   { key: 'constantSymbol', header: 'Konstantní symbol', valueGetter: r => r.constantSymbol },
   { key: 'specificSymbol', header: 'Specifický symbol', valueGetter: r => r.specificSymbol },

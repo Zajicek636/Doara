@@ -57,3 +57,8 @@ export function fieldsToColumns<T>(fields: FormField[]): ColumnSetting<T>[] {
     }
   }));
 }
+
+export function round(value: number, decimals: number) {
+  const factor = Math.pow(10, decimals);
+  return Math.round((value + Number.EPSILON) * factor) / factor;
+}

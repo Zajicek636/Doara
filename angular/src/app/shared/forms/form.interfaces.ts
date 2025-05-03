@@ -18,6 +18,7 @@ export enum CustomValidator {
   PATTERN = 'pattern',
   MIN_DATE = 'minDate',
   MAX_DATE = 'maxDate',
+  DECIMAL_PLACES = 'decimalPlaces'
 }
 
 export interface ValidatorConfig {
@@ -43,7 +44,6 @@ export interface  FormField {
   label: string;
   type: FormFieldTypes;
   validator?: ValidatorConfig[];
-
   visible?: boolean;
   //helpingy pro default values z dto pro table a mapovani a asynchronni operace
   defaultValueGetter: (dto: any) => any;

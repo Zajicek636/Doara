@@ -48,4 +48,16 @@ export class ValidatorService {
       return controlDate <= maxDate ? null : { maxDate: { maxDate: max } };
     };
   }
+
+  decimalPlacesValidator(places: number): ValidatorFn {
+    const re = new RegExp(`^\\d+(?:\\.\\d{0,${places}})?$`);
+    return (control: AbstractControl): ValidationErrors | null => {
+      const val = control.value?.toString();
+      if (!val || re.test(val)) {
+        return null;
+      }
+      return { decimalPlaces: { required: places } };
+    };
+  }
+
 }

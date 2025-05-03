@@ -84,9 +84,6 @@ export class SeznamFakturComponent extends BaseContentComponent<InvoiceDto, Sezn
   }
 
   loadData(): void {
-    if(this.tableComponent.data) {
-      this.dataSource = this.tableComponent.data
-    }
   }
 
   onAdd(): void {

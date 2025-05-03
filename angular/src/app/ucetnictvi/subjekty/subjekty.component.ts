@@ -126,7 +126,6 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
         data.splice(index, 1);
         this.tableComponent.dataSource.data = [...data];
       }
-
     } catch (e: any) {
       await this.dialogService.alert({
         title: "Chyba",

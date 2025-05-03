@@ -86,7 +86,7 @@ export class NovaFakturaDataService extends BaseCrud<string, InvoiceDetailDto, I
       totalVatAmount: 234,
       totalGrossAmount: 1468,
       paymentTerms:'30 dní',
-      vatRate: 21,
+      vatRate: 'C',
       variableSymbol: '2025001',
       constantSymbol: '0308',
       specificSymbol: '001',

@@ -66,6 +66,12 @@ export class FormService {
             validators.push(this.validatorService.maxDateValidator(v.params));
           }
           break;
+
+          case CustomValidator.DECIMAL_PLACES:
+          if (typeof v.params === 'number') {
+            validators.push(this.validatorService.decimalPlacesValidator(v.params));
+          }
+          break;
       }
     });
 

@@ -9,11 +9,11 @@ import {BaseMaterialIcons} from '../../../styles/material.icons';
 import {SharedModule} from '../../shared/shared.module';
 import {NovaFakturaDataService} from './data/nova-faktura-data.service';
 import {FormComponentResult} from '../../shared/forms/any-form/any-form.component';
-import {populateDefaults} from '../../shared/forms/form-field.utils';
+import {populateDefaults, round} from '../../shared/forms/form-field.utils';
 import {
   CREATE_EDIT_FAKTURA_FIELDS,
   CREATE_INVOICE_ITEM_FIELDS,
-  InvoiceCreateEditDto, InvoiceDetailDto, InvoiceDto,
+  InvoiceCreateEditDto, InvoiceDetailDto, InvoiceDto, VAT_RATE_PERCENT, VatRate,
 } from './data/nova-faktura.interfaces';
 import {SubjektDetailDto} from '../subjekty/data/subjekty.interfaces';
 import {FormGroup} from '@angular/forms';
@@ -22,6 +22,7 @@ import {InvoiceItemDto} from '../polozky-faktury/data/polozky-faktury.interfaces
 import {PolozkyFakturyDataService} from '../polozky-faktury/data/polozky-faktury-data.service';
 import {PolozkaKontejneruDataService} from '../../sklady/polozka-kontejneru/data/polozka-kontejneru-data.service';
 import {DialogType, DynamicDialogResult} from '../../shared/dialog/dialog.interfaces';
+import {combineLatest, startWith} from 'rxjs';
 
 @Component({
   selector: 'app-nova-faktura',
@@ -186,14 +187,75 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
 
   onBaseFormReady(form: FormGroup) {
     this.baseForm = form;
-    form.get('supplierId')?.valueChanges.subscribe(val => {
+    this.bindSubjectChange()
+    this.bindVatCalculation();
+  }
+
+  bindSubjectChange() {
+    this.baseForm.get('supplierId')?.valueChanges.subscribe(val => {
       this.syncFields('supplierId', 'customerId', val);
     });
 
-    form.get('customerId')?.valueChanges.subscribe(val => {
+    this.baseForm.get('customerId')?.valueChanges.subscribe(val => {
       this.syncFields('customerId', 'supplierId', val);
     });
   }
+
+  bindVatCalculation() {
+    const netCtrl = this.baseForm.get('totalNetAmount')!;
+    const vatCtrl = this.baseForm.get('totalVatAmount')!;
+    const grossCtrl = this.baseForm.get('totalgrossamount')!;
+    const rateCtrl = this.baseForm.get('vatRate')!;
+
+    function getRate(): number {
+      const rateKey = rateCtrl.value.value as VatRate;
+      return VAT_RATE_PERCENT[rateKey] ?? 0;
+    }
+
+    netCtrl.valueChanges.subscribe(netRaw => {
+      const rate = getRate();
+      if (rate == null) return;
+
+      const net = parseFloat(netRaw) || 0;
+      const vat = net * rate / 100;
+      const gross = net + vat;
+
+      vatCtrl.setValue(round(vat, 2), { emitEvent: false });
+      grossCtrl.setValue(round(gross, 2), { emitEvent: false });
+    });
+
+    grossCtrl.valueChanges.subscribe(grossRaw => {
+      const rate = getRate();
+      if (rate == null) return;
+
+      const gross = parseFloat(grossRaw) || 0;
+      const net = gross / (1 + rate / 100);
+      const vat = gross - net;
+
+      vatCtrl.setValue(round(vat, 2), { emitEvent: false });
+      netCtrl.setValue(round(net, 2), { emitEvent: false });
+    });
+
+    rateCtrl.valueChanges.subscribe(() => {
+      const rate = getRate();
+      if (rate == null) return;
+
+      const net = parseFloat(netCtrl.value) || 0;
+      const gross = parseFloat(grossCtrl.value) || 0;
+
+      if (net) {
+        const vat = net * rate / 100;
+        vatCtrl.setValue(round(vat, 2), { emitEvent: false });
+        grossCtrl.setValue(round(net + vat, 2), { emitEvent: false });
+      } else if (gross) {
+        const netCalc = gross / (1 + rate / 100);
+        const vat = gross - netCalc;
+        vatCtrl.setValue(round(vat, 2), { emitEvent: false });
+        netCtrl.setValue(round(netCalc, 2), { emitEvent: false });
+      }
+    });
+  }
+
   async addNewPolozkaFaktury() {
     const newItem = populateDefaults(CREATE_INVOICE_ITEM_FIELDS, {})
     const response = await this.dialogService.form({
@@ -270,7 +332,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
       this.baseForm.get(affectedKey)?.setValue(null);
     }
 
-    this.baseFormFields = populateDefaults(this.baseFormFields, this.baseForm.value);
+    //this.baseFormFields = populateDefaults(this.baseFormFields, this.baseForm.value);
   }
 
   onBaseFormChanged(result: FormComponentResult) {
