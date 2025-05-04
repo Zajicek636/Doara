@@ -59,7 +59,7 @@ public class SubjectController(ISubjectAppService subjectAppService) : Ucetnictv
         return await subjectAppService.UpdateAsync(id, input);
     }
     
-    [HttpPut("UpdateWithAddress/{id:guid}/{addressId:guid}")]
+    [HttpPut("UpdateWithAddress")]
     [Authorize(UcetnictviPermissions.UpdateSubjectPermission)]
     [Authorize(UcetnictviPermissions.UpdateAddressPermission)]
     public async Task<SubjectDetailDto> UpdateWithAddressAsync(Guid id, Guid addressId, SubjectWithAddressUpdateInputDto input)
