@@ -12,10 +12,11 @@ services:
     networks:
       - doara-network
     healthcheck:
-      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "D0ara!sBest", "-Q", "SELECT 1"]
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-C", "-S", "localhost", "-U", "sa", "-P", "D0ara!sBest", "-Q", "SELECT 1"]
       interval: 30s
       timeout: 30s
-      retries: 5
+      start_period: 30s
+      retries: 5  
 
   doara-migrator:
     build:
@@ -23,9 +24,10 @@ services:
       dockerfile: Dockerfile
       target: migrator
     depends_on:
-      - doara-db
+      doara-db:
+        condition: service_healthy
     environment:
-      - ConnectionStrings__Default=Server=doara-db;Database=Api;User=sa;Password=D0ara!sBest;MultipleActiveResultSets=true;TrustServerCertificate=True;
+      ConnectionStrings__Default: "Server=doara-db;Database=Api;User=sa;Password=D0ara!sBest;MultipleActiveResultSets=true;TrustServerCertificate=True;"
     networks:
       - doara-network
 
@@ -35,13 +37,15 @@ services:
       dockerfile: Dockerfile
       target: host
     depends_on:
-      - doara-db
-      - doara-migrator
+      doara-db:
+        condition: service_healthy
+      doara-migrator:
+        condition: service_completed_successfully
     ports:
-      - "44346:44346"
+      - "8080:80"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__Default=Server=doara-db;Database=Api;User=sa;Password=D0ara!sBest;MultipleActiveResultSets=true;TrustServerCertificate=True;
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__Default: "Server=doara-db;Database=Api;User=sa;Password=D0ara!sBest;MultipleActiveResultSets=true;TrustServerCertificate=True;"
     networks:
       - doara-network
 
