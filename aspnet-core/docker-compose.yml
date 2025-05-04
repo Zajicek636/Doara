@@ -1,0 +1,50 @@
+version: '3.9'
+
+services:
+  doara-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: doara-db
+    environment:
+      SA_PASSWORD: "D0ara!sBest"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - doara-network
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "D0ara!sBest", "-Q", "SELECT 1"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+
+  doara-migrator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrator
+    depends_on:
+      - doara-db
+    environment:
+      - ConnectionStrings__Default=Server=doara-db;Database=Api;User=sa;Password=D0ara!sBest;MultipleActiveResultSets=true;TrustServerCertificate=True;
+    networks:
+      - doara-network
+
+  doara-host:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: host
+    depends_on:
+      - doara-db
+      - doara-migrator
+    ports:
+      - "44346:44346"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__Default=Server=doara-db;Database=Api;User=sa;Password=D0ara!sBest;MultipleActiveResultSets=true;TrustServerCertificate=True;
+    networks:
+      - doara-network
+
+networks:
+  doara-network:
+    driver: bridge
