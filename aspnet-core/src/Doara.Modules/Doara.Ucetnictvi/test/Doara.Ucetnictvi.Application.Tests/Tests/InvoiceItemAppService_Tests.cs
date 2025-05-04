@@ -1,9 +1,13 @@
 ﻿using System.Threading.Tasks;
+using Doara.Sklady;
+using Doara.Sklady.Enums;
+using Doara.Sklady.IAppServices;
 using Doara.Ucetnictvi.Dto.InvoiceItem;
 using Doara.Ucetnictvi.Enums;
 using Doara.Ucetnictvi.IAppServices;
 using Doara.Ucetnictvi.Utils.Converters;
 using Shouldly;
+using Volo.Abp;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Guids;
 using Xunit;
@@ -13,12 +17,14 @@ namespace Doara.Ucetnictvi.Tests;
 public class InvoiceItemAppService_Tests : UcetnictviApplicationTestBase<UcetnictviApplicationTestModule>
 {
     private readonly IInvoiceItemAppService _invoiceItemAppService;
+    private readonly IContainerItemAppService _containerItemAppService;
     private readonly IGuidGenerator _guidGenerator;
     
     public InvoiceItemAppService_Tests()
     {
         _invoiceItemAppService = GetRequiredService<IInvoiceItemAppService>();
         _guidGenerator = GetRequiredService<IGuidGenerator>();
+        _containerItemAppService = GetRequiredService<IContainerItemAppService>();
     }
 
     [Fact]
@@ -93,8 +99,7 @@ public class InvoiceItemAppService_Tests : UcetnictviApplicationTestBase<Ucetnic
                     description: "Update"),
                 Converter.CreateInvoiceItemManageMany(description: "Create")
             ],
-            ItemsForDelete = [TestData.SkInvoiceItemId32],
-            DeleteMissingItems = false
+            ItemsForDelete = [TestData.SkInvoiceItemId32]
         };
 
         var report = await _invoiceItemAppService.ManageManyAsync(input);
@@ -127,60 +132,6 @@ public class InvoiceItemAppService_Tests : UcetnictviApplicationTestBase<Ucetnic
         report.HasErrors.ShouldBeFalse();
         report.Errors.Count.ShouldBe(0);
     }
-    
-    [Fact]
-    public async Task Should_ManageMany_InvoiceItem_With_Delete_Missing()
-    {
-        var input = new InvoiceItemManageManyInputDto
-        {
-            InvoiceId = TestData.SkInvoiceId3,
-            Items =
-            [
-                Converter.CreateInvoiceItemManageMany(TestData.SkInvoiceItemId31,
-                    description: "Update"),
-                Converter.CreateInvoiceItemManageMany(description: "Create")
-            ],
-            ItemsForDelete = [TestData.SkInvoiceItemId31],
-            DeleteMissingItems = true
-        };
-
-        var report = await _invoiceItemAppService.ManageManyAsync(input);
-        var items = await _invoiceItemAppService.GetAllAsync(new InvoiceItemGetAllDto
-        {
-            InvoiceId = TestData.SkInvoiceId3,
-            Sorting = "Description"
-        });
-        
-        var exception1 = await Should.ThrowAsync<EntityNotFoundException>(async () =>
-        {
-            await _invoiceItemAppService.GetAsync(TestData.SkInvoiceItemId31);
-        });
-        var exception2 = await Should.ThrowAsync<EntityNotFoundException>(async () =>
-        {
-            await _invoiceItemAppService.GetAsync(TestData.SkInvoiceItemId32);
-        });
-        var exception3 = await Should.ThrowAsync<EntityNotFoundException>(async () =>
-        {
-            await _invoiceItemAppService.GetAsync(TestData.SkInvoiceItemId33);
-        });
-        
-        exception1.Message.ShouldContain(nameof(Entities.InvoiceItem));
-        exception1.Message.ShouldContain(TestData.SkInvoiceItemId31.ToString());
-        exception2.Message.ShouldContain(nameof(Entities.InvoiceItem));
-        exception2.Message.ShouldContain(TestData.SkInvoiceItemId32.ToString());
-        exception3.Message.ShouldContain(nameof(Entities.InvoiceItem));
-        exception3.Message.ShouldContain(TestData.SkInvoiceItemId33.ToString());
-
-        items.TotalCount.ShouldBe(1);
-        items.Items.Count.ShouldBe(1);
-        items.Items[0].Id.ShouldNotBe(TestData.SkInvoiceItemId31);
-        items.Items[0].Id.ShouldNotBe(TestData.SkInvoiceItemId32);
-        items.Items[0].Id.ShouldNotBe(TestData.SkInvoiceItemId33);
-        items.Items[0].Description.ShouldBe("Create");
-
-        report.HasErrors.ShouldBeFalse();
-        report.Errors.Count.ShouldBe(0);
-    }
 
     [Fact]
     public async Task Should_Thorw_ManageMany_InvoiceItem_With_Non_Existing_Invoice()
@@ -195,8 +146,7 @@ public class InvoiceItemAppService_Tests : UcetnictviApplicationTestBase<Ucetnic
                     description: "Update"),
                 Converter.CreateInvoiceItemManageMany(description: "Create")
             ],
-            ItemsForDelete = [TestData.SkInvoiceItemId31],
-            DeleteMissingItems = true
+            ItemsForDelete = [TestData.SkInvoiceItemId31]
         };
 
         var exception = await Should.ThrowAsync<EntityNotFoundException>(async () =>
@@ -259,8 +209,7 @@ public class InvoiceItemAppService_Tests : UcetnictviApplicationTestBase<Ucetnic
                 Converter.CreateInvoiceItemManageMany(guid2),
                 Converter.CreateInvoiceItemManageMany(description: "Create")
             ],
-            ItemsForDelete = [guid3],
-            DeleteMissingItems = true
+            ItemsForDelete = [guid3, TestData.SkInvoiceItemId31, TestData.SkInvoiceItemId32, TestData.SkInvoiceItemId33]
         };
         var report = await _invoiceItemAppService.ManageManyAsync(input);
         var items = await _invoiceItemAppService.GetAllAsync(new InvoiceItemGetAllDto
@@ -278,8 +227,83 @@ public class InvoiceItemAppService_Tests : UcetnictviApplicationTestBase<Ucetnic
 
         report.HasErrors.ShouldBeTrue();
         report.Errors.Count.ShouldBe(3);
-        report.Errors.ShouldContain($"Položku s id={guid1} neexistuje na faktuře s id={TestData.SkInvoiceId3}.");
-        report.Errors.ShouldContain($"Položku s id={guid2} neexistuje na faktuře s id={TestData.SkInvoiceId3}.");
-        report.Errors.ShouldContain($"Položku s id={guid3} neexistuje na faktuře s id={TestData.SkInvoiceId3}.");
+        report.Errors.ShouldContain($"Položka s id={guid1} neexistuje na faktuře s id={TestData.SkInvoiceId3}.");
+        report.Errors.ShouldContain($"Položka s id={guid2} neexistuje na faktuře s id={TestData.SkInvoiceId3}.");
+        report.Errors.ShouldContain($"Položka s id={guid3} neexistuje na faktuře s id={TestData.SkInvoiceId3}.");
+    }
+
+    [Fact]
+    public async Task Should_ManageMany_InvoiceItem_With_StockMovements()
+    {
+        var input = new InvoiceItemManageManyInputDto
+        {
+            InvoiceId = TestData.SkInvoiceId3,
+            Items =
+            [
+                Converter.CreateInvoiceItemManageMany(null, TestData.ContainerItem11Id,
+                    description: "CreateWithMovement"),
+                Converter.CreateInvoiceItemManageMany(TestData.SkInvoiceItemId33, TestData.ContainerItem12Id, description: "Update", quantity: 50),
+                Converter.CreateInvoiceItemManageMany(description: "Create")
+            ],
+            ItemsForDelete = [TestData.SkInvoiceItemId31, TestData.SkInvoiceItemId32]
+        };
+        var report = await _invoiceItemAppService.ManageManyAsync(input);
+        var containerItem11 = await _containerItemAppService.GetAsync(TestData.ContainerItem11Id);
+        var containerItem12 =  await _containerItemAppService.GetAsync(TestData.ContainerItem12Id);
+        
+        report.HasErrors.ShouldBeFalse();
+        report.Errors.Count.ShouldBe(0);
+        
+        containerItem11.Movements.Count.ShouldBe(2);
+        containerItem11.Movements[0].RelatedDocumentId.ShouldBeNull();
+        containerItem11.Movements[0].Quantity.ShouldBe(100);
+        containerItem11.Movements[0].MovementCategory.ShouldBe(MovementCategory.Unused);
+        containerItem11.Movements[1].RelatedDocumentId.ShouldBe(TestData.SkInvoiceId3);
+        containerItem11.Movements[1].Quantity.ShouldBe(Converter.DefaultInvoiceItemQuantity);
+        containerItem11.Movements[1].MovementCategory.ShouldBe(MovementCategory.Reserved);
+        
+        containerItem12.Movements.Count.ShouldBe(2);
+        containerItem12.Movements[0].RelatedDocumentId.ShouldBeNull();
+        containerItem12.Movements[0].Quantity.ShouldBe(100);
+        containerItem12.Movements[0].MovementCategory.ShouldBe(MovementCategory.Unused);
+        containerItem12.Movements[1].RelatedDocumentId.ShouldBe(TestData.SkInvoiceId3);
+        containerItem12.Movements[1].Quantity.ShouldBe(50);
+        containerItem12.Movements[1].MovementCategory.ShouldBe(MovementCategory.Reserved);
+    }
+    
+    [Fact]
+    public async Task Should_Throw_ManageMany_InvoiceItem_Without_Resources()
+    {
+        var input = new InvoiceItemManageManyInputDto
+        {
+            InvoiceId = TestData.SkInvoiceId3,
+            Items =
+            [
+                Converter.CreateInvoiceItemManageMany(null, TestData.ContainerItem11Id,
+                    description: "CreateWithMovement"),
+                Converter.CreateInvoiceItemManageMany(TestData.SkInvoiceItemId33, TestData.ContainerItem12Id, description: "Update", quantity: 101),
+                Converter.CreateInvoiceItemManageMany(description: "Create")
+            ],
+            ItemsForDelete = [TestData.SkInvoiceItemId31, TestData.SkInvoiceItemId32]
+        };
+        
+        var exception = await Should.ThrowAsync<BusinessException>(async () =>
+        {
+            await _invoiceItemAppService.ManageManyAsync(input);
+        });
+        exception.Code.ShouldBe(SkladyErrorCodes.LackOfAvailableResources);
+        
+        var containerItem11 = await _containerItemAppService.GetAsync(TestData.ContainerItem11Id);
+        var containerItem12 =  await _containerItemAppService.GetAsync(TestData.ContainerItem12Id);
+        
+        containerItem11.Movements.Count.ShouldBe(1);
+        containerItem11.Movements[0].RelatedDocumentId.ShouldBeNull();
+        containerItem11.Movements[0].Quantity.ShouldBe(100);
+        containerItem11.Movements[0].MovementCategory.ShouldBe(MovementCategory.Unused);
+        
+        containerItem12.Movements.Count.ShouldBe(1);
+        containerItem12.Movements[0].RelatedDocumentId.ShouldBeNull();
+        containerItem12.Movements[0].Quantity.ShouldBe(100);
+        containerItem12.Movements[0].MovementCategory.ShouldBe(MovementCategory.Unused);
     }
 }

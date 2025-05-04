@@ -12,6 +12,8 @@ public class InvoiceItem : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
     public virtual bool IsDeleted { get; private set; }
     public virtual Guid? TenantId { get; private set; }
     public virtual Guid InvoiceId { get; private set; }
+    public virtual Guid? ContainerItemId { get; private set; }
+    public virtual Guid? StockMovementId { get; private set; }
     public virtual Invoice Invoice { get; private set; }
     public virtual string Description { get; private set; }
     public virtual decimal Quantity { get; private set; }
@@ -22,13 +24,15 @@ public class InvoiceItem : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
     public virtual decimal GrossAmount { get; private set; }
 
     public InvoiceItem(Guid id, Guid invoiceId, string description, decimal quantity, decimal unitPrice,
-        decimal netAmount, VatRate? vatRate, decimal vatAmount, decimal grossAmount) :
+        decimal netAmount, VatRate? vatRate, decimal vatAmount, decimal grossAmount, Guid? containerItemId, Guid? stockMovementId) :
         this(id, invoiceId, description, quantity, unitPrice, netAmount, vatRate ?? VatRate.None, vatAmount,
-            grossAmount)
+            grossAmount, containerItemId, stockMovementId)
     {
     }
 
-    public InvoiceItem(Guid id, Guid invoiceId, string description, decimal quantity, decimal unitPrice, decimal netAmount, VatRate vatRate, decimal vatAmount, decimal grossAmount) : base(id)
+    public InvoiceItem(Guid id, Guid invoiceId, string description, decimal quantity, decimal unitPrice, 
+        decimal netAmount, VatRate vatRate, decimal vatAmount, decimal grossAmount, Guid? containerItemId, 
+        Guid? stockMovementId) : base(id)
     {
         SetInvoice(invoiceId)
             .SetDescription(description)
@@ -37,7 +41,9 @@ public class InvoiceItem : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
             .SetNetAmount(netAmount)
             .SetVatRate(vatRate)
             .SetVatAmount(vatAmount)
-            .SetGrossAmount(grossAmount);
+            .SetGrossAmount(grossAmount)
+            .SetContainerItemId(containerItemId)
+            .SetStockMovementId(stockMovementId);
     }
 
     public InvoiceItem SetInvoice(Guid invoiceId)
@@ -88,8 +94,31 @@ public class InvoiceItem : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
         return this;
     }
     
+    public InvoiceItem SetContainerItemId(Guid? id)
+    {
+        ContainerItemId = id;
+        return this;
+    }
+    
+    public InvoiceItem SetStockMovementId(Guid? id)
+    {
+        StockMovementId = id;
+        return this;
+    }
+    
+    public InvoiceItem SetStockMovementId(Guid id)
+    {
+        StockMovementId = id;
+        return this;
+    }
+    
     public InvoiceItem GetCopy()
     {
         return (InvoiceItem)MemberwiseClone();
+    }
+
+    protected InvoiceItem()
+    {
+        
     }
 }

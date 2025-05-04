@@ -1,4 +1,5 @@
-﻿using Localization.Resources.AbpUi;
+﻿using Doara.Sklady;
+using Localization.Resources.AbpUi;
 using Doara.Ucetnictvi.Localization;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Localization;
@@ -9,7 +10,8 @@ namespace Doara.Ucetnictvi;
 
 [DependsOn(
     typeof(UcetnictviApplicationContractsModule),
-    typeof(AbpAspNetCoreMvcModule))]
+    typeof(AbpAspNetCoreMvcModule),
+    typeof(SkladyApplicationContractsModule))]
 public class UcetnictviHttpApiModule : AbpModule
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)

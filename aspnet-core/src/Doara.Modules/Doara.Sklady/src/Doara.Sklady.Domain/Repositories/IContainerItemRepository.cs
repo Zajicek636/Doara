@@ -15,4 +15,5 @@ public interface IContainerItemRepository
     Task<ContainerItem> UpdateAsync(ContainerItem containerItem);
     Task DeleteAsync(Guid id);
     Task<bool> AnyAsync(Expression<Func<ContainerItem, bool>> predicate);
+    Task<List<ContainerItem>> GetByIdsAsync(IEnumerable<Guid> ids);
 }

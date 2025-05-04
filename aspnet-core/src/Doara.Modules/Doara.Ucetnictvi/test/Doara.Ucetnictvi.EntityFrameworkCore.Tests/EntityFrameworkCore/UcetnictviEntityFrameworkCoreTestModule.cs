@@ -1,4 +1,5 @@
-﻿using Doara.Ucetnictvi.EntityFrameworkCore.Base;
+﻿using Doara.Sklady.EntityFrameworkCore.Base;
+using Doara.Ucetnictvi.EntityFrameworkCore.Base;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -12,6 +13,7 @@ namespace Doara.Ucetnictvi.EntityFrameworkCore;
 
 [DependsOn(
     typeof(UcetnictviEntityFrameworkCoreModule),
+    typeof(SkladyEntityFrameworkCoreModule),
     typeof(AbpEntityFrameworkCoreSqliteModule)
 )]
 public class UcetnictviEntityFrameworkCoreTestModule : AbpModule
@@ -39,6 +41,10 @@ public class UcetnictviEntityFrameworkCoreTestModule : AbpModule
 
         new UcetnictviDbContext(
             new DbContextOptionsBuilder<UcetnictviDbContext>().UseSqlite(connection).Options
+        ).GetService<IRelationalDatabaseCreator>().CreateTables();
+        
+        new SkladyDbContext(
+            new DbContextOptionsBuilder<SkladyDbContext>().UseSqlite(connection).Options
         ).GetService<IRelationalDatabaseCreator>().CreateTables();
 
         return connection;

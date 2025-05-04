@@ -16,7 +16,7 @@ namespace Doara.Ucetnictvi.Controllers;
 [Route("api/Ucetnictvi/InvoiceItem")]
 public class InvoiceItemController(IInvoiceItemAppService invoiceItemAppService) : UcetnictviController, IInvoiceItemAppService
 {
-    [HttpGet("{id:guid}")]
+    [HttpGet]
     [Authorize(UcetnictviPermissions.ReadInvoiceItemPermission)]
     public async Task<InvoiceItemDto> GetAsync([Required] Guid id)
     {

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Doara.Sklady.Entities;
+using Doara.Sklady.Enums;
+using Doara.Sklady.Repositories;
 using Doara.Ucetnictvi.Entities;
 using Doara.Ucetnictvi.Enums;
 using Doara.Ucetnictvi.Repositories;
@@ -19,11 +22,14 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
     private readonly ISubjectRepository _subjectRepository;
     private readonly IInvoiceRepository _invoiceRepository;
     private readonly IInvoiceItemRepository _invoiceItemRepository;
+    private readonly IContainerRepository _containerRepository;
+    private readonly IContainerItemRepository _containerItemRepository;
 
     public UcetnictviDataSeedContributor(
         IGuidGenerator guidGenerator, ICurrentTenant currentTenant, ICountryRepository countryRepository, 
         IAddressRepository addressRepository, ISubjectRepository subjectRepository, 
-        IInvoiceRepository invoiceRepository, IInvoiceItemRepository invoiceItemRepository)
+        IInvoiceRepository invoiceRepository, IInvoiceItemRepository invoiceItemRepository, 
+        IContainerItemRepository containerItemRepository, IContainerRepository containerRepository)
     {
         _guidGenerator = guidGenerator;
         _currentTenant = currentTenant;
@@ -32,6 +38,8 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
         _subjectRepository = subjectRepository;
         _invoiceRepository = invoiceRepository;
         _invoiceItemRepository = invoiceItemRepository;
+        _containerItemRepository = containerItemRepository;
+        _containerRepository = containerRepository;
     }
 
     public async Task SeedAsync(DataSeedContext context)
@@ -43,6 +51,8 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
             await SeedSubjectAsync();
             await SeedInvoiceAsync();
             await SeedInvoiceItemAsync();
+            await SeedContainerAsync();
+            await SeedContainerItemAsync();
         }
     }
 
@@ -197,7 +207,9 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
             10000m,
             VatRate.Standard21,
             2100m,
-            12100m
+            12100m,
+            null,
+            null
             ));
 
         await _invoiceItemRepository.CreateAsync(new InvoiceItem(
@@ -209,10 +221,11 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
             1500m,
             VatRate.Reduced12,
             315m,
-            1815m
+            1815m,
+            null, 
+            null
         ));
-
-            
+        
         await _invoiceItemRepository.CreateAsync(new InvoiceItem(
             TestData.SkInvoiceItemId31,
             TestData.SkInvoiceId3,
@@ -222,7 +235,9 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
             3000m,
             VatRate.Standard21,
             630m,
-            3630m
+            3630m,
+            null,
+            null
         ));
 
         await _invoiceItemRepository.CreateAsync(new InvoiceItem(
@@ -234,7 +249,9 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
             2000m,
             VatRate.Standard21,
             420m,
-            2420m
+            2420m,
+            null,
+            null
         ));
 
         await _invoiceItemRepository.CreateAsync(new InvoiceItem(
@@ -246,7 +263,27 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
             2000m,
             VatRate.Standard21,
             420m,
-            2420m
+            2420m,
+            TestData.ContainerItem12Id,
+            TestData.StockMovementReserveMovement12Id
         ));
+    }
+    
+    private async Task SeedContainerAsync()
+    {
+        await _containerRepository.CreateAsync(new Container(TestData.ContainerId, "Container1", "Container1Description"));
+    }
+    
+    private async Task SeedContainerItemAsync()
+    {
+        await _containerItemRepository.CreateAsync(new ContainerItem(TestData.ContainerItem11Id,
+            "ContainerItem11", "ContainerItem11Description", 10, 10, 10, 
+            10, 10, "url1", TestData.ContainerId, QuantityType.Grams)
+            .AddStock(100, TestData.StockMovementAddMovement11Id));
+        await _containerItemRepository.CreateAsync(new ContainerItem(TestData.ContainerItem12Id,
+            "ContainerItem21", "ContainerItem21Description", 10, 10, 10, 
+            10, 10, null, TestData.ContainerId, QuantityType.Liters)
+            .AddStock(100, TestData.StockMovementAddMovement12Id)
+            .Reserve(100, TestData.StockMovementReserveMovement12Id, TestData.SkInvoiceId3));
     }
 }

@@ -4,6 +4,7 @@ using Doara.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Doara.Migrations
 {
     [DbContext(typeof(DoaraDbContext))]
-    partial class DoaraDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250503185019_Sklady_A_Ucetnictvi")]
+    partial class Sklady_A_Ucetnictvi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

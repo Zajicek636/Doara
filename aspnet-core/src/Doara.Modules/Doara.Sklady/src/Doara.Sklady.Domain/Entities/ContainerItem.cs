@@ -136,6 +136,7 @@ public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
         {
             throw new BusinessException(SkladyErrorCodes.AmountShouldNotBeZeroOrLower);
         }
+        
         Movements.Add(new StockMovement(plannedId, Id, amount, MovementCategory.Unused, relatedDocId));
         return this;
     }
@@ -147,15 +148,25 @@ public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
         {
             throw new EntityNotFoundException(typeof(StockMovement), movementId);
         }
-        
-        if (movement.MovementCategory == MovementCategory.Unused)
+
+        switch (movement.MovementCategory)
         {
-            var available = Available;
-            if (Available < movement.Quantity)
+            case MovementCategory.Unused:
             {
-                throw new BusinessException(SkladyErrorCodes.LackOfAvailableResources)
-                    .WithData("Quantity", available);
+                var available = Available;
+                if (Available < movement.Quantity)
+                {
+                    throw new BusinessException(SkladyErrorCodes.LackOfAvailableResources)
+                        .WithData("Quantity", available);
+                }
+
+                break;
             }
+            case MovementCategory.Used:
+            case MovementCategory.Reserved:
+                break;
+            case MovementCategory.Reserved2Used:
+            default: throw new BusinessException(SkladyErrorCodes.MovementCannotBeRemoved);
         }
 
         Movements.Remove(movement);
@@ -211,6 +222,5 @@ public class ContainerItem : AuditedEntity<Guid>, ISoftDelete, IMultiTenant
 
     protected ContainerItem()
     {
-        Movements = new Collection<StockMovement>();
     }
 }

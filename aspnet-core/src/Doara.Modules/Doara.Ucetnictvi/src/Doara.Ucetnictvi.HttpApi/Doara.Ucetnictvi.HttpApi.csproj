@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="9.1.1" />
+    <ProjectReference Include="..\..\..\Doara.Sklady\src\Doara.Sklady.Application.Contracts\Doara.Sklady.Application.Contracts.csproj" />
     <ProjectReference Include="..\Doara.Ucetnictvi.Application.Contracts\Doara.Ucetnictvi.Application.Contracts.csproj" />
   </ItemGroup>
 

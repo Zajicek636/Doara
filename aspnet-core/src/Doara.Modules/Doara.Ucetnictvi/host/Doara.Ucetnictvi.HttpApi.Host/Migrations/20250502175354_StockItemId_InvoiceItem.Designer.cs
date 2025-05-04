@@ -4,6 +4,7 @@ using Doara.Ucetnictvi.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Doara.Ucetnictvi.Migrations
 {
     [DbContext(typeof(UcetnictviHttpApiHostMigrationsDbContext))]
-    partial class UcetnictviHttpApiHostMigrationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250502175354_StockItemId_InvoiceItem")]
+    partial class StockItemId_InvoiceItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

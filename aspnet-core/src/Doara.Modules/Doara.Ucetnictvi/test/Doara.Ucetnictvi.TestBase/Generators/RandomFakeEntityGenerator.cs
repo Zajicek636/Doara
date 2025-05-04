@@ -62,7 +62,9 @@ public static class RandomFakeEntityGenerator
             NetAmount = RandomGenerator.RandomNumber(),
             VatRate = RandomGenerator.RandomFromEnum<VatRate>(),
             VatAmount = RandomGenerator.RandomNumber(),
-            GrossAmount = RandomGenerator.RandomNumber()
+            GrossAmount = RandomGenerator.RandomNumber(),
+            ContainerItemId = Guid.NewGuid(),
+            StockMovementId = Guid.NewGuid()
         };
     }
     

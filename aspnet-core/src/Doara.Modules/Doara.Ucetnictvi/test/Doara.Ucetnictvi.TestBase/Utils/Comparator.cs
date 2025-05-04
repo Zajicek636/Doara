@@ -54,6 +54,8 @@ public static class Comparator
         exShould.ShouldBe(entity.VatRate, data.VatRate);
         exShould.ShouldBe(entity.VatAmount, data.VatAmount);
         exShould.ShouldBe(entity.GrossAmount, data.GrossAmount);
+        exShould.ShouldBe(entity.ContainerItemId, data.ContainerItemId);
+        exShould.ShouldBe(entity.StockMovementId, data.StockMovementId);
     }
     
     public static void CheckIfSame(this FakeInvoice data, Invoice entity)

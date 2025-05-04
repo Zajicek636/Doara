@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Doara.Sklady;
+using Doara.Sklady.EntityFrameworkCore.Base;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -52,7 +54,10 @@ namespace Doara.Ucetnictvi;
     typeof(AbpSettingManagementEntityFrameworkCoreModule),
     typeof(AbpTenantManagementEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreSerilogModule),
-    typeof(AbpSwashbuckleModule)
+    typeof(AbpSwashbuckleModule),
+    typeof(SkladyApplicationModule),
+    typeof(SkladyEntityFrameworkCoreModule),
+    typeof(SkladyHttpApiModule)
     )]
 public class UcetnictviHttpApiHostModule : AbpModule
 {

@@ -26,4 +26,13 @@ public static class TestData
     public static Guid SkInvoiceItemId31 = Guid.Parse("04000002-C21B-4925-BF41-A52750A9B999");
     public static Guid SkInvoiceItemId32 = Guid.Parse("04000003-C21B-4925-BF41-A52750A9B999");
     public static Guid SkInvoiceItemId33 = Guid.Parse("04000004-C21B-4925-BF41-A52750A9B999");
+    
+    public static Guid ContainerId = Guid.Parse("05000000-5CF9-4204-8B18-CDDAA3BCBC9B");
+    
+    public static Guid ContainerItem11Id = Guid.Parse("06000000-5CF9-4204-8B18-CDDAA3BCBC9B");
+    public static Guid ContainerItem12Id = Guid.Parse("06000001-5CF9-4204-8B18-CDDAA3BCBC9B");
+    
+    public static Guid StockMovementAddMovement11Id = Guid.Parse("07000000-5CF9-4204-8B18-CDDAA3BCBC9B");
+    public static Guid StockMovementAddMovement12Id = Guid.Parse("07000001-5CF9-4204-8B18-CDDAA3BCBC9B");
+    public static Guid StockMovementReserveMovement12Id = Guid.Parse("07000002-5CF9-4204-8B18-CDDAA3BCBC9B");
 }
