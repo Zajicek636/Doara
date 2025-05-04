@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Extensions.DependencyInjection;
@@ -14,6 +15,7 @@ using Doara.Sklady;
 using Doara.Sklady.EntityFrameworkCore.Base;
 using Doara.Ucetnictvi;
 using Doara.Ucetnictvi.EntityFrameworkCore.Base;
+using Microsoft.AspNetCore.Hosting;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite.Bundling;
 using Microsoft.OpenApi.Models;
@@ -28,6 +30,7 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
 using Volo.Abp.Modularity;
+using Volo.Abp.OpenIddict;
 using Volo.Abp.Security.Claims;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.UI.Navigation.Urls;
@@ -65,6 +68,37 @@ public class DoaraHttpApiHostModule : AbpModule
                 options.UseAspNetCore();
             });
         });
+        
+        var hostingEnvironment = context.Services.GetHostingEnvironment();
+        if (!hostingEnvironment.IsDevelopment())
+        {
+            var configuration = context.Services.GetConfiguration();
+            PreConfigure<AbpOpenIddictAspNetCoreOptions>(options =>
+            {
+                options.AddDevelopmentEncryptionAndSigningCertificate = false;
+            });
+
+            PreConfigure<OpenIddictServerBuilder>(builder =>
+            {
+                builder.AddSigningCertificate(GetSigningCertificate(hostingEnvironment, configuration));
+                builder.AddEncryptionCertificate(GetSigningCertificate(hostingEnvironment, configuration));
+                builder.SetIssuer(new Uri(configuration["AuthServer:Authority"]));
+            });
+        }
+    }
+    
+    private X509Certificate2 GetSigningCertificate(IWebHostEnvironment hostingEnv, IConfiguration configuration)
+    {
+        var fileName = "authserver.pfx";
+        var passPhrase = "2D7AA457-5D33-48D6-936F-C48E5EF468ED";
+        var file = Path.Combine(hostingEnv.ContentRootPath, fileName);
+
+        if (!File.Exists(file))
+        {
+            throw new FileNotFoundException($"Signing Certificate couldn't found: {file}");
+        }
+
+        return new X509Certificate2(file, passPhrase);
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -120,6 +154,8 @@ public class DoaraHttpApiHostModule : AbpModule
     {
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
+        Console.WriteLine($"devel {hostingEnvironment.IsDevelopment()}");
+        Console.WriteLine($"devel {hostingEnvironment.IsDevelopment()}");
         if (hostingEnvironment.IsDevelopment())
         {
             Configure<AbpVirtualFileSystemOptions>(options =>
