@@ -11,7 +11,7 @@ export class SkladyPolozkyDataService extends BaseCrud<string, ContainerDto, Con
   constructor(client: HttpClient, settings: SkladyPolozkyCrudSettings) {
     super(client, settings);
   }
-  public override async getAll( opts?: { useSuffix?: boolean }): Promise<PagedList<ContainerDto>> {
+  public override async getAll(id?: string, opts?: { useSuffix?: boolean }): Promise<PagedList<ContainerDto>> {
     return {
       items: [
         {

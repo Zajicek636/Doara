@@ -44,7 +44,7 @@ export class SkladyPolozkyComponent extends BaseContentComponent<ContainerDto,Sk
 
   async loadData() {
     try {
-      const res = await this.dataService.getAll({useSuffix: true})
+      const res = await this.dataService.getAll(undefined, {useSuffix: true})
       this.items = res.items ?? []
     } catch (e) {
       await this.dialogService.alert({title: "Chyba", message:`${e}`, dialogType: DialogType.WARNING})

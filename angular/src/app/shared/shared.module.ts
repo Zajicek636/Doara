@@ -1,5 +1,5 @@
 ﻿import { NgModule } from '@angular/core';
-import {AsyncPipe, CommonModule, NgForOf, NgIf} from '@angular/common';
+import {AsyncPipe, CommonModule, NgClass, NgForOf, NgIf} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {LayoutModule} from "./layout/layout.module";
@@ -49,7 +49,8 @@ import {ToolbarButtonComponent} from './context-toolbar/toolbar-button/toolbar-b
     MatPaginatorModule,
     MatToolbarModule,
     MatDividerModule,
-    AsyncPipe
+    AsyncPipe,
+    NgClass
   ],
   exports: [
     NgIf,
@@ -64,6 +65,8 @@ import {ToolbarButtonComponent} from './context-toolbar/toolbar-button/toolbar-b
     MatCardModule,
     MatIconModule,
     MatButtonModule,
+    MatDialogModule,
+    NgClass
   ],
     providers: [
     ],

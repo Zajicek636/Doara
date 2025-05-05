@@ -19,10 +19,9 @@ import {SubjektDetailDto} from '../subjekty/data/subjekty.interfaces';
 import {FormGroup} from '@angular/forms';
 import {FormField} from '../../shared/forms/form.interfaces';
 import {InvoiceItemDto} from '../polozky-faktury/data/polozky-faktury.interfaces';
-import {PolozkyFakturyDataService} from '../polozky-faktury/data/polozky-faktury-data.service';
 import {PolozkaKontejneruDataService} from '../../sklady/polozka-kontejneru/data/polozka-kontejneru-data.service';
 import {DialogType, DynamicDialogResult} from '../../shared/dialog/dialog.interfaces';
-import {combineLatest, startWith} from 'rxjs';
+import {NovaPolozkaKontejnerModal} from './nova-polozka-kontejner-modal';
 
 @Component({
   selector: 'app-nova-faktura',
@@ -60,7 +59,6 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     protected override router: Router,
     protected override dialogService: DialogService,
     protected override route: ActivatedRoute,
-    private polozkyFakturyDataService: PolozkyFakturyDataService,
     private containerItemsDataService: PolozkaKontejneruDataService,
   ) {
     super(route, router, breadcrumbService, dialogService, dataService);
@@ -159,7 +157,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         class: 'btn-primary',
         visible: !this.isNew,
         disabled: false,
-        action: () => {  }
+        action: () => this.addNewPolozkaFromContainer()
       }
     ];
 
@@ -183,6 +181,20 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         action: () => this.router.navigate(['/seznam-faktur'])
       }
     ];
+  }
+
+  async addNewPolozkaFromContainer() {
+
+    const items = await this.containerItemsDataService.getAll();
+    const mappedItems = items.items.map((item) => {
+    })
+    const res: FormComponentResult = await this.dialogService.open(NovaPolozkaKontejnerModal<FormComponentResult>,
+      {
+      icon: BaseMaterialIcons.ADD_PERSON,
+      title: "Nový subjekt",
+      type: DialogType.SUCCESS
+    })
+
   }
 
   onBaseFormReady(form: FormGroup) {
@@ -273,7 +285,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
 
     if(!response) return;
 
-    const newPolozka: InvoiceItemDto = this.mapToInvoiceCreateDto(response)
+    const newPolozka: InvoiceItemDto = this.mapToInvoiceItemCreateDto(response)
     newPolozka.id = newPolozka.id == '' ? `newPolozka${this.invoiceItems.length}` : newPolozka.id
     this.invoiceItems.push(newPolozka as InvoiceItemDto)
   }
@@ -295,11 +307,11 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
 
     if(!response) return;
 
-    const updatedItem = this.mapToInvoiceCreateDto(response)
+    const updatedItem = this.mapToInvoiceItemCreateDto(response)
     this.invoiceItems[index] = updatedItem as InvoiceItemDto;
   }
 
-  private mapToInvoiceCreateDto(response: DynamicDialogResult): InvoiceItemDto {
+  private mapToInvoiceItemCreateDto(response: DynamicDialogResult): InvoiceItemDto {
     const main =  response["main_section"]?.data || {}
     return {
       id: main.id,

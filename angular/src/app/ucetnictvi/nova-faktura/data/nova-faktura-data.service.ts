@@ -117,13 +117,4 @@ export class NovaFakturaDataService extends BaseCrud<string, InvoiceDetailDto, I
     };
     return mock
   }
-
-
-  async getOptionsForSubject() {
-    //await this.get();
-  }
-
-  async getInvoiceItems() {
-  }
-
 }

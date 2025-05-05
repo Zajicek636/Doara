@@ -12,7 +12,7 @@ export class PolozkyFakturyDataService extends BaseCrud<string, InvoiceItemDto, 
     super(client, settings);
   }
 
-  public override async getAll(opts?: { useSuffix?: boolean }): Promise<PagedList<InvoiceItemDto>> {
+  public override async getAll(id?: string, opts?: { useSuffix?: boolean }): Promise<PagedList<InvoiceItemDto>> {
     const mockItems: InvoiceItemDto[] = [
       {
         id: 'item1',

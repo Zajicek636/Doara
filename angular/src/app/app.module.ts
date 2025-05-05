@@ -6,6 +6,7 @@ import {LayoutModule} from '@angular/cdk/layout';
 import {SharedModule} from './shared/shared.module';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {loadingInterceptor} from './shared/loading/loading.interceptor';
+import {requestVerificationInterceptor} from './shared/auth/auth.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,7 +17,7 @@ import {loadingInterceptor} from './shared/loading/loading.interceptor';
     SharedModule
   ],
   providers: [
-    provideHttpClient( withInterceptors([loadingInterceptor])),
+    provideHttpClient( withInterceptors([loadingInterceptor, requestVerificationInterceptor])),
   ],
   bootstrap: [AppComponent]
 })

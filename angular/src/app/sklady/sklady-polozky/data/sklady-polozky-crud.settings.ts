@@ -6,10 +6,12 @@ import {ContainerDto} from './sklady-polozky.interfaces';
   providedIn: 'root',
 })
 export class SkladyPolozkyCrudSettings implements CrudSettings<string, ContainerDto> {
-  baseUrl: string = 'https://example.com/api/SkladyPolozky/SkladyPolozky';
+  baseUrl: string = '/api/Sklady/Container';
   postUrl?: string;
   queryParam?: string;
   getAllSuffix: string = "GetAll"
+
+  useContainerIdParamKey: boolean = false;
 
   idGetter(entity: ContainerDto): string {
     return entity.id;

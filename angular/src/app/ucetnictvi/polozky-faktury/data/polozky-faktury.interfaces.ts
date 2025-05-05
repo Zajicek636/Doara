@@ -9,6 +9,7 @@ export interface InvoiceItemCreateManyDto {
 export interface InvoiceItemDto {
   id: string;
   invoiceId?: string;
+  containerItemId?: string,
   description: string;
   quantity: number;
   unitPrice: number;

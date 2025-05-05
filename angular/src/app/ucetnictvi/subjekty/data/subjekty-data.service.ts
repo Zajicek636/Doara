@@ -46,7 +46,7 @@ export class SubjektyDataService extends BaseCrud<string, SubjektDetailDto, Subj
     };
   }
 
-  public override async getAll(opts?: { useSuffix?: boolean }): Promise<PagedList<SubjektDetailDto>> {
+  public override async getAll(id?: string, opts?: { useSuffix?: boolean }): Promise<PagedList<SubjektDetailDto>> {
     const allSubjekty: SubjektDetailDto[] = Array.from({ length: 500 }, (_, i) => ({
       id: `SubId${i + 1}`,
       name: `Jméno Subjektu ${i + 1}`,

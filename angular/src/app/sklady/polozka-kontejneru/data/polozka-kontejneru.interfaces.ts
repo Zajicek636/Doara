@@ -22,12 +22,10 @@ export interface ContainerItemUpdateInputDto { //todo dodelat az bude na BE
 
 export interface ContainerItemDto {
     id: string;
-    state: ContainerItemState;
     quantityType: QuantityType;
     name: string;
     description: string;
     purchaseUrl?: string;
-    quantity: number;
     realPrice: number;
     presentationPrice: number;
     markup: number;
@@ -89,17 +87,6 @@ export const CONTAINER_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
         defaultValueGetter: (item: ContainerItemDto) => item.id,
     },
     {
-        label: 'Stav položky',
-        formControlName: 'state',
-        visible: true,
-        type: FormFieldTypes.LOOKUP,
-        options: Object.values(ContainerItemState).map(s => ({
-            value: s,
-            displayValue: ContainerItemStateLabels[s]
-        })),
-        defaultValueGetter: (item: ContainerItemDto) => item.state,
-    },
-    {
         label: 'Název položky',
         formControlName: 'name',
         visible: true,
@@ -113,14 +100,6 @@ export const CONTAINER_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
         visible: true,
         type: FormFieldTypes.TEXTAREA,
         defaultValueGetter: (item: ContainerItemDto) => item.description,
-    },
-    {
-        label: 'Množství',
-        formControlName: 'quantity',
-        visible: true,
-        type: FormFieldTypes.NUMBER,
-        validator: [{ validator: CustomValidator.REQUIRED }],
-        defaultValueGetter: (item: ContainerItemDto) => item.quantity,
     },
     {
         label: 'Typ množství',
