@@ -55,7 +55,7 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
       expandable: false,
       pageSizeOptions: [10, 30, 50, 100],
       defaultPageSize: 10,
-      extraQueryParams: {id: this.entityId},
+      extraQueryParams: {ContainerId: this.entityId}
     };
   }
 
@@ -124,7 +124,10 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
     if (!dialogResult) return;
     const newObj = this.mapToDto(dialogResult);
     const res = await this.dataService.post('', newObj)
-    //this.tableComponent.dataSource.data.push(res);
+    this.tableComponent.dataSource.data = [
+      ...this.tableComponent.dataSource.data,
+      res
+    ]
   }
 
   async deleteItemContainer() { if(!this.chosenElement) return;
@@ -139,7 +142,7 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
     if(!res) return;
 
     try {
-      await this.dataService.delete(this.chosenElement.id)
+      await this.dataService.delete(this.chosenElement.id!)
       const data = this.tableComponent.dataSource.data;
       const index = data.findIndex(el => el.id === this.chosenElement?.id);
       if (index !== -1) {
@@ -157,11 +160,11 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
   }
 
   async editItemContainer() {
-    let requiredFields = CONTAINER_ITEM_FIELDS.filter(field =>
+    let requiredFields = CONTAINER_ITEM_CREATE_FIELDS.filter(field =>
         field.validator?.some(v => v.validator === CustomValidator.REQUIRED)
     );
 
-    let optionalFields = CONTAINER_ITEM_FIELDS.filter(field =>
+    let optionalFields = CONTAINER_ITEM_CREATE_FIELDS.filter(field =>
         !field.validator?.some(v => v.validator === CustomValidator.REQUIRED)
     );
 
@@ -190,6 +193,9 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
 
     const newObj = this.mapToDto(dialogResult);
     const res = await this.dataService.put(this.chosenElement?.id!, newObj)
+    this.tableComponent.dataSource.data = this.tableComponent.dataSource.data.map(item =>
+      item.id === this.chosenElement?.id ? res : item
+    );
   }
 
   mapToDto(dialogResult: DynamicDialogResult): ContainerItemCreateEditDto {
@@ -199,15 +205,14 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
     return {
       id: this.chosenElement?.id! ?? '',
       name: main.name,
-      description: second.description ?? '',
-      quantity: main.quantity,
-      quantityType: main.quantityType,
+      description: main.description ?? '',
+      quantityType: main.quantityType.value,
       realPrice: main.realPrice,
-      markup: second.markup ?? 0,
-      markupRate: second.markupRate ?? 0,
-      discount: second.discount ?? 0,
-      discountRate: second.discountRate ?? 0,
-      purchaseUrl: second.purchaseUrl ?? '',
+      markup: main.markup || null,
+      markupRate: second.markupRate || null,
+      discount: second.discount || null,
+      discountRate: second.discountRate || null,
+      purchaseUrl: second.purchaseUrl || null,
       containerId: this.entityId!
     };
   }

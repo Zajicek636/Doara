@@ -17,7 +17,7 @@ import {requestVerificationInterceptor} from './shared/auth/auth.interceptor';
     SharedModule
   ],
   providers: [
-    provideHttpClient( withInterceptors([loadingInterceptor, requestVerificationInterceptor])),
+    provideHttpClient( withInterceptors([loadingInterceptor])),
   ],
   bootstrap: [AppComponent]
 })

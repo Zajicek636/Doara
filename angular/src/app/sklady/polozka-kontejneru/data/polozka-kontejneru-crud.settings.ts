@@ -7,13 +7,13 @@ import {ContainerItemDto} from "./polozka-kontejneru.interfaces";
   providedIn: 'root',
 })
 export class PolozkaKontejneruCrudSettings implements CrudSettings<string, ContainerItemDto> {
-  baseUrl: string = 'api/Sklady/ContainerItem';
+  baseUrl: string = '/api/Sklady/ContainerItem';
   postUrl?: string;
   queryParam?: string;
   getAllSuffix: string = "GetAll"
 
   idGetter(entity: ContainerItemDto): string {
-    return entity.id;
+    return entity.id!;
   }
 
   mapper(id: string): QueryParams {

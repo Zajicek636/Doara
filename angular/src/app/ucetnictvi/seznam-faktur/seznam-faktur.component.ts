@@ -43,7 +43,6 @@ export class SeznamFakturComponent extends BaseContentComponent<InvoiceDto, Sezn
       expandable: false,
       pageSizeOptions: [10, 30, 50, 100],
       defaultPageSize: 10,
-      extraQueryParams: { active: true }
     };
     this.loadData()
   }

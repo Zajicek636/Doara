@@ -64,7 +64,6 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
       expandable: false,
       pageSizeOptions: [10, 30, 50, 100],
       defaultPageSize: 10,
-      extraQueryParams: { active: true }
     };
     this.loadData()
   }
@@ -168,10 +167,10 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
     if(!dialogResult) return;
     try {
       const result = this.mapToDto(dialogResult);
-      const res = await this.dataService.put(result.id!,result, {useSuffix: true});
-     /* this.tableComponent.dataSource.data = this.tableComponent.dataSource.data.map(x =>
-        x.id === result.id ? result : x
-      );*/
+      const res = await this.dataService.put(result.id!,result, {useSuffix: true, extraParams: { addressId: result.address.id }});
+      this.tableComponent.dataSource.data = this.tableComponent.dataSource.data.map(x =>
+        x.id === result.id ? res : x
+      );
     } catch (e: any) {
       await this.dialogService.alert({
         title: "Chyba",
@@ -188,7 +187,7 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
         .find(f => f.formControlName === 'SubjektCountryCode');
     if (codeField) {
       codeField.options = this.countries.items.map(c => ({
-        value: c.code,
+        value: c.id,
         displayValue: c.name
       }));
     }
@@ -231,7 +230,7 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
       name: base.SubjektName,
       ic:   base.SubjektIc,
       dic:  base.SubjektDic,
-      isVatPayer: base.SubjektPayer,
+      isVatPayer: base.SubjektPayer.value,
       address: {
         id: addr.AddressId ?? '',
         street: addr.SubjektStreet,

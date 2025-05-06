@@ -7,14 +7,12 @@ import {SubjektDetailDto} from './subjekty.interfaces';
   providedIn: 'root',
 })
 export class SubjektyCrudSettings implements CrudSettings<string, SubjektDetailDto> {
-  baseUrl: string = 'https://example.com/api/Ucetnictvi/Subject';
+  baseUrl: string = '/api/Ucetnictvi/Subject';
   postUrl?: string;
 
   getAllSuffix: string = "GetAllWithDetail"
   postSuffix: string = "CreateWithAddress";
   putSuffix: string = "UpdateWithAddress";
-
-  queryParam?: string;
 
   idGetter(entity: any): string {
     return entity.id;

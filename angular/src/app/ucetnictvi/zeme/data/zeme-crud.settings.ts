@@ -6,9 +6,10 @@ import {CountryDto} from '../../subjekty/data/subjekty.interfaces';
   providedIn: 'root',
 })
 export class ZemeCrudSettings implements CrudSettings<string, CountryDto> {
-  baseUrl: string = 'api/Ucetnictvi/Country';
+  baseUrl: string = '/api/Ucetnictvi/Country';
   postUrl?: string;
   queryParam?: string;
+  getAllSuffix: string = "GetAll";
 
   idGetter(entity: any): string {
     return entity.id;

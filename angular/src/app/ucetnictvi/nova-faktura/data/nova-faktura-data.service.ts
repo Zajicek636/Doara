@@ -54,7 +54,7 @@ export class NovaFakturaDataService extends BaseCrud<string, InvoiceDetailDto, I
           street: `Ulice ${1}`,
           city: `Město ${1}`,
           postalCode: `${10000}`,
-          countryDto: {
+          country: {
             id: 'ID',
             name: 'Česká republika',
             code: 'CZ',
@@ -72,7 +72,7 @@ export class NovaFakturaDataService extends BaseCrud<string, InvoiceDetailDto, I
           street: `Ulice ${2}`,
           city: `Město ${2}`,
           postalCode: `${10002}`,
-          countryDto: {
+          country: {
             id: 'IDD',
             name: 'Slovenski',
             code: 'SK',

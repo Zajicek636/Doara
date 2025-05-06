@@ -46,15 +46,19 @@ export class AnyFormComponent<T> implements OnInit {
   ngOnInit(): void {
     this.form = this.formService.createForm(this.fields);
 
-    this.fields.forEach( f => {
-      const control = this.form.get(f.formControlName)
-      if(control) {
-        control.markAsTouched()
-        control.valueChanges.subscribe( val => {
-          this.triggerOnChange(f.formControlName)
-        })
+    this.fields.forEach(f => {
+      const control = this.form.get(f.formControlName);
+      if (control) {
+        const isRequired = f.validator?.some(v => v.validator === 'required');
+        if (isRequired) {
+          control.markAsTouched();
+        }
+        control.valueChanges.subscribe(() => {
+          this.triggerOnChange(f.formControlName);
+        });
+        control.updateValueAndValidity();
       }
-    })
+    });
     this.modified = false;
     this.triggerInitialChange();
     this.formReady.emit(this.form)

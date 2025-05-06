@@ -13,10 +13,13 @@ export class ValidatorService {
   }
 
   patternValidator(pattern: string): ValidatorFn {
+    const regex = new RegExp(pattern);
     return (control: AbstractControl): ValidationErrors | null => {
-      const regex = new RegExp(pattern);
-      return regex.test(control.value) ? null : { pattern: true }
-    }
+      const value = control.value;
+      if (value == null || value === '') return null;
+
+      return regex.test(value) ? null : { pattern: true };
+    };
   }
 
   stripTime(date: Date): Date {
@@ -27,7 +30,7 @@ export class ValidatorService {
     const min = this.stripTime(minDate);
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
-      if (!value) return null;
+      if (value == null || value === '') return null;
 
       const controlDate = this.stripTime(value instanceof Date ? value : new Date(value));
       if (isNaN(controlDate.getTime())) return { invalidDate: true };
@@ -40,7 +43,7 @@ export class ValidatorService {
     const max = this.stripTime(maxDate);
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
-      if (!value) return null;
+      if (value == null || value === '') return null;
 
       const controlDate = this.stripTime(value instanceof Date ? value : new Date(value));
       if (isNaN(controlDate.getTime())) return { invalidDate: true };

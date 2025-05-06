@@ -10,11 +10,7 @@ import {SharedModule} from '../../shared/shared.module';
 import {NovaFakturaDataService} from './data/nova-faktura-data.service';
 import {FormComponentResult} from '../../shared/forms/any-form/any-form.component';
 import {populateDefaults, round} from '../../shared/forms/form-field.utils';
-import {
-  CREATE_EDIT_FAKTURA_FIELDS,
-  CREATE_INVOICE_ITEM_FIELDS,
-  InvoiceCreateEditDto, InvoiceDetailDto, InvoiceDto, VAT_RATE_PERCENT, VatRate,
-} from './data/nova-faktura.interfaces';
+import {CREATE_EDIT_FAKTURA_FIELDS, CREATE_INVOICE_ITEM_FIELDS, InvoiceCreateEditDto, InvoiceDto, VAT_RATE_PERCENT, VatRate,} from './data/nova-faktura.interfaces';
 import {SubjektDetailDto} from '../subjekty/data/subjekty.interfaces';
 import {FormGroup} from '@angular/forms';
 import {FormField} from '../../shared/forms/form.interfaces';
@@ -186,8 +182,6 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
   async addNewPolozkaFromContainer() {
 
     const items = await this.containerItemsDataService.getAll();
-    const mappedItems = items.items.map((item) => {
-    })
     const res: FormComponentResult = await this.dialogService.open(NovaPolozkaKontejnerModal<FormComponentResult>,
       {
       icon: BaseMaterialIcons.ADD_PERSON,

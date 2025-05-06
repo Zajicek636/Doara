@@ -1,6 +1,8 @@
 import {SubjektDetailDto} from '../../subjekty/data/subjekty.interfaces';
 import {CustomValidator, FormField, FormFieldTypes, FormSelect} from '../../../shared/forms/form.interfaces';
 import {InvoiceItemDto} from '../../polozky-faktury/data/polozky-faktury.interfaces';
+import {ContainerDto} from '../../../sklady/sklady-polozky/data/sklady-polozky.interfaces';
+import {ContainerItemDto} from '../../../sklady/polozka-kontejneru/data/polozka-kontejneru.interfaces';
 
 export interface InvoiceCreateEditDto {
   invoiceNumber: string;
@@ -291,3 +293,24 @@ export const CREATE_EDIT_FAKTURA_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     visible: true
   }
 ];
+
+export const ADD_POLOZKA_FROM_CONTAINER: Omit<FormField, 'defaultValue'>[] = [
+  {
+    visible: false,
+    formControlName: 'containerId',
+    label: 'Kontejner',
+    type: FormFieldTypes.AUTOCOMPLETE,
+    defaultValueGetter: (s: ContainerDto) => s.id,
+    validator: [{ validator: CustomValidator.REQUIRED }],
+  },
+  {
+    formControlName: 'containerItem',
+    label: '',
+    type: FormFieldTypes.AUTOCOMPLETE,
+    defaultValueGetter: (s: ContainerItemDto) => s.id,
+    validator: [{ validator: CustomValidator.REQUIRED }],
+    visible: true
+  }
+];
+
+

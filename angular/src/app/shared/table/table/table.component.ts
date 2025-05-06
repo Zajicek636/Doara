@@ -158,7 +158,12 @@ export class DynamicTableComponent<T> implements OnInit, AfterViewInit {
       this.totalCount = result.totalCount;
 
       this.isLoading = false;
-    } catch (error) {
+    } catch (error: any) {
+      await this.dialogService.alert({
+        title: "Chyba",
+        message: error,
+        dialogType: DialogType.ERROR
+      })
       this.isLoading = false;
       this.dataSource.data = [];
       this.totalCount = 0;
