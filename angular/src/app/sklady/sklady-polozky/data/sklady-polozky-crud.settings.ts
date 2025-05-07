@@ -14,7 +14,7 @@ export class SkladyPolozkyCrudSettings implements CrudSettings<string, Container
   useContainerIdParamKey: boolean = false;
 
   idGetter(entity: ContainerDto): string {
-    return entity.id;
+    return entity.id!;
   }
 
   mapper(id: string): QueryParams {

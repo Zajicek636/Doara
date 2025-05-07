@@ -1,7 +1,7 @@
 ﻿import {CustomValidator, FormField, FormFieldTypes} from '../../../shared/forms/form.interfaces';
 
 export interface ContainerDto {
-  id: string,
+  id?: string,
   name: string
   description: string
 }
@@ -27,6 +27,7 @@ export const CREATE_CONTAINER_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     formControlName: 'ContainerLabel',
     type: FormFieldTypes.TEXTAREA,
     visible: true,
+    validator: [{validator: CustomValidator.REQUIRED}],
     defaultValueGetter: (s: ContainerDto) => s.description,
   }
 ]

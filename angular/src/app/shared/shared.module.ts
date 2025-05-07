@@ -66,7 +66,7 @@ import {ToolbarButtonComponent} from './context-toolbar/toolbar-button/toolbar-b
     MatIconModule,
     MatButtonModule,
     MatDialogModule,
-    NgClass
+    NgClass,
   ],
     providers: [
     ],

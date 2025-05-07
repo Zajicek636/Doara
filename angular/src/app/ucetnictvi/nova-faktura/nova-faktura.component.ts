@@ -18,6 +18,7 @@ import {InvoiceItemDto} from '../polozky-faktury/data/polozky-faktury.interfaces
 import {PolozkaKontejneruDataService} from '../../sklady/polozka-kontejneru/data/polozka-kontejneru-data.service';
 import {DialogType, DynamicDialogResult} from '../../shared/dialog/dialog.interfaces';
 import {NovaPolozkaKontejnerModal} from './nova-polozka-kontejner-modal';
+import {SkladyPolozkyDataService} from '../../sklady/sklady-polozky/data/sklady-polozky-data.service';
 
 @Component({
   selector: 'app-nova-faktura',
@@ -56,6 +57,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     protected override dialogService: DialogService,
     protected override route: ActivatedRoute,
     private containerItemsDataService: PolozkaKontejneruDataService,
+    private skladyPolozkyDataService: SkladyPolozkyDataService,
   ) {
     super(route, router, breadcrumbService, dialogService, dataService);
   }
@@ -78,8 +80,6 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     await this.initInvocieItemsForm();
 
     await this.handleNewItem()
-
-
     this.loaded = true;
   }
 
@@ -91,20 +91,20 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
 
       const mapped: InvoiceDto = {
         id: faktura.id,
-        invoiceNumber: faktura.invoiceNumber,
+        invoiceNumber: faktura.invoiceNumber!,
         supplierId: supplierOption.value,
         customerId: customerOption.value,
         issueDate: faktura.issueDate,
-        taxDate: faktura.taxDate,
-        deliveryDate: faktura.deliveryDate,
+        taxDate: faktura.taxDate!,
+        deliveryDate: faktura.deliveryDate!,
         totalNetAmount: faktura.totalNetAmount,
         totalVatAmount: faktura.totalVatAmount,
         totalGrossAmount: faktura.totalGrossAmount,
-        paymentTerms: faktura.paymentTerms,
-        vatRate: faktura.vatRate,
-        variableSymbol: faktura.variableSymbol,
-        constantSymbol: faktura.constantSymbol,
-        specificSymbol: faktura.specificSymbol,
+        paymentTerms: faktura.paymentTerms!,
+        vatRate: faktura.vatRate!,
+        variableSymbol: faktura.variableSymbol!,
+        constantSymbol: faktura.constantSymbol!,
+        specificSymbol: faktura.specificSymbol!,
       }
       this.baseFormFields = populateDefaults(this.baseFormFields, mapped);
       this.invoiceItems.push(...faktura.items)
@@ -164,7 +164,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         icon: BaseMaterialIcons.SAVE,
         class: 'btn-primary',
         visible: true,
-        disabled: false,
+        disabled: this.baseForm?.invalid ?? true,
         action: () => this.saveFaktura()
       },
       {
@@ -173,22 +173,21 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         icon: BaseMaterialIcons.CANCEL,
         class: 'btn-secondary',
         visible: true,
-        disabled: false,
-        action: () => this.router.navigate(['/seznam-faktur'])
+        disabled: this.baseForm?.dirty ?? true,
+        action: () => {this.baseForm.reset()}
       }
     ];
   }
 
   async addNewPolozkaFromContainer() {
-
-    const items = await this.containerItemsDataService.getAll();
+    const items = await this.skladyPolozkyDataService.getAll(undefined, {useSuffix: true});
     const res: FormComponentResult = await this.dialogService.open(NovaPolozkaKontejnerModal<FormComponentResult>,
       {
-      icon: BaseMaterialIcons.ADD_PERSON,
-      title: "Nový subjekt",
-      type: DialogType.SUCCESS
+        icon: BaseMaterialIcons.ADD_CONTAINER,
+        title: "Nová položka z kontejneru",
+        type: DialogType.SUCCESS,
+        containers: items,
     })
-
   }
 
   onBaseFormReady(form: FormGroup) {
@@ -210,7 +209,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
   bindVatCalculation() {
     const netCtrl = this.baseForm.get('totalNetAmount')!;
     const vatCtrl = this.baseForm.get('totalVatAmount')!;
-    const grossCtrl = this.baseForm.get('totalgrossamount')!;
+    const grossCtrl = this.baseForm.get('totalGrossAmount')!;
     const rateCtrl = this.baseForm.get('vatRate')!;
 
     function getRate(): number {
@@ -312,7 +311,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
       description: main.description,
       quantity: main.quantity,
       unitPrice: main.unitPrice,
-      vatRate: main.vatRate,
+      vatRate: main.vatRate.value,
       netAmount: main.netAmount,
       vatAmount: main.vatAmount,
       grossAmount: main.grossAmount,
@@ -345,12 +344,46 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     this.isBaseFormValid = result.valid;
     this.isBaseFormModified = result.modified;
     this.baseForm = result.form;
-    const data = result.data as InvoiceCreateEditDto;
+
+    this.refreshToolbarButtons();
   }
 
   async saveFaktura() {
-    await this.router.navigate(['ucetnictvi', 'faktura', "10"]);
+    if(!this.entityId && !this.isNew) {
+      await this.postEditFaktura()
+    } else {
+      await this.postNewFaktura()
+    }
   }
 
+  async postEditFaktura() {
+
+  }
+
+  async postNewFaktura() {
+    const newFaktura = this.mapToInvoiceDtoFromForm()
+    const res = await this.dataService.post('',newFaktura)
+    await this.router.navigate(['ucetnictvi', 'faktura', res.id]);
+  }
+
+  private mapToInvoiceDtoFromForm(): InvoiceCreateEditDto {
+    return {
+      invoiceNumber: this.baseForm.value.invoiceNumber,
+      supplierId: this.baseForm.value.supplierId.value,
+      customerId: this.baseForm.value.customerId.value,
+      issueDate: this.baseForm.value.issueDate,
+      taxDate: this.baseForm.value.taxDate ?? null,
+      deliveryDate: this.baseForm.value.deliveryDate ?? null,
+      totalNetAmount: this.baseForm.value.totalNetAmount,
+      totalVatAmount: this.baseForm.value.totalVatAmount,
+      totalGrossAmount: this.baseForm.value.totalGrossAmount,
+      paymentTerms: this.baseForm.value.paymentTerms ?? null,
+      vatRate: this.baseForm.value.vatRate?.value ?? null,
+      variableSymbol: this.baseForm.value.variableSymbol ?? null,
+      constantSymbol: this.baseForm.value.constantSymbol ?? null,
+      specificSymbol: this.baseForm.value.specificSymbol ?? null
+    };
+
+  }
   protected readonly BaseMaterialIcons = BaseMaterialIcons;
 }

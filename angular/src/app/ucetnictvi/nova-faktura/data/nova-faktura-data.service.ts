@@ -12,40 +12,14 @@ export class NovaFakturaDataService extends BaseCrud<string, InvoiceDetailDto, I
   constructor(client: HttpClient, settings: NovaFakturaCrudSettings) {
     super(client, settings);
   }
-
-  public async getPagedRequest(params: any): Promise<any[]> {
-    const b: any[] = []
-    for (let i = 0; i < 1; i++) {
-      const a: any = {
-        id: `SubId${i}`,
-        Name: `JmenoSub${i+i}*`,
-        Ic: `11370105`,
-        Dic: `CZ410605060`,
-        IsVatPayer: false,
-        AddressDetailDto: {
-          id: `AdderssId${i}`,
-          Street: `Street${i}`,
-          City: `City${i}`,
-          PostalCode: `${i+1*123}`,
-          CountryDto: {
-            id: `CountryId${i}`,
-            Name:`CZ`,
-            Code:`CZ`,
-          }
-        }
-      }
-      b.push(a)
-    }
-    return b
-  }
-
+/*
   override async get(id: string, opts?: { useSuffix?: boolean }): Promise<InvoiceDetailDto> {
     const mock: InvoiceDetailDto = {
       id: "10",
       invoiceNumber: 'F2025EDIT',
       supplier: {
-        id: "9764d311-e728-3b8c-5585-3a19bd967b87",
-        name: `Aneta Bezbožná`,
+        id: "c8a067e2-b5b4-ec0e-5e89-3a19be4d7ece",
+        name: `Tomáš`,
         ic: ``,
         dic: ``,
         isVatPayer: true,
@@ -62,8 +36,8 @@ export class NovaFakturaDataService extends BaseCrud<string, InvoiceDetailDto, I
         } as AddressDetailDto
       },
       customer: {
-        id: `ddba2844-dd39-4787-c4b2-3a19bd692566`,
-        name: `Josef Stránský`,
+        id: `11603f2c-5adb-3ac3-1a00-3a19be4d400f`,
+        name: `Jana`,
         ic: `10000000`,
         dic: `CZ${400000001}`,
         isVatPayer: false,
@@ -86,35 +60,33 @@ export class NovaFakturaDataService extends BaseCrud<string, InvoiceDetailDto, I
       totalVatAmount: 234,
       totalGrossAmount: 1468,
       paymentTerms:'30 dní',
-      vatRate: 'C',
+      vatRate: 67,
       variableSymbol: '2025001',
       constantSymbol: '0308',
       specificSymbol: '001',
       items: [
         {
           id: 'item1',
-          invoiceId: '10',
           description: 'Položka 1',
           quantity: 2,
           unitPrice: 500,
           netAmount: 1000,
-          vatRate: 21,
+          vatRate: 67,
           vatAmount: 210,
           grossAmount: 1210
         },
         {
           id: 'item2',
-          invoiceId: '10',
           description: 'Položka 2',
           quantity: 1,
           unitPrice: 800,
           netAmount: 800,
-          vatRate: 21,
+          vatRate: 67,
           vatAmount: 168,
           grossAmount: 968
         }
       ]
     };
     return mock
-  }
+  }*/
 }

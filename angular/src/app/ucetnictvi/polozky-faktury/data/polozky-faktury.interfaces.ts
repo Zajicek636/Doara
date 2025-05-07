@@ -7,8 +7,7 @@ export interface InvoiceItemCreateManyDto {
 }
 
 export interface InvoiceItemDto {
-  id: string;
-  invoiceId?: string;
+  id?: string;
   containerItemId?: string,
   description: string;
   quantity: number;

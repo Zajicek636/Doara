@@ -91,7 +91,7 @@ export class BaseCrud<TId, TDto, TCreateDto, TEditDto> {
       queryParts.push({ [this.settings.queryParam]: id });
     }
 
-    if (id != null) {
+    if (id != null && id != '') {
       queryParts.push(Object.fromEntries(this.settings.mapper(id).params));
     }
 

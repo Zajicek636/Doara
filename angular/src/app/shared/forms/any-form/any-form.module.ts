@@ -81,7 +81,8 @@ export const MY_DATE_FORMATS: MatDateFormats = {
     TextFieldComponent,
     NumberFieldComponent,
     MatNativeDateModule,
-    DateFieldComponent
+    DateFieldComponent,
+    AutocompleteFieldComponent,
   ],
   providers: [
     { provide: DateAdapter, useClass: CustomDateAdapter },

@@ -8,17 +8,17 @@ export interface InvoiceCreateEditDto {
   invoiceNumber: string;
   supplierId: string;
   customerId: string;
-  issueDate: string; // ISO string
-  taxDate: string; // ISO string
-  deliveryDate: string; // ISO string
+  issueDate: string;
+  taxDate?: string;
+  deliveryDate?: string;
   totalNetAmount: number;
   totalVatAmount: number;
   totalGrossAmount: number;
-  paymentTerms: string;
-  vatRate: number;
-  variableSymbol: string;
-  constantSymbol: string;
-  specificSymbol: string;
+  paymentTerms?: string;
+  vatRate?: number;
+  variableSymbol?: string;
+  constantSymbol?: string;
+  specificSymbol?: string;
 }
 
 
@@ -27,50 +27,49 @@ export interface InvoiceDto {
   invoiceNumber: string;
   supplierId: string;
   customerId: string;
-  issueDate: string;// ISO date string
-  taxDate: string;
-  deliveryDate: string;
+  issueDate: string;
+  taxDate?: string;
+  deliveryDate?: string;
   totalNetAmount: number;
   totalVatAmount: number;
   totalGrossAmount: number;
-  paymentTerms: string;
-  vatRate: string;
-  variableSymbol: string;
-  constantSymbol: string;
-  specificSymbol: string;
+  paymentTerms?: string;
+  vatRate?: number;
+  variableSymbol?: string;
+  constantSymbol?: string;
+  specificSymbol?: string;
 }
 
 export interface InvoiceDetailDto {
   id: string;
-  invoiceNumber: string;
+  invoiceNumber?: string;
   supplier: SubjektDetailDto;
   customer: SubjektDetailDto;
   issueDate: string;
-  taxDate: string;
-  deliveryDate: string;
+  taxDate?: string;
+  deliveryDate?: string;
   totalNetAmount: number;
   totalVatAmount: number;
   totalGrossAmount: number;
-  paymentTerms: string;
-  vatRate: string;
-  variableSymbol: string;
-  constantSymbol: string;
-  specificSymbol: string;
+  paymentTerms?: string;
+  vatRate?: number;
+  variableSymbol?: string;
+  constantSymbol?: string;
+  specificSymbol?: string;
   items: InvoiceItemDto[];
 }
 
 export enum VatRate {
-  None = 'X',           // není vyplněno
-  Standard21 = 'S',     // základní sazba
-  Reduced15 = 'R',      // první snížená
-  Reduced12 = 'L',      // druhá snížená
-  Zero = 'Z',           // 0% sazba
-  Exempt = 'E',         // osvobozeno od daně
-  ReverseCharge = 'C',  // přenesená daňová povinnost
-  NonVatPayer = 'N'     // neplátce DPH
+  None = 88,
+  Standard21 = 83,
+  Reduced15 = 82,
+  Reduced12 = 76,
+  Zero = 90,
+  Exempt = 69,
+  ReverseCharge = 67,
+  NonVatPayer = 78
 }
 
-// 2) Mapa k českým popiskům
 export const VatRateLabels: Record<VatRate, string> = {
   [VatRate.None]:           'Neuvedeno',
   [VatRate.Standard21]:     'Základní sazba 21 %',
@@ -82,10 +81,12 @@ export const VatRateLabels: Record<VatRate, string> = {
   [VatRate.NonVatPayer]:    'Neplátce DPH'
 };
 
-export const VAT_RATE_OPTIONS: FormSelect[] = Object.values(VatRate).map(code => ({
-  value: code,
-  displayValue: VatRateLabels[code]
-}));
+export const VAT_RATE_OPTIONS: FormSelect[] = Object.values(VatRate)
+  .filter(value => typeof value === 'number')
+  .map((code) => ({
+    value: code,
+    displayValue: VatRateLabels[code as VatRate]
+  }));
 
 export const VAT_RATE_PERCENT: Record<VatRate, number> = {
   [VatRate.None]: 0,
@@ -148,7 +149,7 @@ export const CREATE_INVOICE_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
   {
     formControlName: 'vatRate',
     label: 'Sazba DPH (%)',
-    type: FormFieldTypes.NUMBER,
+    type: FormFieldTypes.LOOKUP,
     defaultValueGetter: (i: InvoiceItemDto) => i.vatRate,
     options: VAT_RATE_OPTIONS,
     validator: [
@@ -206,8 +207,7 @@ export const CREATE_EDIT_FAKTURA_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     defaultValueGetter: (s: InvoiceDto) => new Date(s.issueDate),
     validator: [
       { validator: CustomValidator.REQUIRED },
-      { validator: CustomValidator.MIN_DATE, params: new Date('2025-05-01T15:40:54.115Z') },
-      { validator: CustomValidator.MAX_DATE, params: new Date('2025-06-02T15:40:54.115Z') }
+      { validator: CustomValidator.MIN_DATE, params: new Date('1000-05-01T15:40:54.115Z') },
     ],
     visible: true
   },
@@ -215,16 +215,19 @@ export const CREATE_EDIT_FAKTURA_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     formControlName: 'taxDate',
     label: 'Datum zdanitelného plnění',
     type: FormFieldTypes.DATE,
-    defaultValueGetter: (s: InvoiceDto) => new Date(s.taxDate),
-    validator: [{ validator: CustomValidator.REQUIRED }],
+    defaultValueGetter: (s: InvoiceDto) => s.taxDate ? new Date(s.taxDate) : null,
+    validator: [
+      { validator: CustomValidator.MIN_DATE, params: new Date('1000-05-01T15:40:54.115Z') },
+    ],
     visible: true
   },
   {
     formControlName: 'deliveryDate',
     label: 'Datum dodání',
     type: FormFieldTypes.DATE,
-    defaultValueGetter: (s: InvoiceDto) =>  new Date(s.deliveryDate),
-    validator: [{ validator: CustomValidator.REQUIRED }],
+    defaultValueGetter: (s: InvoiceDto) => s.deliveryDate ? new Date(s.deliveryDate) : null,
+    validator: [
+      { validator: CustomValidator.MIN_DATE, params: new Date('1000-05-01T15:40:54.115Z') },],
     visible: true
   },
   {
@@ -232,7 +235,7 @@ export const CREATE_EDIT_FAKTURA_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     label: 'Částka bez DPH',
     type: FormFieldTypes.NUMBER,
     defaultValueGetter: (s: InvoiceDto) => s.totalNetAmount,
-    validator: [{validator: CustomValidator.DECIMAL_PLACES, params: 2}],
+    validator: [{ validator: CustomValidator.REQUIRED }, { validator: CustomValidator.DECIMAL_PLACES, params: 2}],
     visible: true
   },
   {
@@ -240,20 +243,20 @@ export const CREATE_EDIT_FAKTURA_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     label: 'DPH',
     type: FormFieldTypes.NUMBER,
     defaultValueGetter: (s: InvoiceDto) => s.totalVatAmount,
-    validator: [],
+    validator: [{ validator: CustomValidator.REQUIRED }],
     visible: true
   },
   {
-    formControlName: 'totalgrossamount',
+    formControlName: 'totalGrossAmount',
     label: 'Částka s DPH',
     type: FormFieldTypes.NUMBER,
     defaultValueGetter: (s: InvoiceDto) => s.totalGrossAmount,
-    validator: [{validator: CustomValidator.DECIMAL_PLACES, params: 2}],
+    validator: [{ validator: CustomValidator.REQUIRED },{validator: CustomValidator.DECIMAL_PLACES, params: 2}],
     visible: true
   },
   {
     formControlName: 'paymentTerms',
-    label: 'Způsob platby',
+    label: 'Platební podmínky',
     type: FormFieldTypes.TEXT,
     defaultValueGetter: (s: InvoiceDto) => s.paymentTerms,
     validator: [],
@@ -296,7 +299,7 @@ export const CREATE_EDIT_FAKTURA_FIELDS: Omit<FormField, 'defaultValue'>[] = [
 
 export const ADD_POLOZKA_FROM_CONTAINER: Omit<FormField, 'defaultValue'>[] = [
   {
-    visible: false,
+    visible: true,
     formControlName: 'containerId',
     label: 'Kontejner',
     type: FormFieldTypes.AUTOCOMPLETE,
@@ -305,11 +308,31 @@ export const ADD_POLOZKA_FROM_CONTAINER: Omit<FormField, 'defaultValue'>[] = [
   },
   {
     formControlName: 'containerItem',
-    label: '',
+    label: 'Položka z kontejneru',
     type: FormFieldTypes.AUTOCOMPLETE,
     defaultValueGetter: (s: ContainerItemDto) => s.id,
     validator: [{ validator: CustomValidator.REQUIRED }],
-    visible: true
+    visible: false
+  },
+  {
+    visible: false,
+    formControlName: 'vatRate',
+    label: 'Sazba dph',
+    type: FormFieldTypes.LOOKUP,
+    options: VAT_RATE_OPTIONS,
+    defaultValueGetter: (s: InvoiceItemDto) => s.vatRate,
+    validator: [{ validator: CustomValidator.REQUIRED }],
+  },
+  {
+    visible: false,
+    formControlName: 'quantity',
+    label: 'Množství',
+    type: FormFieldTypes.NUMBER,
+    defaultValueGetter: (s: InvoiceItemDto) => s.quantity,
+    validator: [
+      { validator: CustomValidator.REQUIRED },
+      { validator: CustomValidator.MIN, params: 1 },
+    ],
   }
 ];
 
