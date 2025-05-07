@@ -14,6 +14,8 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
-    //todo pro auth subscription
+    if (!this.authService.isLoggedIn()) {
+      await this.authService.autoLogin();
+    }
   }
 }

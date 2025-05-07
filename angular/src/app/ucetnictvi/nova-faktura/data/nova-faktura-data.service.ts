@@ -44,11 +44,11 @@ export class NovaFakturaDataService extends BaseCrud<string, InvoiceDetailDto, I
       id: "10",
       invoiceNumber: 'F2025EDIT',
       supplier: {
-        id: `SubId1`,
-        name: `Jméno Subjektu 1`,
-        ic: `10000000`,
-        dic: `CZ${400000000}`,
-        isVatPayer: false,
+        id: "9764d311-e728-3b8c-5585-3a19bd967b87",
+        name: `Aneta Bezbožná`,
+        ic: ``,
+        dic: ``,
+        isVatPayer: true,
         address: {
           id: `AddressId${1}`,
           street: `Ulice ${1}`,
@@ -62,8 +62,8 @@ export class NovaFakturaDataService extends BaseCrud<string, InvoiceDetailDto, I
         } as AddressDetailDto
       },
       customer: {
-        id: `SubId2`,
-        name: `Jméno Subjektu 2`,
+        id: `ddba2844-dd39-4787-c4b2-3a19bd692566`,
+        name: `Josef Stránský`,
         ic: `10000000`,
         dic: `CZ${400000001}`,
         isVatPayer: false,
