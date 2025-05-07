@@ -15,7 +15,7 @@ export abstract class BaseContentComponent<T, DataService> implements OnInit {
   basePath: string | undefined;
   breadCrumbTitle: string | undefined;
   private _chosenElement?: T;
-
+  entityId: string | null = "";
   toolbarButtons!: ToolbarButton[];
 
   protected constructor(
@@ -34,6 +34,11 @@ export abstract class BaseContentComponent<T, DataService> implements OnInit {
   }
 
   ngOnInit() {
+    this.route.paramMap.subscribe(pm => {
+      if(pm.get('id')) {
+        this.entityId = pm.get('id');
+      }
+    });
     this.refreshToolbarButtons();
   }
 

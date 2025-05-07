@@ -27,7 +27,6 @@ import {SkladyPolozkyDataService} from '../../sklady/sklady-polozky/data/sklady-
   styleUrl: './nova-faktura.component.scss'
 })
 export class NovaFakturaComponent extends BaseContentComponent<any,any> implements OnInit {
-  entityId: string | null = null;
 
   baseFormFields: FormField[] = [];
   isBaseFormValid = false;
@@ -69,11 +68,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
 
   override async ngOnInit() {
     super.ngOnInit();
-    this.route.paramMap.subscribe(pm => {
-      this.entityId = pm.get('id');
-      this.isNew = !this.entityId;
-      this.refreshToolbarButtons();
-    });
+    this.isNew = !this.entityId;
 
     await this.loadItemsForInits();
     await this.initSubjectsForm();

@@ -2,8 +2,8 @@
 import {RouterModule, Routes} from '@angular/router';
 import {SkladyMainComponent} from './sklady-main/sklady-main.component';
 import {SkladyPolozkyComponent} from './sklady-polozky/sklady-polozky.component';
-import {SkladyEditaceComponent} from './sklady-editace/sklady-editace.component';
 import {PolozkaKontejneruComponent} from './polozka-kontejneru/polozka-kontejneru.component';
+import {SkladyPohybyPolozkyComponent} from './sklady-editace/sklady-pohyby-polozky.component';
 
 const routes: Routes = [
   {
@@ -27,9 +27,9 @@ const routes: Routes = [
         data: { basePath: 'sklady', breadcrumb: 'Položky kontejneru' },
       },
       {
-        path: 'editace-skladu',
-        component: SkladyEditaceComponent,
-        data: { basePath: 'sklady', breadcrumb: 'Editace skladu'}
+        path: 'pohyby-polozky/:id',
+        component: SkladyPohybyPolozkyComponent,
+        data: { basePath: 'sklady', breadcrumb: 'Pohyby položky'}
       },
     ]
   },

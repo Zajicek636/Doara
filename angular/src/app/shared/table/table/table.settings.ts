@@ -10,6 +10,7 @@ export interface TableSettings<T> {
   cacheEntityType: string;
   extraQueryParams?: { [key: string]: any };
   clientSideFilter?: boolean;
+  showPaginator: boolean;
 }
 
 export interface ColumnSetting<T> {

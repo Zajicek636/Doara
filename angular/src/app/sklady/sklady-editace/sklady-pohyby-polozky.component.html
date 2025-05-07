@@ -1,0 +1,11 @@
+<app-context-toolbar [buttons]="this.toolbarButtons"></app-context-toolbar>
+<div class="content-scroll-wrapper">
+  <app-dynamic-table
+    *ngIf="loaded"
+    #tableComponent
+    [data]="this.dataSource"
+    [settings]="this.tableSettings!"
+    (selectedElement)="this.clickedElement($event)"
+    (rowDoubleClicked)="this.handleDoubleClick($event)"
+  />
+</div>

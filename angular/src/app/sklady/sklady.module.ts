@@ -1,8 +1,8 @@
 ﻿import {ComponentType, NgModule} from '@angular/core';
 import {SkladyRoutingModule} from './sklady-routing.module';
 import {SkladyPolozkyComponent} from './sklady-polozky/sklady-polozky.component';
-import {SkladyEditaceComponent} from './sklady-editace/sklady-editace.component';
 import {SkladyPolozkyDataService} from './sklady-polozky/data/sklady-polozky-data.service';
+import {SkladyPohybyPolozkyComponent} from './sklady-editace/sklady-pohyby-polozky.component';
 
 
 @NgModule({
@@ -11,7 +11,7 @@ import {SkladyPolozkyDataService} from './sklady-polozky/data/sklady-polozky-dat
   imports: [
     SkladyRoutingModule,
     SkladyPolozkyComponent,
-    SkladyEditaceComponent,
+    SkladyPohybyPolozkyComponent,
   ],
   exports: [
   ]

@@ -1,4 +1,5 @@
 import {CustomValidator, FormField, FormFieldTypes} from "../../../shared/forms/form.interfaces";
+import {MovementDto} from "../../sklady-editace/data/sklady-pohyby-polozky.interfaces";
 
 export interface ContainerItemCreateEditDto {
   id?: string;
@@ -32,6 +33,7 @@ export interface ContainerItemDto {
     discount?: number;
     discountRate?: number;
     containerId: string;
+    movements?: MovementDto[];
 }
 
 export enum ContainerItemState {

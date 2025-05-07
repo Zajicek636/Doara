@@ -10,6 +10,7 @@
   OPEN_IN_NEW = "open_in_new",
   EDIT = "edit",
   DELETE = "delete",
+  MOVEMENT = "move_down",
 
 
 

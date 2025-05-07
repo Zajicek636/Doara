@@ -42,7 +42,6 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
   }
 
   form!: FormGroup;
-  entityId: string|null = null;
 
   override ngOnInit() {
     super.ngOnInit();
@@ -55,6 +54,7 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
       expandable: false,
       pageSizeOptions: [10, 30, 50, 100],
       defaultPageSize: 10,
+      showPaginator: true,
       extraQueryParams: {ContainerId: this.entityId}
     };
   }
@@ -70,7 +70,6 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
         disabled: false,
         action: () => this.addNewItemContainer()
       },
-
       {
         id: 'edit',
         text: 'Upravit',
@@ -79,6 +78,15 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
         disabled: !this.chosenElement,
         visible: true,
         action: () => this.editItemContainer()
+      },
+      {
+        id: 'pohyby',
+        text: 'Pohyby',
+        icon: BaseMaterialIcons.GRAPH_INCREASE,
+        class: 'btn-secondary',
+        disabled: !this.chosenElement,
+        visible: true,
+        action: () => this.navigateToPohyby()
       },
       {
         id: 'delete',
@@ -217,12 +225,16 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
     };
   }
 
+  navigateToPohyby() {
+    this.router.navigate([this.basePath,'pohyby-polozky', this.chosenElement?.id], {state: { previousBreadcrumbs: this.breadcrumbService.breadcrumbsValue }});
+  }
+
   clickedElement(item: ContainerItemDto) {
     this.chosenElement = item;
   }
 
   async handleDoubleClick(item: ContainerItemDto) {
     this.chosenElement = item;
-    await this.editItemContainer();
+    this.navigateToPohyby();
   }
 }

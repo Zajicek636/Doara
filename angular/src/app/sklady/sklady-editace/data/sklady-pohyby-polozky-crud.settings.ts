@@ -1,15 +1,19 @@
 ﻿import {Injectable} from '@angular/core';
 import {CrudSettings, QueryParams} from '../../../shared/crud/base-crud-service';
-import {SkladyEditaceDto} from './sklady-editace.interfaces';
+
 @Injectable({
   providedIn: 'root',
 })
-export class SkladyEditaceCrudSettings implements CrudSettings<string, SkladyEditaceDto> {
-  baseUrl: string = 'https://example.com/api/SkladyEditace/SkladyEditace';
-  postUrl?: string;
+export class SkladyPohybyPolozkyCrudSettings implements CrudSettings<string, any> {
+  baseUrl: string = '/api/Sklady/ContainerItem';
+  addStock = "AddStock";
+  removeMovement = "RemoveMovement";
+  reserve = "Reserve";
+  use = "Use";
+  reservationToUsage = "ReservationToUsage";
   queryParam?: string;
 
-  idGetter(entity: SkladyEditaceDto): string {
+  idGetter(entity: any): string {
     return entity.id;
   }
 

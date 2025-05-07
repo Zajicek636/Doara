@@ -64,6 +64,7 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
       expandable: false,
       pageSizeOptions: [10, 30, 50, 100],
       defaultPageSize: 10,
+      showPaginator: true
     };
     this.loadData()
   }
