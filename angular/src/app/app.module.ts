@@ -1,4 +1,4 @@
-﻿import { NgModule } from '@angular/core';
+﻿import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routes';
@@ -10,6 +10,7 @@ import {requestVerificationInterceptor} from './shared/auth/auth.interceptor';
 import {OAuthModule, OAuthService} from 'angular-oauth2-oidc';
 import {authConfig} from './shared/auth/auth.service';
 import {CookieService} from 'ngx-cookie-service';
+import {AuthInitializerService} from './shared/auth/auth.initializer';
 
 
 @NgModule({
@@ -24,6 +25,12 @@ import {CookieService} from 'ngx-cookie-service';
   providers: [
     CookieService,
     provideHttpClient( withInterceptors([loadingInterceptor, requestVerificationInterceptor])),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (authInit: AuthInitializerService) => () => authInit.init(),
+      deps: [AuthInitializerService],
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
