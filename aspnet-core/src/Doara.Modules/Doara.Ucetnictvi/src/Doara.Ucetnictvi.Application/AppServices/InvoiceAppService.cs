@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Doara.Ucetnictvi.Dto.Invoice;
+using Doara.Ucetnictvi.Dto.InvoiceItem;
 using Doara.Ucetnictvi.Entities;
 using Doara.Ucetnictvi.IAppServices;
 using Doara.Ucetnictvi.Permissions;
@@ -13,7 +15,7 @@ using Volo.Abp.Domain.Entities;
 
 namespace Doara.Ucetnictvi.AppServices;
 
-public class InvoiceAppService(IInvoiceRepository invoiceRepository, ISubjectRepository subjectRepository) : UcetnictviAppService, IInvoiceAppService
+public class InvoiceAppService(IInvoiceRepository invoiceRepository, ISubjectRepository subjectRepository, IInvoiceItemAppService invoiceItemAppService) : UcetnictviAppService, IInvoiceAppService
 {
     [Authorize(UcetnictviPermissions.ReadInvoicePermission)]
     public async Task<InvoiceDetailDto> GetAsync(Guid id)
@@ -117,10 +119,14 @@ public class InvoiceAppService(IInvoiceRepository invoiceRepository, ISubjectRep
     [Authorize(UcetnictviPermissions.DeleteInvoicePermission)]
     public async Task DeleteAsync(Guid id)
     {
-        if (!await invoiceRepository.AnyAsync(x => x.Id == id))
+        var invoice = await invoiceRepository.GetAsync(id);
+
+        await invoiceItemAppService.ManageManyAsync(new InvoiceItemManageManyInputDto
         {
-            throw new EntityNotFoundException(typeof(Invoice), id);
-        }
+            InvoiceId = invoice.Id,
+            Items = [],
+            ItemsForDelete = invoice.Items.Select(x => x.Id).ToList()
+        });
         await invoiceRepository.DeleteAsync(id);
     }
 }
