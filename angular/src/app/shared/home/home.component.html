@@ -1,6 +1,17 @@
-<p>home works!</p>
-<div class="grid-container row g-3">
-  <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let item of data">
-    <app-widget [data]="item" [ngStyle]="{'width': item?.width + 'px', 'height': item?.height + 'px'}"></app-widget>
+<div class="dashboard-container">
+  <div class="dashboard-welcome animate-fade">
+    <h1>👋 Vítej v systému Doara</h1>
+    <p>Spravuj faktury a skladové položky jednoduše a přehledně.</p>
+  </div>
+
+  <div class="dashboard-actions">
+    <div class="dashboard-card animate-fade-up delay-1">
+      <h3>📄 Faktury</h3>
+      <p>Vytvářej, upravuj a spravuj faktury na jednom místě.</p>
+    </div>
+    <div class="dashboard-card animate-fade-up delay-2">
+      <h3>📦 Sklad</h3>
+      <p>Měj přehled o položkách ve skladech a kontejnerech.</p>
+    </div>
   </div>
 </div>

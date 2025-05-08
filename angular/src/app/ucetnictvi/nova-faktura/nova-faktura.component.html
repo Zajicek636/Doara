@@ -4,6 +4,7 @@
   <div class="forms-row" style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; justify-content: center">
     <div style="width: 75%; padding:10px 60px; border: 1px solid black; border-radius: 5px">
       <app-any-form
+        *ngIf="formReady"
         [fields]="this.baseFormFields"
         (formChanged)="onBaseFormChanged($event)"
         (formReady)="onBaseFormReady($event)"

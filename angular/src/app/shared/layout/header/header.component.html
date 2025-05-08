@@ -1,4 +1,19 @@
 <mat-toolbar class="mat-elevation-z9 header">
-  <button mat-icon-button (click)="onLeftToggle()"><mat-icon>menu</mat-icon></button>
-  <!--<button mat-icon-button (click)="onRightToggle()"><mat-icon>menu</mat-icon></button>-->
+  <div class="left">
+    <button mat-icon-button (click)="onLeftToggle()">
+      <mat-icon>{{ BaseMaterialIcons.HAMBURGER }}</mat-icon>
+    </button>
+
+    <button mat-icon-button (click)="navigateHome()">
+      <mat-icon>{{ BaseMaterialIcons.HOME }}</mat-icon>
+    </button>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="right">
+    <button mat-icon-button (click)="logout()">
+      <mat-icon>{{ BaseMaterialIcons.LOGOUT }}</mat-icon>
+    </button>
+  </div>
 </mat-toolbar>

@@ -132,7 +132,10 @@ export const SUBJEKT_ADDRESS_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     formControlName: 'SubjektPSC',
     defaultValueGetter: (a: SubjektDetailDto) => a.address.postalCode,
     type: FormFieldTypes.TEXT,
-    validator: [{ validator: CustomValidator.REQUIRED }]
+    validator: [
+      { validator: CustomValidator.REQUIRED },
+      { validator: CustomValidator.PATTERN, params: '^\\d{5}$' }
+    ]
   },
   {
     label: 'Kód země',

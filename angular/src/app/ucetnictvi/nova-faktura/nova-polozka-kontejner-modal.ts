@@ -156,7 +156,7 @@ export class NovaPolozkaKontejnerModal<T> extends DefaultDialogComponent impleme
 
       this.containerItemsById = res.items.map(item => ({
         containerItemId: item.id,
-        description: `${item.name} ${item.description}`,
+        description: `${item.name} - ${item.description}`,
         quantity: 0,
         unitPrice: item.presentationPrice,
         netAmount: 0,

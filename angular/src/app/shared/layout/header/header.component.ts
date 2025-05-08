@@ -1,5 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Router} from '@angular/router';
+import {OAuthService} from 'angular-oauth2-oidc';
+import {BaseMaterialIcons} from '../../../../styles/material.icons';
 
 @Component({
   selector: 'app-header',
@@ -9,7 +11,7 @@ import {Router} from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
   @Output() toggleLeft: EventEmitter<any> = new EventEmitter();
-  constructor(private router: Router,) { }
+  constructor(private router: Router, private oauthService: OAuthService ) { }
 
   ngOnInit(): void {
   }
@@ -23,7 +25,8 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.router.navigate(['/home']);
+    this.oauthService.logOut()
   }
 
+  protected readonly BaseMaterialIcons = BaseMaterialIcons;
 }

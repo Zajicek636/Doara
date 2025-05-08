@@ -38,29 +38,28 @@ import {PolozkyFakturyDataService} from '../polozky-faktury/data/polozky-faktury
 })
 export class NovaFakturaComponent extends BaseContentComponent<any,any> implements OnInit, OnDestroy {
   @ViewChild('drawerContent') drawerTemplate!: TemplateRef<any>;
+  isNew = true;
+  entity: InvoiceDto | null = null;
 
-
+  baseForm!: FormGroup;
   baseFormFields: FormField[] = [];
   isBaseFormValid = false;
   isBaseFormModified = false;
-
   invoiceItemForm: FormField[] = [];
 
-  isInvoiceItemFormValid = false;
   invoiceItems: InvoiceItemDto[] = [];
-  invoiceItemsForDelete: string[] = []
 
+  invoiceItemsForDelete: string[] = []
 
   invoiceItemSectionToolbarButtons: ToolbarButton[] = []
 
-
-  isNew = true;
-  entity: InvoiceDto | null = null;
-  baseForm!: FormGroup;
   subjektOptions:any[] = [];
   loaded: boolean = false;
   drawerOpen = false;
+  formReady: boolean = true;
 
+  private baseFormDefaults: Partial<InvoiceCreateEditDto> = {};
+  invoiceItemsDefault: InvoiceItemDto[] = [];
 
   constructor(
     private subjektyDataService: SubjektyDataService,
@@ -85,11 +84,10 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
   override async ngOnInit() {
     super.ngOnInit();
     this.isNew = !this.entityId;
-
+    this.baseFormDefaults = {};
     await this.loadItemsForInits();
     await this.initSubjectsForm();
     await this.initInvocieItemsForm();
-
     await this.handleNewItem()
     this.loaded = true;
   }
@@ -121,8 +119,10 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         constantSymbol: faktura.constantSymbol!,
         specificSymbol: faktura.specificSymbol!,
       }
+      this.baseFormDefaults = {...mapped}
       this.baseFormFields = populateDefaults(this.baseFormFields, mapped);
       this.invoiceItems.push(...faktura.items)
+      this.invoiceItemsDefault.push(...faktura.items)
     }
   }
 
@@ -199,10 +199,28 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         icon: BaseMaterialIcons.CANCEL,
         class: 'btn-secondary',
         visible: true,
-        disabled: this.baseForm?.dirty ?? true,
-        action: () => {this.baseForm.reset()}
+        disabled: !this.baseForm?.dirty,
+        action: () => {this.resetFormToDefaults()}
       }
     ];
+  }
+
+  resetFormToDefaults() {
+    this.baseFormFields = populateDefaults(
+      CREATE_EDIT_FAKTURA_FIELDS.map(f => {
+        if (f.formControlName === 'supplierId' || f.formControlName === 'customerId') {
+          return { ...f, options: this.subjektOptions };
+        }
+        return f;
+      }),
+      this.baseFormDefaults
+    );
+    this.baseFormFields = [...this.baseFormFields];
+    this.invoiceItems = [...this.invoiceItemsDefault];
+
+    // force re-render
+    this.formReady = false;
+    setTimeout(() => this.formReady = true, 0);
   }
 
   toggleDrawerWithContent() {

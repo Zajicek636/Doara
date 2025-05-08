@@ -1,5 +1,7 @@
 ﻿export enum BaseMaterialIcons {
   //---OVERALL
+  HAMBURGER = "menu",
+  LOGOUT = "logout",
   PLUS = "add",
   CONTAINER = "dataset",
   COG_SETTINGS = "settings",
@@ -11,6 +13,7 @@
   EDIT = "edit",
   DELETE = "delete",
   MOVEMENT = "move_down",
+  HOME = "home",
 
 
 
