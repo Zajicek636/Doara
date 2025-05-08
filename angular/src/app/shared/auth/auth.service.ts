@@ -1,61 +1,36 @@
 ﻿import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {lastValueFrom, Observable, tap} from 'rxjs';
 import {Injectable} from '@angular/core';
+import {AuthConfig, OAuthService} from 'angular-oauth2-oidc';
+import {CookieService} from 'ngx-cookie-service';
+
+
+export const authConfig: AuthConfig = {
+  issuer: 'https://localhost:44346/',
+  redirectUri: window.location.origin,
+  clientId: 'Doara_App',
+  responseType: 'code',
+  scope: 'Doara',
+  oidc: true,
+  useSilentRefresh: false,
+  silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
+  sessionChecksEnabled: false,
+};
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly apiUrl = 'https://localhost:44346';
-  private readonly tokenKey = 'token';
+  constructor(private http: HttpClient, private oauthService: OAuthService,private cookieService: CookieService) {
+  }
 
-  private readonly autoLoginCredentials = {
-    username: 'admin',
-    password: '1q2w3E*'
-  };
+  public async auth() {
+    await this.oauthService.loadDiscoveryDocumentAndTryLogin();
 
-  constructor(private http: HttpClient) {}
-
-  async autoLogin(): Promise<void> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'accept': 'text/plain',
-      'RequestVerificationToken': this.getRequestVerificationToken() ?? '',
-      'X-Requested-With': 'XMLHttpRequest'
-    });
-
-    const body = {
-      userNameOrEmailAddress: this.autoLoginCredentials.username,
-      password: this.autoLoginCredentials.password,
-      rememberMe: true
-    };
-
-    try {
-      const response = await lastValueFrom(
-        this.http.post<any>(`${this.apiUrl}/api/account/login`, body, {
-          headers,
-          withCredentials: true
-        })
-      );
-
-      console.log('[AUTH] Přihlášení OK', response);
-    } catch (err) {
-      console.error('[AUTH] Chyba při přihlášení:', err);
+    if (this.oauthService.hasValidAccessToken()) {
+      this.oauthService.setupAutomaticSilentRefresh();
+      const tenant = this.cookieService.get('__tenant');
+      localStorage.setItem('tenant', tenant);
+    } else {
+      this.oauthService.initLoginFlow();
     }
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
-  }
-
-  isLoggedIn(): boolean {
-    return !!this.getToken();
-  }
-
-  logout(): void {
-    localStorage.removeItem(this.tokenKey);
-  }
-
-  private getRequestVerificationToken(): string | null {
-    const match = document.cookie.match(new RegExp('(^| )RequestVerificationToken=([^;]+)'));
-    return match ? match[2] : null;
   }
 }

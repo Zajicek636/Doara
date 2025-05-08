@@ -21,17 +21,15 @@ export class MenuComponent implements OnInit {
     { name: 'Sklady', link: 'sklady', icon: BaseMaterialIcons.CONTAINER, items:
         [
           { name: 'Sklad', link: 'polozky', icon: BaseMaterialIcons.CATEGORY},
-          { name: 'Test2', link: 'editace-skladu', icon: BaseMaterialIcons.GRAPH_INCREASE}
         ]
     },
     { name: 'Účetnictví', link: 'ucetnictvi', icon: BaseMaterialIcons.PAYMENTS, items:
         [
-          { name: 'Nová fakura', link: 'faktura', icon: BaseMaterialIcons.NEW_QUOTE },
-          { name: 'Faktury', link: 'seznam-faktur', icon: BaseMaterialIcons.LIST_ICON},
+          { name: 'Fakura', link: 'faktura', icon: BaseMaterialIcons.NEW_QUOTE },
+          { name: 'Seznam faktur', link: 'seznam-faktur', icon: BaseMaterialIcons.LIST_ICON},
           { name: 'Subjekty', link: 'subjekty', icon: BaseMaterialIcons.GROUPS_PEOPLE},
         ]
     },
-    { name: 'Settings', link: 'nastaveni', icon: BaseMaterialIcons.COG_SETTINGS },
   ]) ;
 
   constructor(private router: Router) {}

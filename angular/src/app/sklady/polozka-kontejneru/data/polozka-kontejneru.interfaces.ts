@@ -71,12 +71,6 @@ export const QuantityTypeLabels: Record<QuantityType, string> = {
     [QuantityType.Liters]: 'Litry',
 };
 
-export const ContainerItemStateLabels: Record<ContainerItemState, string> = {
-    [ContainerItemState.New]: 'Nový',
-    [ContainerItemState.Used]: 'Použité',
-    [ContainerItemState.Canceled]: 'Zrušeno',
-};
-
 export const CONTAINER_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     {
       label: 'ID',

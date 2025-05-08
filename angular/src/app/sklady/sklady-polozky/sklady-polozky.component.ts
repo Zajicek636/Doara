@@ -81,7 +81,7 @@ export class SkladyPolozkyComponent extends BaseContentComponent<ContainerDto,Sk
       type: DialogType.SUCCESS
     })
     const res = this.mapToDto(a,"main_section")
-    await this.dataService.put(res.id, res)
+    await this.dataService.put(res.id!, res)
     this.items = this.items.map(x => x.id == res.id ? res : x)
   }
 
@@ -91,7 +91,7 @@ export class SkladyPolozkyComponent extends BaseContentComponent<ContainerDto,Sk
       message: `Opravdu chcete odebrat kontejner ${item.name} a jeho položky?`,
       dialogType: DialogType.ALERT,
     })
-    await this.dataService.delete(item.id);
+    await this.dataService.delete(item.id!);
     this.items.splice(this.items.indexOf(item), 1);
   }
 
@@ -118,14 +118,14 @@ export class SkladyPolozkyComponent extends BaseContentComponent<ContainerDto,Sk
     if(!a) return;
 
     const obj = this.mapToDto(a,"main_section")
-    const res = await this.dataService.post('',obj)
+    const res = await this.dataService.post('',obj, {useSuffix: false})
     this.items.push(res)
   }
 
   mapToDto(result: DynamicDialogResult, key: string): ContainerDto {
     return {
       name: result[key].data.ContainerName,
-      id: result[key].data.ContainerId ?? '',
+      id: result[key].data.ContainerId || null,
       description: result[key].data.ContainerLabel
     }
   }

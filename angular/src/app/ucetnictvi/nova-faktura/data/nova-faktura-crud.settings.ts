@@ -6,7 +6,7 @@ import {InvoiceCreateEditDto} from './nova-faktura.interfaces';
   providedIn: 'root',
 })
 export class NovaFakturaCrudSettings implements CrudSettings<string, InvoiceCreateEditDto> {
-  baseUrl: string = '/api/Subjekty/Subjekty';
+  baseUrl: string = '/api/Ucetnictvi/Invoice';
   postUrl?: string;
   queryParam?: string;
 
@@ -16,6 +16,7 @@ export class NovaFakturaCrudSettings implements CrudSettings<string, InvoiceCrea
 
   mapper(id: string): QueryParams {
     const dict = new Map<string, any>();
+    dict.set('id', id);
     return { params: dict };
   }
 }

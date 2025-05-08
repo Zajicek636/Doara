@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {AuthService} from './shared/auth/auth.service';
+import {OAuthService} from 'angular-oauth2-oidc';
+import {CookieService} from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-root',
@@ -10,12 +12,9 @@ import {AuthService} from './shared/auth/auth.service';
 })
 export class AppComponent implements OnInit {
   constructor(private authService: AuthService) {
-    this.authService.autoLogin();
   }
 
   async ngOnInit() {
-    if (!this.authService.isLoggedIn()) {
-      await this.authService.autoLogin();
-    }
+    await this.authService.auth()
   }
 }

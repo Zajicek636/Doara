@@ -8,7 +8,7 @@ import {InvoiceDto} from '../../nova-faktura/data/nova-faktura.interfaces';
   providedIn: 'root',
 })
 export class SeznamFakturCrudSettings implements CrudSettings<string, InvoiceDto> {
-  baseUrl: string = 'https://example.com/api/SeznamFaktur/SeznamFaktur';
+  baseUrl: string = '/api/Ucetnictvi/Invoice';
   postUrl?: string;
   getAllSuffix?: string = "GetAll";
   queryParam?: string;

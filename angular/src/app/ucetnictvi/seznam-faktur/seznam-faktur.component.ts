@@ -80,6 +80,7 @@ export class SeznamFakturComponent extends BaseContentComponent<InvoiceDto, Sezn
   }
 
   public async handleDoubleClick(event: any) {
+    this.onEdit()
   }
 
   loadData(): void {
@@ -91,7 +92,7 @@ export class SeznamFakturComponent extends BaseContentComponent<InvoiceDto, Sezn
   }
 
   onEdit(): void {
-    console.log("On edit")
+    this.router.navigate([this.basePath,'faktura', this.chosenElement?.id], {state: { previousBreadcrumbs: this.breadcrumbService.breadcrumbsValue }});
   }
 
   async onDelete(): Promise<void> {
@@ -104,9 +105,7 @@ export class SeznamFakturComponent extends BaseContentComponent<InvoiceDto, Sezn
     })
     if(!res) return
     try {
-      //todo doimplementovat volani api
-      //await this.dataService.delete(this.chosenElement?.id!)
-      //await this.tableComponent.loadData()
+      await this.dataService.delete(this.chosenElement?.id!)
       this.removeItemFromTable()
       this.chosenElement = undefined
     } catch (e) {
