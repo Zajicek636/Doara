@@ -4,8 +4,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
 import { Component } from '@angular/core';
-import {ToolbarButtonComponent} from '../toolbar-button.component';
-import {ToolbarButton} from '../../context-toolbar.interfaces';
+import {ToolbarButtonComponent} from './toolbar-button.component';
+import {ToolbarButton} from '../context-toolbar.interfaces';
+
 
 
 describe('ToolbarButtonComponent', () => {

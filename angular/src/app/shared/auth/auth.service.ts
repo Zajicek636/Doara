@@ -54,7 +54,10 @@ export class AuthService {
       localStorage.setItem('tenant', tenant);
     } else {
       console.warn('No valid token, clearing storage and redirecting');
-      this.oauthService.logOut(true); // smaže localStorage + redirect na login
+      localStorage.clear();
+      sessionStorage.clear();
+      this.cookieService.deleteAll('/', '.localhost');
+      this.oauthService.initLoginFlow();
     }
   }
 }

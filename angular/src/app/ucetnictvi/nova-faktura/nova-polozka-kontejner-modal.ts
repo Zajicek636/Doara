@@ -8,7 +8,7 @@ import {PolozkaKontejneruDataService} from '../../sklady/polozka-kontejneru/data
 import {SkladyPolozkyDataService} from '../../sklady/sklady-polozky/data/sklady-polozky-data.service';
 import {SharedModule} from '../../shared/shared.module';
 import {ContainerDto} from '../../sklady/sklady-polozky/data/sklady-polozky.interfaces';
-import {ADD_POLOZKA_FROM_CONTAINER, VAT_RATE_PERCENT, VatRate} from './data/nova-faktura.interfaces';
+import {ADD_POLOZKA_FROM_CONTAINER, VAT_RATE_PERCENT, VatRate, VatRateLabels} from './data/nova-faktura.interfaces';
 import {FormField, FormFieldTypes} from '../../shared/forms/form.interfaces';
 import {FormService} from '../../shared/forms/form.service';
 import {InvoiceItemDto} from '../polozky-faktury/data/polozky-faktury.interfaces';
@@ -160,7 +160,7 @@ export class NovaPolozkaKontejnerModal<T> extends DefaultDialogComponent impleme
         quantity: 0,
         unitPrice: item.presentationPrice,
         netAmount: 0,
-        vatRate: 21,
+        vatRate: 0,
         vatAmount: 0,
         grossAmount: 0,
         available: item.available ?? 0
@@ -214,7 +214,7 @@ export class NovaPolozkaKontejnerModal<T> extends DefaultDialogComponent impleme
 
     const quantity = parseFloat(formValue.quantity) || 0;
     const unitPrice = parseFloat(selectedItem.unitPrice?.toString() || '0');
-    const vatRate = formValue.vatRate?.value;
+    const vatRate = VAT_RATE_PERCENT[formValue.vatRate?.value as VatRate];
 
     const netAmount = unitPrice * quantity;
     const vatAmount = netAmount * (vatRate / 100);
@@ -224,9 +224,9 @@ export class NovaPolozkaKontejnerModal<T> extends DefaultDialogComponent impleme
       id: undefined,
       containerItemId: selectedItem.containerItemId,
       description: selectedItem.description,
-      quantity,
-      unitPrice,
-      vatRate,
+      quantity: quantity,
+      unitPrice: unitPrice,
+      vatRate: formValue.vatRate?.value,
       netAmount: Math.round(netAmount * 100) / 100,
       vatAmount: Math.round(vatAmount * 100) / 100,
       grossAmount: Math.round(grossAmount * 100) / 100,

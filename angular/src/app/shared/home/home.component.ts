@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { WidgetComponent } from './widget/widget.component';
 import { Widget } from './home.interfaces';
 import {NgForOf, NgStyle} from '@angular/common';
+import {ActivatedRoute, Router} from '@angular/router';
 
 export interface WidgetPolozky {
   id: number;
@@ -17,4 +18,9 @@ export interface WidgetPolozky {
 })
 export class HomeComponent {
 
+  constructor(private router:Router,) {
+  }
+  public navigate(route: string) {
+    this.router.navigate([route]);
+  }
 }
