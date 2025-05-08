@@ -1,6 +1,6 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {MatDrawer, MatDrawerContainer, MatSidenav} from '@angular/material/sidenav';
-import {RouterOutlet} from '@angular/router';
+import {DrawerService} from '../drawer.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -8,10 +8,17 @@ import {RouterOutlet} from '@angular/router';
   standalone: false,
   styleUrl: './main-layout.component.scss'
 })
-export class MainLayoutComponent implements OnInit {
+export class MainLayoutComponent implements OnInit, AfterViewInit {
+
+  constructor(
+    private drawerService: DrawerService
+  ) { }
   leftMenuCollapsed = true
 
   @ViewChild('leftDrawer') leftDrawer!: MatSidenav;
+
+  @ViewChild('drawer') drawer!: MatSidenav;
+  @ViewChild('drawerOutlet', { read: ViewContainerRef }) outlet!: ViewContainerRef;
 
   ngOnInit(): void {
   }
@@ -20,6 +27,12 @@ export class MainLayoutComponent implements OnInit {
     this.leftDrawer.toggle();
     this.leftMenuCollapsed = !this.leftMenuCollapsed
   }
+
+  ngAfterViewInit(): void {
+    this.drawerService.setDrawer(this.drawer);
+    this.drawerService.setContainerRef(this.outlet);
+  }
+
 
 
 }

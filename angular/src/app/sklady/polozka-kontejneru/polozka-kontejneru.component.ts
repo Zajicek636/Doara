@@ -161,7 +161,7 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
     } catch (e: any) {
       await this.dialogService.alert({
         title: "Chyba",
-        message: e.errors,
+        message: e.error.error.message,
         dialogType: DialogType.ERROR
       })
     }

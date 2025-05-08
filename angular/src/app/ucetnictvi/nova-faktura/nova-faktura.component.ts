@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {BaseContentComponent} from '../../shared/layout/base-component';
 import {SubjektyDataService} from '../subjekty/data/subjekty-data.service';
 import {BreadcrumbService} from '../../shared/breadcrumb/breadcrumb.service';
@@ -10,23 +10,35 @@ import {SharedModule} from '../../shared/shared.module';
 import {NovaFakturaDataService} from './data/nova-faktura-data.service';
 import {FormComponentResult} from '../../shared/forms/any-form/any-form.component';
 import {populateDefaults, round} from '../../shared/forms/form-field.utils';
-import {CREATE_EDIT_FAKTURA_FIELDS, CREATE_INVOICE_ITEM_FIELDS, InvoiceCreateEditDto, InvoiceDto, VAT_RATE_PERCENT, VatRate,} from './data/nova-faktura.interfaces';
+import {
+  CREATE_EDIT_FAKTURA_FIELDS,
+  CREATE_INVOICE_ITEM_FIELDS,
+  InvoiceCreateEditDto,
+  InvoiceDto,
+  VAT_RATE_PERCENT,
+  VatRate, VatRateLabels,
+} from './data/nova-faktura.interfaces';
 import {SubjektDetailDto} from '../subjekty/data/subjekty.interfaces';
 import {FormGroup} from '@angular/forms';
 import {FormField} from '../../shared/forms/form.interfaces';
-import {InvoiceItemDto} from '../polozky-faktury/data/polozky-faktury.interfaces';
+import {InvoiceItemCreateManyDto, InvoiceItemDto} from '../polozky-faktury/data/polozky-faktury.interfaces';
 import {PolozkaKontejneruDataService} from '../../sklady/polozka-kontejneru/data/polozka-kontejneru-data.service';
 import {DialogType, DynamicDialogResult} from '../../shared/dialog/dialog.interfaces';
 import {NovaPolozkaKontejnerModal} from './nova-polozka-kontejner-modal';
 import {SkladyPolozkyDataService} from '../../sklady/sklady-polozky/data/sklady-polozky-data.service';
+import {DrawerService} from '../../shared/layout/drawer.service';
+import {DecimalPipe} from '@angular/common';
+import {PolozkyFakturyDataService} from '../polozky-faktury/data/polozky-faktury-data.service';
 
 @Component({
   selector: 'app-nova-faktura',
-  imports: [SharedModule],
+  imports: [SharedModule, DecimalPipe],
   templateUrl: './nova-faktura.component.html',
   styleUrl: './nova-faktura.component.scss'
 })
-export class NovaFakturaComponent extends BaseContentComponent<any,any> implements OnInit {
+export class NovaFakturaComponent extends BaseContentComponent<any,any> implements OnInit, OnDestroy {
+  @ViewChild('drawerContent') drawerTemplate!: TemplateRef<any>;
+
 
   baseFormFields: FormField[] = [];
   isBaseFormValid = false;
@@ -36,6 +48,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
 
   isInvoiceItemFormValid = false;
   invoiceItems: InvoiceItemDto[] = [];
+  invoiceItemsForDelete: string[] = []
 
 
   invoiceItemSectionToolbarButtons: ToolbarButton[] = []
@@ -46,6 +59,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
   baseForm!: FormGroup;
   subjektOptions:any[] = [];
   loaded: boolean = false;
+  drawerOpen = false;
 
 
   constructor(
@@ -57,6 +71,8 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     protected override route: ActivatedRoute,
     private containerItemsDataService: PolozkaKontejneruDataService,
     private skladyPolozkyDataService: SkladyPolozkyDataService,
+    private polozkyFakturyDataService: PolozkyFakturyDataService,
+    private drawerService: DrawerService
   ) {
     super(route, router, breadcrumbService, dialogService, dataService);
   }
@@ -76,6 +92,10 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
 
     await this.handleNewItem()
     this.loaded = true;
+  }
+
+  ngOnDestroy() {
+    this.drawerService.close()
   }
 
   private async handleNewItem() {
@@ -138,6 +158,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         icon: BaseMaterialIcons.PLUS,
         class: 'btn-primary',
         visible: !this.isNew,
+        tooltip: "Vytvořit položku",
         disabled: false,
         action: () => this.addNewPolozkaFaktury()
       },
@@ -146,6 +167,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         text: 'Přidat položku ze skladu',
         icon: BaseMaterialIcons.ADD_CONTAINER,
         class: 'btn-primary',
+        tooltip: "Přidat položku ze skladu",
         visible: !this.isNew,
         disabled: false,
         action: () => this.addNewPolozkaFromContainer()
@@ -163,6 +185,15 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         action: () => this.saveFaktura()
       },
       {
+        id: 'polozkyFaktura',
+        text: 'Položky faktury',
+        icon: BaseMaterialIcons.RECEIPT,
+        class: 'btn-secondary',
+        visible: true,
+        disabled: this.isNew,
+        action: () => {this.toggleDrawerWithContent()}
+      },
+      {
         id: 'cancelFaktura',
         text: 'Zrušit',
         icon: BaseMaterialIcons.CANCEL,
@@ -174,15 +205,27 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     ];
   }
 
+  toggleDrawerWithContent() {
+    if (this.drawerOpen) {
+      this.drawerService.close();
+      this.drawerOpen = false;
+    } else {
+      this.drawerService.openWithTemplate(this.drawerTemplate);
+      this.drawerOpen = true;
+    }
+  }
+
   async addNewPolozkaFromContainer() {
     const items = await this.skladyPolozkyDataService.getAll(undefined, {useSuffix: true});
-    const res: FormComponentResult = await this.dialogService.open(NovaPolozkaKontejnerModal<FormComponentResult>,
+    const res: InvoiceItemDto = await this.dialogService.open(NovaPolozkaKontejnerModal<FormComponentResult>,
       {
         icon: BaseMaterialIcons.ADD_CONTAINER,
         title: "Nová položka z kontejneru",
         type: DialogType.SUCCESS,
         containers: items,
     })
+    if(!res) return
+    this.invoiceItems.push(res)
   }
 
   onBaseFormReady(form: FormGroup) {
@@ -256,26 +299,59 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     });
   }
 
+  getVatRateLabel(rate: number) {
+    return VatRateLabels[rate as VatRate];
+  }
+
   async addNewPolozkaFaktury() {
-    const newItem = populateDefaults(CREATE_INVOICE_ITEM_FIELDS, {})
-    const response = await this.dialogService.form({
+    const newItem = populateDefaults(CREATE_INVOICE_ITEM_FIELDS, {});
+
+    const responsePromise = this.dialogService.form({
       headerIcon: BaseMaterialIcons.PLUS,
       title: `Nová položka faktury`,
-      sections: [
-        {
-          sectionId: "main_section",
-          headerIcon: BaseMaterialIcons.ASSIGNMENT,
-          fields: newItem,
-          sectionTitle: "Informace o položce"
-        }],
+      sections: [{
+        sectionId: "main_section",
+        headerIcon: BaseMaterialIcons.ASSIGNMENT,
+        fields: newItem,
+        sectionTitle: "Informace o položce"
+      }],
       type: DialogType.SUCCESS
-    })
+    }, (sectionId, form) => {
+      if (sectionId !== 'main_section') return;
 
-    if(!response) return;
+      const unitCtrl = form.get('unitPrice');
+      const qtyCtrl = form.get('quantity');
+      const vatRateCtrl = form.get('vatRate');
+      const netCtrl = form.get('netAmount');
+      const vatCtrl = form.get('vatAmount');
+      const grossCtrl = form.get('grossAmount');
 
-    const newPolozka: InvoiceItemDto = this.mapToInvoiceItemCreateDto(response)
-    newPolozka.id = newPolozka.id == '' ? `newPolozka${this.invoiceItems.length}` : newPolozka.id
-    this.invoiceItems.push(newPolozka as InvoiceItemDto)
+      const recalculate = () => {
+        const unitPrice = parseFloat(unitCtrl?.value) || 0;
+        const quantity = parseFloat(qtyCtrl?.value) || 0;
+        const vatRate = vatRateCtrl?.value?.value as VatRate;
+        const vatPercent = VAT_RATE_PERCENT[vatRate] ?? 0;
+
+        const net = unitPrice * quantity;
+        const vat = net * vatPercent / 100;
+        const gross = net + vat;
+
+        netCtrl?.setValue(round(net, 2), { emitEvent: false });
+        vatCtrl?.setValue(round(vat, 2), { emitEvent: false });
+        grossCtrl?.setValue(round(gross, 2), { emitEvent: false });
+      };
+
+      unitCtrl?.valueChanges.subscribe(recalculate);
+      qtyCtrl?.valueChanges.subscribe(recalculate);
+      vatRateCtrl?.valueChanges.subscribe(recalculate);
+    });
+
+    const response = await responsePromise;
+    if (!response) return;
+
+    const newPolozka: InvoiceItemDto = this.mapToInvoiceItemCreateDto(response);
+    newPolozka.id = newPolozka.id == '' ? undefined : newPolozka.id;
+    this.invoiceItems.push(newPolozka as InvoiceItemDto);
   }
 
   async editPolozka(item: InvoiceItemDto, index: number) {
@@ -297,6 +373,27 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
 
     const updatedItem = this.mapToInvoiceItemCreateDto(response)
     this.invoiceItems[index] = updatedItem as InvoiceItemDto;
+  }
+
+  countSum() {
+    return this.invoiceItems.reduce((sum, item) => sum + (item.grossAmount || 0), 0);
+  }
+
+  async removePolozka(item: InvoiceItemDto, index: number) {
+    console.log(item)
+    const res = await this.dialogService.confirmAsync({
+      dialogType: DialogType.ALERT,
+      title: "Potvrdit operaci",
+      message: "Chcete odebrat položku z faktury?",
+      icon: BaseMaterialIcons.DELETE
+    })
+
+    if(!res) return;
+    const existringItem = this.invoiceItems.find(x=>x?.id === item.id);
+    if(existringItem?.id) {
+      this.invoiceItemsForDelete.push(existringItem.id!);
+    }
+    this.invoiceItems.splice(index, 1);
   }
 
   private mapToInvoiceItemCreateDto(response: DynamicDialogResult): InvoiceItemDto {
@@ -344,15 +441,31 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
   }
 
   async saveFaktura() {
-    if(!this.entityId && !this.isNew) {
-      await this.postEditFaktura()
-    } else {
+    if(this.entityId == '' && this.isNew) {
       await this.postNewFaktura()
+    } else {
+      await this.postEditFaktura()
     }
   }
 
   async postEditFaktura() {
-
+    const faktura = this.mapToInvoiceDtoFromForm();
+    try {
+      await this.dataService.put(this.entityId!, faktura);
+      const invoiceItems: InvoiceItemCreateManyDto = {
+        invoiceId: this.entityId!,
+        items: this.invoiceItems,
+        itemsForDelete: this.invoiceItemsForDelete
+      }
+      const items = await this.polozkyFakturyDataService.post('', invoiceItems, {useSuffix: true})
+    }
+    catch (e: any) {
+      await this.dialogService.alert({
+        title: "Chyba",
+        message: e.error.error.message,
+        dialogType: DialogType.ERROR,
+      });
+    }
   }
 
   async postNewFaktura() {
@@ -381,4 +494,6 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
 
   }
   protected readonly BaseMaterialIcons = BaseMaterialIcons;
+  protected readonly VatRateLabels = VatRateLabels;
+  protected readonly VatRate = VatRate;
 }

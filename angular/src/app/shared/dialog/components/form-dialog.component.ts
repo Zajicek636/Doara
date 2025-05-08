@@ -1,4 +1,4 @@
-﻿import {Component, Inject, Input} from '@angular/core';
+﻿import {Component, EventEmitter, Inject, Input, Output} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -37,6 +37,7 @@ import {FormDialogParams, FormSection} from '../dialog.interfaces';
           <mat-card-content>
             <app-any-form
               [fields]="section.fields"
+              (formReady)="onFormReady(section.sectionId, $event)"
               (formChanged)="valueChanged($event, section.sectionId)"
               style="display: flex; flex-direction: column; flex-wrap: wrap; gap: 0.5rem; align-items: stretch; justify-content: space-evenly"
             />
@@ -66,6 +67,11 @@ import {FormDialogParams, FormSection} from '../dialog.interfaces';
 })
 export class FormDialogComponent extends DefaultDialogComponent {
   @Input() fields!: FormSection[];
+  @Output() formReady = new EventEmitter<{ sectionId: string, form: FormGroup }>();
+
+  onFormReady(sectionId: string, form: FormGroup): void {
+    this.formReady.emit({ sectionId, form });
+  }
 
   form: FormGroup = new FormGroup({});
   result: any = {};

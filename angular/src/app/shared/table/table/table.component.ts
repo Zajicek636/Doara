@@ -161,7 +161,7 @@ export class DynamicTableComponent<T> implements OnInit, AfterViewInit {
     } catch (error: any) {
       await this.dialogService.alert({
         title: "Chyba",
-        message: error,
+        message: error.error.error.message,
         dialogType: DialogType.ERROR
       })
       this.isLoading = false;

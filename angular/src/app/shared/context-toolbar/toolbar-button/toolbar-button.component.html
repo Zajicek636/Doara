@@ -4,6 +4,8 @@
   [color]="btn.class || 'primary'"
   (click)="btn.action(contextItem)"
   [disabled]="btn.disabled"
+  [matTooltip]="btn.tooltip ?? ''"
+  [style.width]="btn.width ? btn.width+'px' : ''"
   [style.visibility]="btn.visible ? 'visible' : 'hidden'"
   type="button"
   class="toolbar-button {{ btn.class }}"

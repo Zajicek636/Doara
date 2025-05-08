@@ -24,6 +24,14 @@
   border-top-right-radius: unset;
 }
 
+.drawer-second {
+  width: 30vw;
+  background-color: $baseWhite;
+  border-top-left-radius: unset!important;
+  border-left: solid 1px $baseGreen !important;
+  z-index: 4;
+}
+
 .mat-toolbar {
   background-color: $baseWhite;
 }

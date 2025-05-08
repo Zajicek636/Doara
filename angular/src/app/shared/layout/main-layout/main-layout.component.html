@@ -7,6 +7,11 @@
       <app-menu></app-menu>
     </mat-sidenav>
 
+
+    <mat-sidenav class="drawer-second" [opened]="false" #drawer position="end" mode="side">
+      <ng-template #drawerOutlet></ng-template>
+    </mat-sidenav>
+
     <mat-sidenav-content class="content">
       <app-breadcrumb></app-breadcrumb>
         <router-outlet></router-outlet>

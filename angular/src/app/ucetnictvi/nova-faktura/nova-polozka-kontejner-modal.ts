@@ -1,20 +1,21 @@
 ﻿import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef,} from '@angular/material/dialog';
 import {DefaultDialogComponent} from '../../shared/dialog/components/default-dialog.component';
-import {FormGroup} from '@angular/forms';
+import {FormGroup, Validators} from '@angular/forms';
 import {FormComponentResult} from '../../shared/forms/any-form/any-form.component';
 import {BaseMaterialIcons} from '../../../styles/material.icons';
 import {PolozkaKontejneruDataService} from '../../sklady/polozka-kontejneru/data/polozka-kontejneru-data.service';
 import {SkladyPolozkyDataService} from '../../sklady/sklady-polozky/data/sklady-polozky-data.service';
 import {SharedModule} from '../../shared/shared.module';
 import {ContainerDto} from '../../sklady/sklady-polozky/data/sklady-polozky.interfaces';
-import {ADD_POLOZKA_FROM_CONTAINER} from './data/nova-faktura.interfaces';
+import {ADD_POLOZKA_FROM_CONTAINER, VAT_RATE_PERCENT, VatRate} from './data/nova-faktura.interfaces';
 import {FormField, FormFieldTypes} from '../../shared/forms/form.interfaces';
 import {FormService} from '../../shared/forms/form.service';
 import {InvoiceItemDto} from '../polozky-faktury/data/polozky-faktury.interfaces';
 import {DialogService} from '../../shared/dialog/dialog.service';
 import {DialogType} from '../../shared/dialog/dialog.interfaces';
 import {MatTableModule} from '@angular/material/table';
+import {round} from '../../shared/forms/form-field.utils';
 
 @Component({
   selector: 'app-nova-polozka-kontejner-dialog',
@@ -108,7 +109,7 @@ export class NovaPolozkaKontejnerModal<T> extends DefaultDialogComponent impleme
         return { ...f, visible: true, options: this.containerOptions };
       }
       if (f.formControlName === 'vatRate' || f.formControlName === 'quantity') {
-        return { ...f, visible: false }; // zatím skryté
+        return { ...f, visible: false };
       }
       return f;
     });
@@ -131,8 +132,19 @@ export class NovaPolozkaKontejnerModal<T> extends DefaultDialogComponent impleme
     });
 
     this.formBase.get('containerItem')?.valueChanges.subscribe(itemId => {
+      const selectedItem: any = this.containerItemsById.find(x=> x.containerItemId == itemId.value)
       this.updateFormFieldVisibility('vatRate', !!itemId);
       this.updateFormFieldVisibility('quantity', !!itemId);
+
+      const quantityCtrl = this.formBase.get('quantity');
+      if (selectedItem && quantityCtrl) {
+        quantityCtrl.setValidators([
+          Validators.required,
+          Validators.min(1),
+          Validators.max(selectedItem.available || 0)
+        ]);
+        quantityCtrl.updateValueAndValidity();
+      }
     });
   }
 
@@ -140,10 +152,7 @@ export class NovaPolozkaKontejnerModal<T> extends DefaultDialogComponent impleme
     if (!containerId) {return}
 
     try {
-      const res = await this.polozkaKontejneruDataService.getAll(undefined, {
-        useSuffix: true,
-        extraParams: {ContainerId: containerId}
-      })
+      const res = await this.polozkaKontejneruDataService.getAllWithDetail({extraParams: {ContainerId: containerId}})
 
       this.containerItemsById = res.items.map(item => ({
         containerItemId: item.id,
@@ -153,7 +162,8 @@ export class NovaPolozkaKontejnerModal<T> extends DefaultDialogComponent impleme
         netAmount: 0,
         vatRate: 21,
         vatAmount: 0,
-        grossAmount: 0
+        grossAmount: 0,
+        available: item.available ?? 0
       } as InvoiceItemDto));
 
       const options = this.containerItemsById.map(item => ({
@@ -202,12 +212,27 @@ export class NovaPolozkaKontejnerModal<T> extends DefaultDialogComponent impleme
       return;
     }
 
-    // Upravíme hodnoty
-    selectedItem.quantity = formValue.quantity;
-    selectedItem.vatRate = formValue.vatRate;
+    const quantity = parseFloat(formValue.quantity) || 0;
+    const unitPrice = parseFloat(selectedItem.unitPrice?.toString() || '0');
+    const vatRate = formValue.vatRate?.value;
 
-    this.dialogRef.close(selectedItem);
+    const netAmount = unitPrice * quantity;
+    const vatAmount = netAmount * (vatRate / 100);
+    const grossAmount = netAmount + vatAmount;
 
+    const invoiceItem: InvoiceItemDto = {
+      id: undefined,
+      containerItemId: selectedItem.containerItemId,
+      description: selectedItem.description,
+      quantity,
+      unitPrice,
+      vatRate,
+      netAmount: Math.round(netAmount * 100) / 100,
+      vatAmount: Math.round(vatAmount * 100) / 100,
+      grossAmount: Math.round(grossAmount * 100) / 100,
+    };
+
+    this.dialogRef.close(invoiceItem);
   }
 
 

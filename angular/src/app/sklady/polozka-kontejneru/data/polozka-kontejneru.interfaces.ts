@@ -33,6 +33,9 @@ export interface ContainerItemDto {
     discount?: number;
     discountRate?: number;
     containerId: string;
+    available?: number,
+    onHand?: number,
+    reserved?: number,
     movements?: MovementDto[];
 }
 

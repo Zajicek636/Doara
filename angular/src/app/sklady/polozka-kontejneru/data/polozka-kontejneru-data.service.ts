@@ -18,4 +18,11 @@ export class PolozkaKontejneruDataService extends BaseCrud<string, ContainerItem
   constructor(client: HttpClient, settings: PolozkaKontejneruCrudSettings) {
     super(client, settings);
   }
+
+  async getAllWithDetail(extraParams: Record<string, any> = {}): Promise<PagedList<ContainerItemDto>> {
+    const suffix = '/GetAllWithDetail';
+    const query = this.buildQueryParams({}, extraParams);
+    const res$ = this.client.get<PagedList<ContainerItemDto>>(this.buildUrl(suffix, query));
+    return await lastValueFrom(res$);
+  }
 }

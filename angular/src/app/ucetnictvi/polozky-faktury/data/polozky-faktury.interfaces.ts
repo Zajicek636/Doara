@@ -3,7 +3,7 @@ export interface InvoiceItemCreateManyDto {
   invoiceId: string;
   items: InvoiceItemDto[];
   itemsForDelete: string[];
-  deleteMissingItems: boolean;
+  deleteMissingItems?: boolean;
 }
 
 export interface InvoiceItemDto {

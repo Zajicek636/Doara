@@ -10,21 +10,39 @@
       ></app-any-form>
     </div>
 
-    <div *ngIf="!this.isNew">
-      <div style="display: flex; flex-direction: row; gap: 0.25rem">
-        <ng-container *ngFor="let btn of invoiceItemSectionToolbarButtons">
-          <app-toolbar-button [btn]="btn"/>
-        </ng-container>
-      </div>
+    <ng-template #drawerContent>
+      <div class="drawer-content">
+        <h2 style="margin-bottom: 1rem;">Položky faktury ({{ invoiceItems.length }}) - {{ countSum() | number:'1.2-2' }} Kč</h2>
 
-      <div style="padding-top: 10px">
-        <ng-container *ngFor="let item of invoiceItems; let i = index">
-          <div>
-            <button (click)="editPolozka(item, i)" mat-icon-button><mat-icon>{{BaseMaterialIcons.EDIT}}</mat-icon></button>
-            {{item.description}} - {{item.description}} - {{item.quantity}}</div>
-        </ng-container>
+        <div class="toolbar-row">
+          <ng-container *ngFor="let btn of invoiceItemSectionToolbarButtons">
+            <app-toolbar-button [btn]="btn" />
+          </ng-container>
+        </div>
+
+        <div class="invoice-items-list">
+          <div class="item-card" *ngFor="let item of invoiceItems; let i = index">
+            <div class="item-info">
+              <div class="item-description">{{ item.description }}</div>
+              <div class="item-detail">Množství: {{ item.quantity }}</div>
+              <div class="item-detail">Jednotková cena: {{ item.unitPrice | number:'1.2-2' }} Kč</div>
+              <div class="item-detail">Cena bez DPH: {{ item.netAmount | number:'1.2-2' }} Kč</div>
+              <div class="item-detail">DPH: {{ getVatRateLabel(item.vatRate)}}</div>
+              <div class="item-detail">Celkem: {{ item.grossAmount | number:'1.2-2' }} Kč</div>
+            </div>
+            <div class="item-actions">
+              <button mat-icon-button color="primary" (click)="editPolozka(item, i)">
+                <mat-icon>{{ BaseMaterialIcons.EDIT }}</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="removePolozka(item, i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </ng-template>
+
   </div>
 </div>
 

@@ -21,6 +21,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatCardModule,} from '@angular/material/card';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {ToolbarButtonComponent} from './context-toolbar/toolbar-button/toolbar-button.component';
+import {MatTooltip} from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -29,29 +30,30 @@ import {ToolbarButtonComponent} from './context-toolbar/toolbar-button/toolbar-b
       ContextToolbarComponent,
       ToolbarButtonComponent,
     ],
-  imports: [
-    MatProgressSpinnerModule,
-    CommonModule,
-    RouterModule,
-    ReactiveFormsModule,
-    LayoutModule,
-    MatDialogModule,
-    FormsModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatAutocompleteModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
-    MatToolbarModule,
-    MatDividerModule,
-    AsyncPipe,
-    NgClass
-  ],
+    imports: [
+        MatProgressSpinnerModule,
+        CommonModule,
+        RouterModule,
+        ReactiveFormsModule,
+        LayoutModule,
+        MatDialogModule,
+        FormsModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatButtonModule,
+        MatSelectModule,
+        MatAutocompleteModule,
+        MatTableModule,
+        MatSortModule,
+        MatPaginatorModule,
+        MatToolbarModule,
+        MatDividerModule,
+        AsyncPipe,
+        NgClass,
+        MatTooltip
+    ],
   exports: [
     NgIf,
     ReactiveFormsModule,

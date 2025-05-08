@@ -11,6 +11,7 @@ import {
 } from './dialog.interfaces';
 import {ConfirmDialogComponent} from './components/confirm-dialog.component';
 import {FormDialogComponent} from './components/form-dialog.component';
+import {FormGroup} from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
@@ -48,12 +49,30 @@ export class DialogService {
     return result;
   }
 
-  async form<T>(params: FormDialogParams): Promise<DynamicDialogResult> {
-    return this.open(FormDialogComponent, {
-      headerIcon: params.headerIcon,
-      title: params.title,
-      fields: params.sections,
-      type: params.type ?? DialogType.SUCCESS,
+  async form<T>(
+    params: FormDialogParams,
+    onFormReady?: (sectionId: string, form: FormGroup) => void
+  ): Promise<DynamicDialogResult> {
+    const dialogRef = this.dialog.open(FormDialogComponent, {
+      data: {
+        headerIcon: params.headerIcon,
+        title: params.title,
+        fields: params.sections,
+        type: params.type ?? DialogType.SUCCESS,
+      },
+      width: '90vw',
+      maxWidth: '800px',
+      minWidth: '300px',
+      panelClass: 'custom-dialog'
     });
+
+    const instance = dialogRef.componentInstance;
+    if (onFormReady) {
+      instance.formReady.subscribe(({ sectionId, form }) => {
+        onFormReady(sectionId, form);
+      });
+    }
+
+    return dialogRef.afterClosed().toPromise();
   }
 }

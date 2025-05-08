@@ -6,7 +6,7 @@ import {InvoiceItemDto} from './polozky-faktury.interfaces';
   providedIn: 'root',
 })
 export class PolozkyFakturyCrudSettings implements CrudSettings<string, InvoiceItemDto> {
-  baseUrl: string = 'api/Ucetnictvi/InvoiceItem';
+  baseUrl: string = '/api/Ucetnictvi/InvoiceItem';
   postUrl?: string;
   queryParam?: string;
 
@@ -14,7 +14,7 @@ export class PolozkyFakturyCrudSettings implements CrudSettings<string, InvoiceI
   getAllSuffix: string = "GetAll"
 
   idGetter(entity: InvoiceItemDto): string {
-    return entity.id;
+    return entity.id!;
   }
 
   mapper(id: string): QueryParams {

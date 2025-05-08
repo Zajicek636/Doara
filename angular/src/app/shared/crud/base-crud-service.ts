@@ -38,11 +38,11 @@ export class BaseCrud<TId, TDto, TCreateDto, TEditDto> {
     protected settings: CrudSettings<TId, TDto>
   ) {}
 
-  private buildUrl(suffix?: string, query?: string): string {
+  protected buildUrl(suffix?: string, query?: string): string {
     return `${this.origin}${this.settings.baseUrl}${suffix ?? ''}${query ?? ''}`;
   }
 
-  private buildQueryParams(...paramObjects: Record<string, any>[]): string {
+  protected buildQueryParams(...paramObjects: Record<string, any>[]): string {
     const queryParams = new URLSearchParams();
 
     paramObjects.forEach(params => {
