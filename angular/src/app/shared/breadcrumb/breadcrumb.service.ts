@@ -1,43 +1,58 @@
 ﻿import { Injectable } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, PRIMARY_OUTLET } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import {BehaviorSubject} from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+
+export interface IBreadCrumb {
+  label: string;
+  url: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class BreadcrumbService {
-  private _breadcrumbs = new BehaviorSubject<Array<{ label: string, url: string }>>([]);
-  breadcrumbs$ = this._breadcrumbs.asObservable();
+  private _breadcrumbs = new BehaviorSubject<IBreadCrumb[]>([]);
+  readonly breadcrumbs$ = this._breadcrumbs.asObservable();
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      const newBreadcrumbs = this.createBreadcrumbs(this.activatedRoute.root);
-      this._breadcrumbs.next(newBreadcrumbs);
-    });
+    this.router.events
+      .pipe(filter(e => e instanceof NavigationEnd))
+      .subscribe(() => {
+        // 1) Vezmi dříve uložené crumby (pokud existují)
+        const history: IBreadCrumb[] = window.history.state.previousBreadcrumbs ?? [];
+
+        // 2) Vygeneruj nové podle URL & data.breadcrumb
+        const generated = this.buildBreadcrumbs(this.activatedRoute.root);
+
+        // 3) Sloučíme obojí
+        this._breadcrumbs.next([ ...history, ...generated ]);
+      });
   }
 
-  private createBreadcrumbs(
+  public get breadcrumbsValue(): IBreadCrumb[] {
+    return this._breadcrumbs.getValue();
+  }
+
+  private buildBreadcrumbs(
     route: ActivatedRoute,
     url: string = '',
-    breadcrumbs: Array<{ label: string, url: string }> = []
-  ): Array<{ label: string, url: string }> {
-    const children: ActivatedRoute[] = route.children;
-
-    for (const child of children) {
-      const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
-      if (routeURL !== '') {
-        url += `/${routeURL}`;
-      }
-
-      const label = child.snapshot.data['breadcrumb'];
-      if (label) {
-        breadcrumbs.push({ label, url });
-      }
-
-      return this.createBreadcrumbs(child, url, breadcrumbs);
+    crumbs: IBreadCrumb[] = []
+  ): IBreadCrumb[] {
+    const children = route.children.filter(r => r.outlet === PRIMARY_OUTLET);
+    if (!children.length) {
+      return crumbs;
     }
 
-    return breadcrumbs;
+    for (const child of children) {
+      const segment = child.snapshot.url.map(u => u.path).join('/');
+      if (segment) {
+        url += `/${segment}`;
+      }
+      const label = child.snapshot.data['breadcrumb'];
+      if (label) {
+        crumbs.push({ label, url });
+      }
+      return this.buildBreadcrumbs(child, url, crumbs);
+    }
+    return crumbs;
   }
 }

@@ -1,7 +1,7 @@
 ﻿@use '../../../styles/variables' as *;
 
 .breadcrumb-custom {
-  background:linear-gradient(to bottom, $baseWhite,$baseWhiteDarker);
+  background:linear-gradient(to bottom, $baseWhite,$baseGreenLightenPastel);
   padding: 15px;
   border-radius: 0px 0px 8px 8px;
 }

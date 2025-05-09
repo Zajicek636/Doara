@@ -9,11 +9,11 @@ import {FormGroup} from '@angular/forms';
 import {FormField, FormFieldTypes} from '../form.interfaces';
 import {FormService} from '../form.service';
 
-export interface FormComponentResult<T> {
+export interface FormComponentResult {
   valid: boolean;
-  data: T;
+  data: any;
   modified: boolean;
-  form: FormGroup;
+  form: FormGroup
 }
 
 @Component({
@@ -23,11 +23,11 @@ export interface FormComponentResult<T> {
   styleUrl: './any-form.component.scss',
 })
 export class AnyFormComponent<T> implements OnInit {
+  @Input() defaults: any = {}
   @Input() fields!: FormField[];
 
-  @Output() formChanged: EventEmitter<FormComponentResult<T>> = new EventEmitter<FormComponentResult<T>>();
-
-  @Input() defaults: any = {}
+  @Output() formChanged: EventEmitter<FormComponentResult> = new EventEmitter<FormComponentResult>();
+  @Output() formReady: EventEmitter<FormGroup> = new EventEmitter<FormGroup>();
 
   isSmallScreen: boolean = false;
 
@@ -46,17 +46,33 @@ export class AnyFormComponent<T> implements OnInit {
   ngOnInit(): void {
     this.form = this.formService.createForm(this.fields);
 
-    this.fields.forEach( f => {
-      const control = this.form.get(f.formControlName)
-      if(control) {
-        control.markAsTouched()
-        control.valueChanges.subscribe( val => {
-          this.triggerOnChange(f.formControlName)
-        })
+    this.fields.forEach(f => {
+      const control = this.form.get(f.formControlName);
+      if (control) {
+        const isRequired = f.validator?.some(v => v.validator === 'required');
+        if (isRequired) {
+          control.markAsTouched();
+        }
+        control.valueChanges.subscribe(() => {
+          this.triggerOnChange(f.formControlName);
+        });
+        control.updateValueAndValidity();
       }
-    })
+    });
     this.modified = false;
-    //this.form.valueChanges.subscribe( x=> this.triggerOnChange(x));
+    this.triggerInitialChange();
+    this.formReady.emit(this.form)
+  }
+
+  private triggerInitialChange() {
+    const FormVal = Object.assign({}, this.entity, this.form.value);
+
+    this.formChanged.emit({
+      valid: this.form.valid,
+      data: FormVal,
+      modified: false,
+      form: this.form
+    });
   }
 
   triggerOnChange(control: any) {

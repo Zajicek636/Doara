@@ -4,7 +4,13 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routes';
 import {LayoutModule} from '@angular/cdk/layout';
 import {SharedModule} from './shared/shared.module';
-import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClient, withInterceptors} from '@angular/common/http';
+import {loadingInterceptor} from './shared/loading/loading.interceptor';
+import {requestVerificationInterceptor} from './shared/auth/auth.interceptor';
+import {OAuthModule, OAuthService} from 'angular-oauth2-oidc';
+import {authConfig} from './shared/auth/auth.service';
+import {CookieService} from 'ngx-cookie-service';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -12,9 +18,17 @@ import {provideHttpClient} from '@angular/common/http';
     BrowserModule,
     AppRoutingModule,
     LayoutModule,
-    SharedModule
+    SharedModule,
+    OAuthModule.forRoot()
   ],
-  providers: [provideHttpClient()],
+  providers: [
+    CookieService,
+    provideHttpClient( withInterceptors([loadingInterceptor, requestVerificationInterceptor])),
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(private oauthService: OAuthService) {
+    this.oauthService.configure(authConfig);
+  }
+}

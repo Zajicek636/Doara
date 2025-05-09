@@ -1,5 +1,6 @@
 ﻿import {FormGroup} from '@angular/forms';
 import {FormField} from '../forms/form.interfaces';
+import {FormComponentResult} from '../forms/any-form/any-form.component';
 
 export enum DialogType {
   WARNING = "alert-warning",
@@ -9,9 +10,10 @@ export enum DialogType {
 }
 
 export interface DialogParams {
-  title: string,
+  title?: string,
   message: string,
   dialogType: DialogType
+  icon?: string,
 }
 
 export interface AlertDialogParams extends DialogParams {
@@ -19,9 +21,24 @@ export interface AlertDialogParams extends DialogParams {
 }
 
 export interface ConfirmDialogParams extends DialogParams {
-  cancelButton: string
+  cancelButton?: string
+  confirmButton?: string
 }
 
 export interface FormDialogParams {
-  fields: FormField[]
+  headerIcon?: string,
+  title: string,
+  sections: FormSection[],
+  type: DialogType,
 }
+
+export interface FormSection {
+  sectionId:string
+  headerIcon?: string,
+  sectionTitle: string,
+  fields: FormField[],
+}
+
+export type DynamicDialogResult = {
+  [sectionId: string]: FormComponentResult;
+};

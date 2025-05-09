@@ -1,3 +1,90 @@
-app-any-form div {
-  background: red!important;
+@use '../../../styles/variables' as *;
+
+.card-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.card {
+  flex: 1 1 calc(20% - 1rem);
+  max-width: calc(20% - 1rem);
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: $baseWhite;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-4px);
+    background-color: $baseGreenLightenPastel;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    .card-avatar {
+      transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      background-color: $darkGreenAlert;
+    }
+
+    .icon-large {
+      color: $baseGreenLightenPastel;
+    }
+  }
+}
+
+.container-header {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.card-avatar {
+  background-color: $baseGreenLightenPastel;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-large {
+  color: $darkGreenAlert;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  width: 100%;
+}
+
+.card-subtitle {
+  white-space: nowrap;  /* Umožní textu na titulce zůstat v jedné řadě */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.8rem;
+  color: $baseGrey;
+  display: block;
+  width: 100%;
+}
+
+.card-content {
+  font-size: 0.9rem;
+  color: $baseGrey;
+  margin-top: 0.5rem;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.5rem;
 }

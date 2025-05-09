@@ -8,34 +8,28 @@ import {CustomValidator, FormGroupedSelect, FormSelect} from '../../form.interfa
   selector: 'app-lookup-field',
   standalone: false,
   templateUrl: './lookup-field.component.html',
-  styleUrl: './lookup-field.component.scss',
+  styleUrls: ['./lookup-field.component.scss', '../any-form.component.scss'],
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }]
 })
 export class LookupFieldComponent extends BaseFieldComponent {
-
   get canBeNulled(): boolean {
-    if(this.field?.validator)
-      return !this.field.validator.some(v => v.validator === CustomValidator.REQUIRED);
-    else
-      return true
+    return !this.field?.validator?.some(v => v.validator === CustomValidator.REQUIRED);
   }
 
   get isGroupSelection(): boolean {
     return !!this.field?.options?.[0]?.hasOwnProperty('groupName');
   }
 
-  get groupedOptions(): FormGroupedSelect[] | undefined {
-    if (this.isGroupSelection) {
-      return this.field.options as FormGroupedSelect[];
-    }
-    return undefined;
+  get groupedOptions(): FormGroupedSelect[] {
+    return (this.field.options ?? []) as FormGroupedSelect[];
   }
 
-  get normalOptions(): FormSelect[] | undefined {
-    if (!this.isGroupSelection) {
-      return this.field.options as FormSelect[];
-    }
-    return undefined;
+  get normalOptions(): FormSelect[] {
+    return (this.field.options ?? []) as FormSelect[];
   }
 
+  compareWith = (o1: FormSelect, o2: FormSelect): boolean => {
+    if (!o1 || !o2) return o1 === o2;
+    return o1.value === o2.value;
+  };
 }

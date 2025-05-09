@@ -16,6 +16,30 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {AutocompleteFieldComponent} from './autocomplete-field/autocomplete-field.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {RadiobuttonFieldComponent} from './radiobutton-field/radiobutton-field.component';
+import {MatRadioModule} from '@angular/material/radio';
+import {DateFieldComponent} from './date-field/date-field.component';
+import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+  MatDateFormats,
+  MatNativeDateModule,
+} from '@angular/material/core';
+import {CustomDateAdapter} from './date-field/date.adapter';
+
+export const MY_DATE_FORMATS: MatDateFormats = {
+  parse: {
+    dateInput: 'dd.MM.yyyy',
+  },
+  display: {
+    dateInput: 'dd.MM.yyyy',
+    monthYearLabel: 'MMMM yyyy',
+    dateA11yLabel: 'dd.MM.yyyy',
+    monthYearA11yLabel: 'MMMM yyyy',
+  },
+};
 
 @NgModule({
   declarations: [
@@ -24,7 +48,9 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     LookupFieldComponent,
     TextFieldComponent,
     NumberFieldComponent,
-    AutocompleteFieldComponent
+    AutocompleteFieldComponent,
+    RadiobuttonFieldComponent,
+    DateFieldComponent,
   ],
   imports: [
     CommonModule,
@@ -39,7 +65,12 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatIconModule,
     MatButtonModule,
     MatSelectModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatRadioModule,
+    MatDatepickerToggle,
+    MatDatepicker,
+    MatDatepickerInput,
+    MatNativeDateModule,
   ],
   exports: [
     ReactiveFormsModule,
@@ -49,8 +80,15 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     LookupFieldComponent,
     TextFieldComponent,
     NumberFieldComponent,
+    MatNativeDateModule,
+    DateFieldComponent,
+    AutocompleteFieldComponent,
   ],
-  providers: [],
+  providers: [
+    { provide: DateAdapter, useClass: CustomDateAdapter },
+    { provide: MAT_DATE_LOCALE, useValue: 'cs-CZ' },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+  ]
 })
 export class AnyFormModule { }
 

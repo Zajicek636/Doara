@@ -1,183 +1,134 @@
 import {Component, OnInit} from '@angular/core';
-import {SkladyPolozkyDataService} from './sklady-polozky-data.service';
-import {BreadcrumbService} from "../../shared/breadcrumb/breadcrumb.service";
-import {Router} from "@angular/router";
+import {BreadcrumbService, IBreadCrumb} from "../../shared/breadcrumb/breadcrumb.service";
+import {ActivatedRoute, Router} from "@angular/router";
 import {DialogService} from "../../shared/dialog/dialog.service";
-import {CustomValidator, FormField, FormFieldTypes} from "../../shared/forms/form.interfaces";
-import {FormComponentResult} from '../../shared/forms/any-form/any-form.component';
+
 import {FormGroup} from '@angular/forms';
-import {AnyFormModule} from '../../shared/forms/any-form/any-form.module';
-import {DialogType} from '../../shared/dialog/dialog.interfaces';
-export interface Res {
-  Test: string,
-  Cislo: string,
-}
+import {DialogType, DynamicDialogResult} from '../../shared/dialog/dialog.interfaces';
+import {SkladyPolozkyDataService} from './data/sklady-polozky-data.service';
+import {SharedModule} from '../../shared/shared.module';
+import {ContainerDto, CREATE_CONTAINER_FIELDS} from './data/sklady-polozky.interfaces';
+import {BaseMaterialIcons} from '../../../styles/material.icons';
+import {BaseContentComponent} from '../../shared/layout/base-component';
+import {ToolbarButton} from '../../shared/context-toolbar/context-toolbar.interfaces';
+import {FormField} from '../../shared/forms/form.interfaces';
+import {populateDefaults} from '../../shared/forms/form-field.utils';
+import {PagedList} from '../../shared/crud/base-crud-service';
+
 @Component({
   selector: 'app-sklady-polozky',
-  imports: [AnyFormModule],
+  imports: [SharedModule],
   templateUrl: './sklady-polozky.component.html',
   styleUrl: './sklady-polozky.component.scss'
 })
-export class SkladyPolozkyComponent implements OnInit {
-  testingFields:FormField[];
+export class SkladyPolozkyComponent extends BaseContentComponent<ContainerDto,SkladyPolozkyDataService> implements OnInit {
+  items: ContainerDto[] = [];
   form: FormGroup;
-  constructor(
-      private dataService: SkladyPolozkyDataService,
-      private breadcrumbService: BreadcrumbService,
-      private router: Router,
-      private dialogService: DialogService,
-  ) {
-    this.form = new FormGroup({});
+  containerFields!: FormField[];
 
-    this.testingFields  = [
-      {
-        label: "Test",
-        defaultValue: "TEST",
-        formControlName: "Test",
-        type: FormFieldTypes.TEXT,
-        validator: [{
-          validator: CustomValidator.REQUIRED
-        },{
-          validator: CustomValidator.MAX,
-          params: 10
-        },{
-          validator: CustomValidator.MIN,
-          params: 3
-        }]
-      }, {
-        label: "Password",
-        formControlName: "Cislo",
-        type: FormFieldTypes.PASSWORD,
-        validator: [
-          {
-            validator: CustomValidator.REQUIRED
-          },
-          {
-            validator: CustomValidator.MIN,
-            params: 5
-          },
-          {
-            validator: CustomValidator.MAX,
-            params: 10
-          }]
-      },
-      {
-        label: "Select me",
-        formControlName: "Select",
-        type: FormFieldTypes.LOOKUP,
-        validator: [
-          {
-            validator: CustomValidator.REQUIRED
-          },],
-        options: [{displayValue: "First", value: "TEST"}, {displayValue: "Second", value: "Second"}]
-      },
-      {
-        label: "Select me 2",
-        formControlName: "Select2",
-        type: FormFieldTypes.LOOKUP,
-        options: [{displayValue: "First", value: "First"}, {displayValue: "Second", value: "Second"}]
-      },
-      {
-        label: "Multiple select",
-        formControlName: "Select3",
-        multipleSelect: true,
-        type: FormFieldTypes.LOOKUP,
-        validator: [
-          {
-            validator: CustomValidator.REQUIRED
-          },],
-        options: [{displayValue: "First", value: "First"}, {displayValue: "Second", value: "Second"}]
-      },
-      {
-        label: "Grouped select",
-        formControlName: "Select4",
-        type: FormFieldTypes.LOOKUP,
-        validator: [
-          {
-            validator: CustomValidator.REQUIRED
-          },],
-        options: [
-          {groupName: "TEST GROUP", val:[{displayValue: "First", value: "First"}]},
-          {groupName: "SECOND GROUP", val:[{displayValue: "Second", value: "Second"}]}
-        ]
-      },
-      {
-        label: "Grouped multiple select",
-        formControlName: "Select5",
-        multipleSelect: true,
-        type: FormFieldTypes.LOOKUP,
-        validator: [
-          {
-            validator: CustomValidator.REQUIRED
-          },],
-        options: [
-          {groupName: "TEST GROUP", val:[{displayValue: "First", value: "TEST"}]},
-          {groupName: "SECOND GROUP", val:[{displayValue: "Second", value: "TEST"}]}
-        ]
-      },
-      {
-        label: "tEXTAREA",
-        formControlName: "tEXTAREA",
-        type: FormFieldTypes.TEXTAREA,
-        validator: [
-          {
-            validator: CustomValidator.REQUIRED
-          },],
-      },
-      {
-        label: "Autocomplete classic",
-        formControlName: "autocomplete",
-        type: FormFieldTypes.AUTOCOMPLETE,
-        validator: [
-          {
-            validator: CustomValidator.REQUIRED
-          },],
-        options: [{displayValue: "First", value: "First"}, {displayValue: "Second", value: "Second"}]
-      },
-      {
-        label: "Autocomplete grouped",
-        formControlName: "autocomplete2",
-        type: FormFieldTypes.AUTOCOMPLETE,
-        validator: [
-          {
-            validator: CustomValidator.REQUIRED
-          },],
-        options: [
-          {groupName: "TEST GROUP", val:[{displayValue: "First", value: "TEST"}]},
-          {groupName: "SECOND GROUP", val:[{displayValue: "Second", value: "TEST"}]}
-        ]
-      },
-    ]
+  constructor(
+    protected override dataService: SkladyPolozkyDataService,
+    protected override  breadcrumbService: BreadcrumbService,
+    protected override  router: Router,
+    protected override route: ActivatedRoute,
+    protected override  dialogService: DialogService,
+    ) {
+    super(route, router,breadcrumbService, dialogService, dataService);
+    this.form = new FormGroup({});
   }
 
-  ngOnInit() {
+  override ngOnInit() {
+    super.ngOnInit();
     this.loadData()
   }
 
-  public handleChange(res: FormComponentResult<Res>) {
-    this.form = res.form
-    console.log(res.data);
-  }
-
-
   async loadData() {
     try {
-      await this.dataService.get("test")
+      const res = await this.dataService.getAll(undefined, {useSuffix: true})
+      this.items = res.items ?? []
     } catch (e) {
-      await this.dialogService.alert({title: "Titulek", message:`${e}`, dialogType: DialogType.WARNING})
+      await this.dialogService.alert({title: "Chyba", message:`${e}`, dialogType: DialogType.WARNING})
     }
   }
 
-  async route() {
-
-    const tes = await this.dialogService.form<Res>({fields: this.testingFields})
-    console.log(tes)
-
-    /*const form: FormGroup = this.formService.createForm([{ name: 'firstName', label: 'First Name', type: 'text' },
-      { name: 'lastName', label: 'Last Name', type: 'text' }])
-   await this.router.navigate([this.router.url, 'nastaveni']);
-
-    });*/
-
+  protected buildToolbarButtons(): ToolbarButton<ContainerDto>[] {
+    return [
+      {
+        id: 'addContainer',
+        text: 'Přidat kontejner',
+        icon: BaseMaterialIcons.ADD_CONTAINER,
+        class: 'btn-primary',
+        visible: true,
+        disabled: false,
+        action: () => this.addNewContainer()
+      },
+    ];
   }
+
+  async handleEditClick(item: ContainerDto) {
+    this.containerFields = populateDefaults(CREATE_CONTAINER_FIELDS, item)
+
+    const a = await this.dialogService.form({
+      headerIcon: BaseMaterialIcons.EDIT_PERSON,
+      title: `Editace kontejneru - ${item.name}`,
+      sections: [
+        {
+          sectionId: "main_section",
+          headerIcon: BaseMaterialIcons.ASSIGNMENT,
+          fields: this.containerFields,
+          sectionTitle: "Základní informace"
+        }],
+      type: DialogType.SUCCESS
+    })
+    const res = this.mapToDto(a,"main_section")
+    await this.dataService.put(res.id!, res)
+    this.items = this.items.map(x => x.id == res.id ? res : x)
+  }
+
+  async handleDeleteClick(item: ContainerDto) {
+    await this.dialogService.confirmAsync({
+      title: "Potvrzení operace",
+      message: `Opravdu chcete odebrat kontejner ${item.name} a jeho položky?`,
+      dialogType: DialogType.ALERT,
+    })
+    await this.dataService.delete(item.id!);
+    this.items.splice(this.items.indexOf(item), 1);
+  }
+
+  async handleClickContainer(item: ContainerDto) {
+    const prev: IBreadCrumb[] = this.breadcrumbService.breadcrumbsValue;
+    await this.router.navigate(['polozky', item.id], { relativeTo: this.route.parent, state: { previousBreadcrumbs: prev } });
+  }
+
+  async addNewContainer() {
+    this.containerFields = CREATE_CONTAINER_FIELDS;
+
+    const a = await this.dialogService.form({
+      headerIcon: BaseMaterialIcons.ADD_CONTAINER,
+      title: "Nový kontejner",
+      sections: [
+        {
+          sectionId: "main_section",
+          headerIcon: BaseMaterialIcons.ASSIGNMENT,
+          fields: this.containerFields,
+          sectionTitle: "Základní informace"
+        }],
+      type: DialogType.SUCCESS
+    })
+    if(!a) return;
+
+    const obj = this.mapToDto(a,"main_section")
+    const res = await this.dataService.post('',obj, {useSuffix: false})
+    this.items.push(res)
+  }
+
+  mapToDto(result: DynamicDialogResult, key: string): ContainerDto {
+    return {
+      name: result[key].data.ContainerName,
+      id: result[key].data.ContainerId || null,
+      description: result[key].data.ContainerLabel
+    }
+  }
+
+  protected readonly BaseMaterialIcons = BaseMaterialIcons;
 }

@@ -1,0 +1,49 @@
+<!--<mat-form-field appearance="outline" style="width: 100%">
+  <mat-label>Filtr</mat-label>
+  <input
+    matInput
+    (keyup)="applyFilter($event)"
+    placeholder="Zadejte hledaný výraz"
+  >
+</mat-form-field>-->
+
+<div class="mat-elevation-z8 table-responsive">
+  <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
+
+      <ng-container
+        *ngFor="let col of displayedColumns"
+        [matColumnDef]="col.key"
+      >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ col.header || (col.key | uppercase) }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ col.valueGetter(element) }}
+        </td>
+      </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnKeys; sticky: true" class="table-header"></tr>
+
+    <tr
+      mat-row
+      *matRowDef="let row; columns: columnKeys"
+      [class.selectedRow]="expandedElement === row"
+      (click)="settings.clickable ? toggleRow(row) : null"
+      (dblclick)="settings.clickable ? onRowDoubleClick(row) : null"
+    ></tr>
+
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" [attr.colspan]="columnKeys.length">
+        Žádná data, která by vyhověla zadanému filtru „{{ currentFilter }}“
+      </td>
+    </tr>
+
+  </table>
+
+  <mat-paginator *ngIf="this.settings.showPaginator"
+    class="sticky-paginator"
+    [length]="totalCount"
+    [pageSizeOptions]="settings.pageSizeOptions || [20, 40, 60, 100]"
+    showFirstLastButtons>
+  </mat-paginator>
+</div>

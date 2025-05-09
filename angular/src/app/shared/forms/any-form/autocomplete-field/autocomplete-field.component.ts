@@ -8,12 +8,27 @@ import {Observable, of, startWith} from 'rxjs';
   selector: 'app-autocomplete-field',
   standalone: false,
   templateUrl: './autocomplete-field.component.html',
-  styleUrl: './autocomplete-field.component.scss',
+  styleUrls: ['./autocomplete-field.component.scss', '../any-form.component.scss'],
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }]
 })
 export class AutocompleteFieldComponent extends BaseFieldComponent implements OnInit {
-  filteredGroupedOptions$?: Observable<FormGroupedSelect[]>;
-  filteredOptions$?: Observable<FormSelect[]>;
+  filteredGroupedOptions$!: Observable<FormGroupedSelect[]>;
+  filteredOptions$!: Observable<FormSelect[]>;
+
+  getDisplayValue(): string {
+    if (this.control?.value) {
+      if (typeof this.control.value === 'object') {
+        return this.control.value.displayValue || '';
+      }
+      return this.control.value;
+    }
+    return '';
+  }
+
+  displayFn = (opt: FormSelect | string): string => {
+    if (!opt) return '';
+    return typeof opt === 'string' ? opt : opt.displayValue;
+  };
 
   get isGroupSelection(): boolean {
     return !!this.field?.options?.[0]?.hasOwnProperty('groupName');
@@ -28,29 +43,30 @@ export class AutocompleteFieldComponent extends BaseFieldComponent implements On
   }
 
   ngOnInit(): void {
-    this.control?.valueChanges
-      .pipe(startWith(''))
-      .subscribe(value => {
-        const filterValue = value?.toLowerCase() ?? '';
+    this.filteredGroupedOptions$ = of(this.groupedOptions);
+    this.filteredOptions$ = of(this.normalOptions);
 
-        if (this.isGroupSelection) {
-          this.filteredGroupedOptions$ = of(
-            this.groupedOptions
-              .map(group => ({
-                groupName: group.groupName,
-                val: group.val.filter(option =>
-                  option.displayValue.toLowerCase().includes(filterValue)
-                )
-              }))
-              .filter(group => group.val.length > 0)
-          );
-        } else {
-          this.filteredOptions$ = of(
-            this.normalOptions.filter(option =>
-              option.displayValue.toLowerCase().includes(filterValue)
-            )
-          );
-        }
-      });
+    this.control?.valueChanges.pipe(startWith(this.control.value)).subscribe((val: FormSelect | string) => {
+      const filterValue = typeof val === 'string' ? val.toLowerCase() : (val?.displayValue ?? '').toLowerCase();
+
+      if (this.isGroupSelection) {
+        this.filteredGroupedOptions$ = of(
+          this.groupedOptions
+            .map(group => ({
+              groupName: group.groupName,
+              val: group.val.filter(option =>
+                option.displayValue.toLowerCase().includes(filterValue)
+              )
+            }))
+            .filter(group => group.val.length > 0)
+        );
+      } else {
+        this.filteredOptions$ = of(
+          this.normalOptions.filter(option =>
+            option.displayValue.toLowerCase().includes(filterValue)
+          )
+        );
+      }
+    });
   }
 }

@@ -1,18 +1,102 @@
 @use '../../../styles/variables' as *;
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));  /* Flexibilní sloupce */
-  gap: 15px;  /* Nastavení mezery mezi widgety */
-}
 
-.widget {
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 2rem;
+  min-height: 100vh;
   background-color: $baseWhite;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 16px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
 }
 
-.widget:active {
-  opacity: 0.7;
+.dashboard-welcome {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 2.2rem;
+    color: $baseDarkGreen;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: $baseGrey;
+  }
+}
+
+.dashboard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.dashboard-card {
+  background-color: $baseWhite;
+  border: 1px solid $baseLightGrey;
+  border-left: 4px solid $baseGreen;
+  border-radius: 1rem;
+  padding: 1.5rem 2rem;
+  min-width: 250px;
+  max-width: 300px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+
+  h3 {
+    color: $baseBlack;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: $baseGrey;
+    font-size: 0.95rem;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.dashboard-cta {
+  background-color: $baseGreen;
+  color: $baseWhite;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background-color: $baseDarkGreen;
+  }
+}
+
+/* Animace */
+.animate-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.animate-fade-up.delay-1 {
+  animation-delay: 0.3s;
+}
+
+.animate-fade-up.delay-2 {
+  animation-delay: 0.5s;
+}
+
+.animate-fade-up.delay-3 {
+  animation-delay: 0.7s;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

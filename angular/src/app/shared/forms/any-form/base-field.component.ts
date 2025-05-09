@@ -13,6 +13,7 @@ export abstract class BaseFieldComponent {
   protected get control() {
     return this.form.get(this.field.formControlName);
   }
+
   protected parseErrorMessages(errors: ValidationErrors): string {
     const errorMessages: { [key: string]: string | ((error: any) => string) } = {
       required: 'Toto pole je povinné',
@@ -21,7 +22,9 @@ export abstract class BaseFieldComponent {
       max: (error: any) => `Maximum je ${error.max}`,
       maxlength: (error: any) => `Překročeno maximum znaků: ${error.actualLength} / ${error.requiredLength}`,
       email: 'Email není ve správném formátu',
-      pattern: 'Položka není ve správném formátu'
+      pattern: (error: any) => `Položka není ve správném formátu`,
+      minDate: (error: any) => `Datum nesmí být před ${new Date(error.minDate).toLocaleDateString()}`,
+      maxDate: (error: any) => `Datum nesmí být po ${new Date(error.maxDate).toLocaleDateString()}`
     };
 
     const messages = Object.keys(errors).map(key => {
@@ -41,9 +44,5 @@ export abstract class BaseFieldComponent {
       return this.parseErrorMessages(control.errors);
     }
     return '';
-  }
-
-  protected blur() {
-
   }
 }

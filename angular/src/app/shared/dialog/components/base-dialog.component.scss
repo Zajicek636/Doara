@@ -5,7 +5,15 @@
   color: $darkOrangeAlert;
 }
 .dialog-header {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.mat-card {
+  margin-bottom:0.5rem;
 }
 
 .alert-danger {
@@ -21,4 +29,27 @@
 .alert-success {
   background-color: $lightenBaseGreen;
   color: $baseDarkGreen;
+}
+
+.container-columns {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.panel {
+  flex: 1 1 50%;
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #fafafa;
+  max-height: 80vh;
+  overflow: auto;
+}
+
+.full-width-table {
+  width: 100%;
 }

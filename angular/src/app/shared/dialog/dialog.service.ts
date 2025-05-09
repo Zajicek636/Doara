@@ -2,9 +2,16 @@
 import { MatDialog } from '@angular/material/dialog';
 import {AlertDialogComponent} from './components/alert-dialog.component';
 import {DefaultDialogComponent} from './components/default-dialog.component';
-import {AlertDialogParams, ConfirmDialogParams, DialogType, FormDialogParams} from './dialog.interfaces';
+import {
+  AlertDialogParams,
+  ConfirmDialogParams,
+  DialogType,
+  DynamicDialogResult,
+  FormDialogParams
+} from './dialog.interfaces';
 import {ConfirmDialogComponent} from './components/confirm-dialog.component';
 import {FormDialogComponent} from './components/form-dialog.component';
+import {FormGroup} from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
@@ -13,10 +20,10 @@ export class DialogService {
   open<T extends DefaultDialogComponent>(component: new (...args: any[]) => T, data?: any): Promise<any> {
     const dialogRef = this.dialog.open(component, {
       data,
-      width: '30%',
-      height: 'auto',
-      maxWidth: '100%',
-      panelClass: 'custom-dialog',
+      width: '90vw',
+      maxWidth: '800px',
+      minWidth: '300px',
+      panelClass: 'custom-dialog'
     });
 
     return dialogRef.afterClosed().toPromise();
@@ -32,17 +39,40 @@ export class DialogService {
 
   async confirmAsync(params: ConfirmDialogParams): Promise<boolean> {
     const result = await this.open(ConfirmDialogComponent, {
-      title: params.title,
+      title: params.title ?? "Potvrdit operaci",
+      icon: params.icon,
       message: params.message,
-      type: DialogType.WARNING,
+      type: params.dialogType,
+      cancelButton: params.cancelButton ?? "Zrušit",
+      confirmButton: params.confirmButton ?? "Potvrdit"
     });
     return result;
   }
 
-  async form<T>(params: FormDialogParams): Promise<T | undefined> {
-    return this.open(FormDialogComponent, {
-      fields: params.fields,
-      type: DialogType.ALERT,
+  async form<T>(
+    params: FormDialogParams,
+    onFormReady?: (sectionId: string, form: FormGroup) => void
+  ): Promise<DynamicDialogResult> {
+    const dialogRef = this.dialog.open(FormDialogComponent, {
+      data: {
+        headerIcon: params.headerIcon,
+        title: params.title,
+        fields: params.sections,
+        type: params.type ?? DialogType.SUCCESS,
+      },
+      width: '90vw',
+      maxWidth: '800px',
+      minWidth: '300px',
+      panelClass: 'custom-dialog'
     });
+
+    const instance = dialogRef.componentInstance;
+    if (onFormReady) {
+      instance.formReady.subscribe(({ sectionId, form }) => {
+        onFormReady(sectionId, form);
+      });
+    }
+
+    return dialogRef.afterClosed().toPromise();
   }
 }

@@ -1,8 +1,29 @@
-<div style="display: flex; flex-wrap: wrap; flex-direction: column; gap: 10px; width: 10%">
-  <app-any-form
-    style="display: flex; flex-direction: row; gap: 15px; flex-wrap: wrap"
-    [fields]="this.testingFields"
-    (formChanged)="handleChange($event)"
-  />
+<app-context-toolbar [buttons]="toolbarButtons"></app-context-toolbar>
+<div class="content-scroll-wrapper">
+  <div class="card-grid" *ngIf="items">
+    <ng-container *ngFor="let item of items">
+      <mat-card appearance="outlined" class="card">
+        <mat-card-header class="container-header">
+          <div mat-card-avatar class="card-avatar">
+            <mat-icon class="icon-large">{{ BaseMaterialIcons.CONTAINER }}</mat-icon>
+          </div>
+          <mat-card-title class="card-title">{{ item.name }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="card-content">
+          {{ item.description || 'Žádný popis' }}
+        </mat-card-content>
+        <mat-card-actions STYLE="display: flex; flex-direction: row; gap: 0.5rem">
+          <button mat-mini-fab (click)="handleClickContainer(item)">
+            <mat-icon>{{BaseMaterialIcons.OPEN_IN_NEW}}</mat-icon>
+          </button>
+          <button mat-mini-fab (click)="handleEditClick(item)">
+            <mat-icon>{{BaseMaterialIcons.EDIT}}</mat-icon>
+          </button>
+          <button mat-mini-fab color="primary" (click)="handleDeleteClick(item)">
+            <mat-icon>{{BaseMaterialIcons.DELETE}}</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </ng-container>
+  </div>
 </div>
-

@@ -1,6 +1,10 @@
 ﻿import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {UcetnictviMainComponent} from './ucetnictvi-main/ucetnictvi-main.component';
+import {SkladyPolozkyComponent} from '../sklady/sklady-polozky/sklady-polozky.component';
+import {SeznamFakturComponent} from './seznam-faktur/seznam-faktur.component';
+import {NovaFakturaComponent} from './nova-faktura/nova-faktura.component';
+import {SubjektyComponent} from './subjekty/subjekty.component';
 
 
 const routes: Routes = [
@@ -11,8 +15,26 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: UcetnictviMainComponent,
-        data: { basePath: 'ucetnictvi', breadcrumb: 'Účetnictví' }
+        redirectTo: 'seznam-faktur',
+        pathMatch: 'full'
+      },
+      {
+        path: 'seznam-faktur',
+        component: SeznamFakturComponent,
+        data: { basePath: 'ucetnictvi', breadcrumb: 'Seznam faktur' },
+      },
+      {
+        path: 'faktura',
+        children: [
+          { path: '', component: NovaFakturaComponent, data: { breadcrumb: 'Nová faktura' } },
+          { path: ':id', component: NovaFakturaComponent, data: { breadcrumb: 'Úprava faktury' } }
+        ]
+      },
+      {
+        path: 'subjekty',
+        component: SubjektyComponent,
+        data: { basePath: 'ucetnictvi', breadcrumb: 'Seznam subjektů' },
+        children: []
       },
     ]
   },

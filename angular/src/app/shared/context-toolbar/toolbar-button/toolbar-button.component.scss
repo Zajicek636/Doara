@@ -1,0 +1,28 @@
+.toolbar-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  font-size: 1.2rem;
+  margin-right: 0.25rem;
+}
+
+.button-text {
+  flex-shrink: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1;
+}

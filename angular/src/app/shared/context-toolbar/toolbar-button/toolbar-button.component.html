@@ -1,0 +1,17 @@
+<button
+  mat-flat-button
+  [id]="btn.id"
+  [color]="btn.class || 'primary'"
+  (click)="btn.action(contextItem)"
+  [disabled]="btn.disabled"
+  [matTooltip]="btn.tooltip ?? ''"
+  [style.width]="btn.width ? btn.width+'px' : ''"
+  [style.visibility]="btn.visible ? 'visible' : 'hidden'"
+  type="button"
+  class="toolbar-button {{ btn.class }}"
+>
+  <div class="button-content">
+    <mat-icon *ngIf="btn.icon" class="icon">{{ btn.icon }}</mat-icon>
+    <span class="button-text" *ngIf="showText">{{ btn.text }}</span>
+  </div>
+</button>

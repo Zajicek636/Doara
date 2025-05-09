@@ -1,4 +1,5 @@
 <app-header (toggleLeft)="onLeftDrawerClick($event)"></app-header>
+<app-loading></app-loading>
 
 <div class="main-container">
   <mat-sidenav-container class="mat-drawer-container">
@@ -6,11 +7,14 @@
       <app-menu></app-menu>
     </mat-sidenav>
 
+
+    <mat-sidenav class="drawer-second" [opened]="false" #drawer position="end" mode="side">
+      <ng-template #drawerOutlet></ng-template>
+    </mat-sidenav>
+
     <mat-sidenav-content class="content">
       <app-breadcrumb></app-breadcrumb>
-      <div class="content-scroll-wrapper">
         <router-outlet></router-outlet>
-      </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

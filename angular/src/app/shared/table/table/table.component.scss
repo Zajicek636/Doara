@@ -1,0 +1,40 @@
+@use '../../../../styles/variables' as *;
+
+
+tr:hover {
+  background: $baseGreenLightenPastel;
+}
+
+tr:active {
+  background: $lightenBaseGreen;
+}
+
+.mat-elevation-z8 {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
+.selectedRow {
+  background: $baseLightGrey;
+}
+
+.table-responsive {
+  width: 100%;
+  height: calc(100vh - 200px);
+  overflow: auto;
+}
+.full-width-table {
+  display: inline-table;
+  white-space: nowrap;
+}
+
+.table-header {
+  background-color: $lightenBaseGreen;
+}
+
+.sticky-paginator {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+}

@@ -2,10 +2,12 @@
   TEXT = 'string',
   NUMBER = 'number',
   BOOLEAN = 'boolean',
+  RADIO = 'radiobutton',
   AUTOCOMPLETE = 'autocomplete',
   LOOKUP = 'lookup',
   PASSWORD = 'password',
   TEXTAREA = 'textarea',
+  DATE = 'date'
 }
 
 export enum CustomValidator {
@@ -14,6 +16,9 @@ export enum CustomValidator {
   MAX = 'max',
   EMAIL = 'email',
   PATTERN = 'pattern',
+  MIN_DATE = 'minDate',
+  MAX_DATE = 'maxDate',
+  DECIMAL_PLACES = 'decimalPlaces'
 }
 
 export interface ValidatorConfig {
@@ -31,7 +36,7 @@ export interface FormGroupedSelect {
   val: FormSelect[]
 }
 
-export interface FormField {
+export interface  FormField {
   formControlName: string;
   multipleSelect?: boolean;
   options?: FormSelect[] | FormGroupedSelect[];
@@ -39,4 +44,7 @@ export interface FormField {
   label: string;
   type: FormFieldTypes;
   validator?: ValidatorConfig[];
+  visible?: boolean;
+  //helpingy pro default values z dto pro table a mapovani a asynchronni operace
+  defaultValueGetter: (dto: any) => any;
 }

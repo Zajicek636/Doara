@@ -1,0 +1,10 @@
+<app-context-toolbar [buttons]="this.toolbarButtons"></app-context-toolbar>
+<div style="padding: 0.5rem">
+  <app-dynamic-table
+    #tableComponent
+    [settings]="this.tableSettings!"
+    [dataService]="this.dataService"
+    (selectedElement)="this.clickedElement($event)"
+    (rowDoubleClicked)="this.handleDoubleClick($event)"
+  />
+</div>

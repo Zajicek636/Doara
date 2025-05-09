@@ -1,0 +1,10 @@
+<mat-toolbar color="accent" class="context-toolbar" *ngIf="buttons?.length">
+  <ng-container *ngFor="let btn of buttons">
+    <app-toolbar-button
+      [btn]="btn"
+      [contextItem]="contextItem"
+      [showText]="showText"
+    ></app-toolbar-button>
+  </ng-container>
+</mat-toolbar>
+<mat-divider></mat-divider>

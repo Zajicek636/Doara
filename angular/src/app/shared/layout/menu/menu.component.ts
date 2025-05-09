@@ -1,5 +1,6 @@
 import {Component, Input, OnInit, signal} from '@angular/core';
 import {Router} from '@angular/router';
+import {BaseMaterialIcons} from '../../../../styles/material.icons';
 
 export interface  MenuItem {
   name: string;
@@ -17,9 +18,18 @@ export class MenuComponent implements OnInit {
   @Input() collapsed = false;
 
   menuItems = signal<MenuItem[]>([
-    { name: 'Sklady', link: 'sklady', icon: 'dataset', items: [{ name: 'Test', link: 'polozky', icon: 'data_thresholding' },{ name: 'Test2', link: 'editace-skladu', icon: 'data_thresholding'}]},
-    { name: 'Účetnictví', link: 'ucetnictvi', icon: 'data_thresholding' },
-    { name: 'Settings', link: 'nastaveni', icon: 'settings' },
+    { name: 'Sklady', link: 'sklady', icon: BaseMaterialIcons.CONTAINER, items:
+        [
+          { name: 'Sklad', link: 'polozky', icon: BaseMaterialIcons.CATEGORY},
+        ]
+    },
+    { name: 'Účetnictví', link: 'ucetnictvi', icon: BaseMaterialIcons.PAYMENTS, items:
+        [
+          { name: 'Fakura', link: 'faktura', icon: BaseMaterialIcons.NEW_QUOTE },
+          { name: 'Seznam faktur', link: 'seznam-faktur', icon: BaseMaterialIcons.LIST_ICON},
+          { name: 'Subjekty', link: 'subjekty', icon: BaseMaterialIcons.GROUPS_PEOPLE},
+        ]
+    },
   ]) ;
 
   constructor(private router: Router) {}

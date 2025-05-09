@@ -20,31 +20,35 @@ import {MatIcon} from "@angular/material/icon";
 import {MenuItemComponent} from './menu/menu-item/menu-item.component';
 import {MatToolbar} from '@angular/material/toolbar';
 import {BreadcrumbComponent} from "../breadcrumb/breadcrumb.component";
+import {LoadingComponent} from '../loading/loading.component';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 @NgModule({
     declarations: [
       MainLayoutComponent,
       HeaderComponent,
       MenuComponent,
-      MenuItemComponent
+      MenuItemComponent,
+      LoadingComponent
     ],
-    imports: [
-        CommonModule,
-        RouterModule,
-        MatTooltipModule,
-        MatSidenavModule,
-        MatButtonModule,
-        MatListItem,
-        MatList,
-        MatSidenavModule,
-        MatIcon,
-        MatToolbar,
-        MatNavList,
-        MatListItemIcon,
-        MatListItemTitle,
-        MatDivider,
-        MatListItemMeta,
-        BreadcrumbComponent,
-    ]
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatTooltipModule,
+    MatSidenavModule,
+    MatButtonModule,
+    MatListItem,
+    MatList,
+    MatSidenavModule,
+    MatIcon,
+    MatToolbar,
+    MatNavList,
+    MatListItemIcon,
+    MatListItemTitle,
+    MatDivider,
+    MatListItemMeta,
+    BreadcrumbComponent,
+    MatProgressSpinner,
+  ]
 })
 export class LayoutModule { }

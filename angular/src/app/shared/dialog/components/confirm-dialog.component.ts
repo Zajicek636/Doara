@@ -8,23 +8,25 @@ import {
   MatDialogTitle
 } from '@angular/material/dialog';
 import {MatButton} from '@angular/material/button';
-import {NgClass} from '@angular/common';
+import {NgClass, NgIf} from '@angular/common';
+import {MatIcon} from '@angular/material/icon';
 
 @Component({
   selector: 'app-confirm-dialog',
   template: `
     <div class="dialog-container">
       <div mat-dialog-title class="dialog-header shadow-sm" [ngClass]="data.type">
+        <mat-icon *ngIf="data.icon">{{ data.icon }}</mat-icon>
         <span>{{ data.title }}</span>
       </div>
 
       <mat-dialog-content>
-        <p class="message">{{ data.message }}</p>
+        <p class="message" [innerHTML]="data.message"></p>
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
-        <button mat-button [ngClass]="data.type" (click)="cancel()">Cancel</button>
-        <button mat-button [ngClass]="data.type" (click)="close()">Confirm</button>
+        <button *ngIf="data.cancelButton" mat-button [ngClass]="data.type" (click)="onCancel()">{{data.cancelButton}}</button>
+        <button *ngIf="data.confirmButton" mat-button [ngClass]="data.type" (click)="onConfirm()">{{data.confirmButton}}</button>
       </mat-dialog-actions>
     </div>
   `,
@@ -33,7 +35,9 @@ import {NgClass} from '@angular/common';
     MatDialogActions,
     MatButton,
     MatDialogTitle,
-    NgClass
+    NgClass,
+    NgIf,
+    MatIcon,
   ],
   styleUrls: ['base-dialog.component.scss']
 })
@@ -43,9 +47,12 @@ export class ConfirmDialogComponent extends DefaultDialogComponent {
     private dialogRef: MatDialogRef<ConfirmDialogComponent>
   ) {
     super();
-    this.close = this.dialogRef.close.bind(this.dialogRef);
   }
-  cancel() {
-    this.dialogRef.close();
+  onCancel(): void {
+    this.dialogRef.close(false);
+  }
+
+  onConfirm(): void {
+    this.dialogRef.close(true);
   }
 }

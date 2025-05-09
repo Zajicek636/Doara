@@ -1,9 +1,10 @@
-<mat-form-field appearance="fill" class="full-width">
+<mat-form-field appearance="fill">
   <mat-label>{{ field.label }}</mat-label>
   <input
     matInput
     [formControlName]="field.formControlName"
     [type]="field.type === FormFieldTypes.PASSWORD ? hide() ? 'password' : 'text' : 'text'" />
   <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
+
   <button *ngIf="field.type === FormFieldTypes.PASSWORD" mat-icon-button matSuffix (click)="hideShowPass($event)"><mat-icon>visibility_off</mat-icon></button>
 </mat-form-field>
