@@ -11,6 +11,7 @@
   "private": true,
   "dependencies": {
     "@abp/ng.core": "^9.1.2",
+    "@angular/animations": "^19.2.5",
     "@angular/cdk": "^19.2.8",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",

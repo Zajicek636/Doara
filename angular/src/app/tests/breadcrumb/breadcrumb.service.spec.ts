@@ -1,7 +1,8 @@
 ﻿import { TestBed } from '@angular/core/testing';
-import { BreadcrumbService, IBreadCrumb } from '../breadcrumb.service';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import {BehaviorSubject, take} from 'rxjs';
+import {BreadcrumbService} from '../../shared/breadcrumb/breadcrumb.service';
+
 
 describe('BreadcrumbService', () => {
   let service: BreadcrumbService;

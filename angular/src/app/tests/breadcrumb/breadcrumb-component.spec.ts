@@ -1,9 +1,11 @@
 ﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BreadcrumbComponent } from '../breadcrumb.component';
-import { BreadcrumbService, IBreadCrumb } from '../breadcrumb.service';
+
 import { of, BehaviorSubject } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
+import {BreadcrumbComponent} from '../../shared/breadcrumb/breadcrumb.component';
+import {BreadcrumbService, IBreadCrumb} from '../../shared/breadcrumb/breadcrumb.service';
+
 
 describe('BreadcrumbComponent', () => {
   let component: BreadcrumbComponent;

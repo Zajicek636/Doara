@@ -54,10 +54,20 @@ export class AuthService {
       localStorage.setItem('tenant', tenant);
     } else {
       console.warn('No valid token, clearing storage and redirecting');
-      localStorage.clear();
-      sessionStorage.clear();
-      this.cookieService.deleteAll('/', '.localhost');
-      this.oauthService.initLoginFlow();
+
+      // odložený redirect, aby měl promazání čas proběhnout
+      setTimeout(() => {
+        localStorage.clear();
+        sessionStorage.clear();
+        this.cookieService.deleteAll('/', '.localhost');
+        document.cookie.split(";").forEach(c => {
+          const eqPos = c.indexOf("=");
+          const name = eqPos > -1 ? c.substring(0, eqPos) : c;
+          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        });
+
+        this.oauthService.initLoginFlow();
+      }, 0);
     }
   }
 }

@@ -58,7 +58,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
   drawerOpen = false;
   formReady: boolean = true;
 
-  private baseFormDefaults: Partial<InvoiceCreateEditDto> = {};
+  public baseFormDefaults: Partial<InvoiceCreateEditDto> = {};
   invoiceItemsDefault: InvoiceItemDto[] = [];
 
   constructor(
@@ -480,7 +480,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     catch (e: any) {
       await this.dialogService.alert({
         title: "Chyba",
-        message: e.error.error.message,
+        message: e?.error?.error?.message ?? 'Došlo k neznámé chybě při ukládání faktury.',
         dialogType: DialogType.ERROR,
       });
     }
