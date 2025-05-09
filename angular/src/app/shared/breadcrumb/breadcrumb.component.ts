@@ -7,6 +7,7 @@ import {NgForOf, NgIf} from '@angular/common';
   selector: 'app-breadcrumb',
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.scss'],
+  standalone: true,
   imports: [
     RouterLink,
     NgIf,

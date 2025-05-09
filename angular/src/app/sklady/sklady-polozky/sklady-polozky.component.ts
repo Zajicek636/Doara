@@ -81,18 +81,36 @@ export class SkladyPolozkyComponent extends BaseContentComponent<ContainerDto,Sk
       type: DialogType.SUCCESS
     })
     const res = this.mapToDto(a,"main_section")
-    await this.dataService.put(res.id!, res)
-    this.items = this.items.map(x => x.id == res.id ? res : x)
+    try {
+      await this.dataService.put(res.id!, res)
+      this.items = this.items.map(x => x.id == res.id ? res : x)
+    } catch (e) {
+      await this.dialogService.alert({
+        title: 'Chyba',
+        message: 'Položka nebyla nalezena.',
+        dialogType: DialogType.ERROR
+      })
+    }
   }
 
   async handleDeleteClick(item: ContainerDto) {
-    await this.dialogService.confirmAsync({
+    const res = await this.dialogService.confirmAsync({
       title: "Potvrzení operace",
       message: `Opravdu chcete odebrat kontejner ${item.name} a jeho položky?`,
       dialogType: DialogType.ALERT,
     })
-    await this.dataService.delete(item.id!);
-    this.items.splice(this.items.indexOf(item), 1);
+
+    if(!res) return
+    try {
+      await this.dataService.delete(item.id!);
+      this.items.splice(this.items.indexOf(item), 1);
+    } catch (e) {
+      await this.dialogService.alert({
+        title: 'Chyba',
+        message: 'Položka nebyla nalezena.',
+        dialogType: DialogType.ERROR
+      });
+    }
   }
 
   async handleClickContainer(item: ContainerDto) {
@@ -117,9 +135,18 @@ export class SkladyPolozkyComponent extends BaseContentComponent<ContainerDto,Sk
     })
     if(!a) return;
 
-    const obj = this.mapToDto(a,"main_section")
-    const res = await this.dataService.post('',obj, {useSuffix: false})
-    this.items.push(res)
+    try {
+      const obj = this.mapToDto(a,"main_section")
+      const res = await this.dataService.post('',obj, {useSuffix: false})
+      this.items.push(res)
+    } catch (e) {
+      await this.dialogService.alert({
+        title: 'Chyba',
+        message: 'Položka nebyla nalezena.',
+        dialogType: DialogType.ERROR
+      });
+    }
+
   }
 
   mapToDto(result: DynamicDialogResult, key: string): ContainerDto {

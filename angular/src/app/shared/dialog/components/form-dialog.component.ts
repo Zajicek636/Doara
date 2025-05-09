@@ -1,4 +1,4 @@
-﻿import {Component, EventEmitter, Inject, Input, Output} from '@angular/core';
+﻿import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Inject, Input, Output} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -8,10 +8,8 @@ import {
 } from '@angular/material/dialog';
 import { DefaultDialogComponent } from './default-dialog.component';
 import {NgClass, NgForOf, NgIf,} from '@angular/common';
-import {SharedModule} from '../../shared.module';
 import {MatButton} from '@angular/material/button';
 import { FormComponentResult} from '../../forms/any-form/any-form.component';
-import {FormField} from '../../forms/form.interfaces';
 import {FormGroup} from '@angular/forms';
 import {AnyFormModule} from '../../forms/any-form/any-form.module';
 import {MatIcon} from '@angular/material/icon';
@@ -65,7 +63,7 @@ import {FormDialogParams, FormSection} from '../dialog.interfaces';
     NgForOf,
   ]
 })
-export class FormDialogComponent extends DefaultDialogComponent {
+export class FormDialogComponent extends DefaultDialogComponent implements AfterViewInit {
   @Input() fields!: FormSection[];
   @Output() formReady = new EventEmitter<{ sectionId: string, form: FormGroup }>();
 
@@ -80,9 +78,14 @@ export class FormDialogComponent extends DefaultDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public override data: any,
     private dialogRef: MatDialogRef<FormDialogComponent>,
+    private cdr: ChangeDetectorRef,
   ) {
     super();
     this.fields = this.data.fields;
+  }
+
+  ngAfterViewInit(): void {
+    this.cdr.detectChanges();
   }
 
   public isSubmitDisabled = true;

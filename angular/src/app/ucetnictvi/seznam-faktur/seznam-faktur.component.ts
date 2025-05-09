@@ -97,6 +97,7 @@ export class SeznamFakturComponent extends BaseContentComponent<InvoiceDto, Sezn
   }
 
   async onDelete(): Promise<void> {
+    if(!this.chosenElement) return
     const res = await this.dialogService.confirmAsync({
       title: "Smazání",
       message: "Chcete opravdu smazat záznam?",

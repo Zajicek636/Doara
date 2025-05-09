@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {MainLayoutComponent} from './shared/layout/main-layout/main-layout.component';
 import {HomeComponent} from './shared/home/home.component';
+import {SimpleAuthGuard} from './shared/auth/simple-auth-guard';
 
 const ucetnictviModule = () => import('./ucetnictvi/ucetnictvi.module').then(m => m.UcetnictviModule);
 const skladyModule = () => import('./sklady/sklady.module').then(m => m.SkladyModule);
@@ -17,23 +18,22 @@ export const routes: Routes = [
         pathMatch: 'full',
       },
       {
-        path: 'home', //tady nekde jde hodit auth, jestli mas pristup k modulu :-)))
+        path: 'home',
         component: HomeComponent,
+        canActivate: [SimpleAuthGuard],
         data: { breadcrumb: "Home" }
 
       },
       {
         path: 'ucetnictvi',
-        loadChildren: ucetnictviModule
+        loadChildren: ucetnictviModule,
+        canActivate: [SimpleAuthGuard],
       },
       {
         path: 'sklady',
-        loadChildren: skladyModule
+        loadChildren: skladyModule,
+        canActivate: [SimpleAuthGuard],
       },
-      {
-        path: 'nastaveni',
-        loadChildren: nastaveniModule
-      }
     ]
   }
 ]
