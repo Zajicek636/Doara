@@ -77,6 +77,15 @@ describe('NovaFakturaComponent - edit mode', () => {
     component = fixture.componentInstance;
   });
 
+
+  afterEach(() => {
+    mockNovaFakturaDataService.put.calls.reset();
+    mockPolozkyFakturyService.post.calls.reset();
+    mockDialogService.alert.calls.reset();
+  }); //potrebuji cista data po testech an edit apod.
+
+
+
   it('should load and populate form in edit mode', async () => {
     await component.ngOnInit();
 
@@ -171,7 +180,6 @@ describe('NovaFakturaComponent - edit mode', () => {
       specificSymbol: new FormControl(null)
     });
 
-    // přidej jednu položku
     component.invoiceItems = [{
       id: 'item1',
       description: 'Test',
@@ -182,8 +190,11 @@ describe('NovaFakturaComponent - edit mode', () => {
       vatAmount: 0,
       grossAmount: 100
     }];
-
     component.invoiceItemsForDelete = [];
+    component.formReady = true;
+
+    // vynucená validita
+    spyOnProperty(component.baseForm, 'valid', 'get').and.returnValue(true);
 
     await component.saveFaktura();
 

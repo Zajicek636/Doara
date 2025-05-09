@@ -11,6 +11,7 @@ import {PolozkyFakturyDataService} from '../../../ucetnictvi/polozky-faktury/dat
 import {DrawerService} from '../../../shared/layout/drawer.service';
 import {ActivatedRoute} from '@angular/router';
 import {of} from 'rxjs';
+import {FormControl, FormGroup} from '@angular/forms';
 
 describe('NovaFakturaComponent - new invoice mode', () => {
   let component: NovaFakturaComponent;
@@ -60,6 +61,12 @@ describe('NovaFakturaComponent - new invoice mode', () => {
     component = fixture.componentInstance;
   });
 
+  afterEach(() => {
+    mockNovaFakturaDataService.post.calls.reset();
+    mockPolozkyFakturyService.post.calls.reset();
+    mockDialogService.alert.calls.reset();
+  });
+
   it('should create the component in new invoice mode', async () => {
     await component.ngOnInit();
 
@@ -68,4 +75,5 @@ describe('NovaFakturaComponent - new invoice mode', () => {
     expect(component.loaded).toBeTrue();
     expect(component.entityId).toBeFalsy();
   });
+
 });

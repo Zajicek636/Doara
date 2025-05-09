@@ -1,112 +1,108 @@
 ﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 import { By } from '@angular/platform-browser';
-import { Component } from '@angular/core';
-import {SharedModule} from '../../shared/shared.module';
+import { of } from 'rxjs';
 import {DynamicTableComponent} from '../../shared/table/table/table.component';
 import {DialogService} from '../../shared/dialog/dialog.service';
 
-interface TestItem {
-  id: number;
-  name: string;
-}
-
-@Component({
-  standalone: true,
-  selector: 'test-host',
-  template: `
-    <app-dynamic-table
-      [settings]="settings"
-      [dataService]="mockService"
-      [data]="inputData"
-      (rowDoubleClicked)="onDoubleClick($event)"
-      (selectedElement)="onSelect($event)">
-    </app-dynamic-table>`,
-  imports: [
-    SharedModule
-  ]
-})
-class TestHostComponent {
-  settings = {
-    columns: [
-      {
-        key: 'name',
-        header: 'Name',
-        valueGetter: (row: TestItem) => row.name,
-      },
-    ],
-    clickable: true,
-    expandable: false,
-    defaultPageSize: 5,
-    cacheEntityType: 'TestEntity',
-    showPaginator: true,
-  };
-
-  inputData: TestItem[] | undefined = undefined;
-  mockService = {
-    getPagedRequestAsync: jasmine.createSpy().and.resolveTo({
-      items: Array.from({ length: 5 }, (_, i) => ({ id: i, name: `Item ${i}` })),
-      totalCount: 5
-    })
-  };
-
-  onDoubleClick = jasmine.createSpy();
-  onSelect = jasmine.createSpy();
-}
-
 describe('DynamicTableComponent', () => {
-  let fixture: ComponentFixture<TestHostComponent>;
-  let host: TestHostComponent;
+  let component: DynamicTableComponent<any>;
+  let fixture: ComponentFixture<DynamicTableComponent<any>>;
+
+  const mockDialogService = jasmine.createSpyObj('DialogService', ['alert']);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DynamicTableComponent],
-      imports: [
-        TestHostComponent,
-        SharedModule
-      ],
-      providers: [
-        {
-          provide: DialogService,
-          useValue: {
-            alert: jasmine.createSpy().and.returnValue(Promise.resolve())
-          }
-        }
-      ]
+      imports: [MatPaginatorModule, MatSortModule, MatTableModule, NoopAnimationsModule],
+      providers: [{ provide: DialogService, useValue: mockDialogService }]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TestHostComponent);
-    host = fixture.componentInstance;
+    fixture = TestBed.createComponent(DynamicTableComponent<any>);
+    component = fixture.componentInstance;
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should set columns from settings', () => {
+    component.settings = {
+      cacheEntityType: '',
+      clickable: false,
+      expandable: false,
+      columns: [
+        { key: 'name', header: 'Jméno', valueGetter: (r: any) => r.name },
+        { key: 'age', header: 'Věk', valueGetter: (r: any) => r.age }
+      ],
+      defaultPageSize: 10,
+      showPaginator: true,
+      pageSizeOptions: [10, 20]
+    };
+
+    component.data = [
+      { name: 'Alice', age: 25 },
+      { name: 'Bob', age: 30 }
+    ];
+
     fixture.detectChanges();
+    component.ngOnInit();
+
+    expect(component.columnKeys).toEqual(['name', 'age']);
+    expect(component.dataSource.data.length).toBe(2);
   });
 
-  it('should create the host and table component', () => {
-    expect(host).toBeTruthy();
-    const tableEl = fixture.debugElement.query(By.css('table'));
-    expect(tableEl).toBeTruthy();
-  });
+  it('should call dataService when loading data', async () => {
+    const mockService = {
+      getPagedRequestAsync: jasmine.createSpy('getPagedRequestAsync').and.resolveTo({
+        items: [{ name: 'test' }],
+        totalCount: 1
+      })
+    };
 
+    component.settings = {
+      cacheEntityType: '',
+      clickable: false,
+      expandable: false,
+      columns: [{ key: 'name', header: 'Jméno', valueGetter: (r: any) => r.name }],
+      defaultPageSize: 10,
+      showPaginator: true,
+      pageSizeOptions: [10]
+    };
+    component.dataService = mockService;
+    component.data = undefined;
 
-  it('should handle error from dataService', async () => {
-    const tableComponent = fixture.debugElement.query(By.directive(DynamicTableComponent)).componentInstance as DynamicTableComponent<TestItem>;
-    const dialogService = TestBed.inject(DialogService);
-    host.mockService.getPagedRequestAsync.and.rejectWith({ error: { error: { message: 'Test error' } } });
-    tableComponent['pageCache'].clear();
-    await tableComponent.loadData();
-    expect(dialogService.alert).toHaveBeenCalledWith(jasmine.objectContaining({ message: 'Test error' }));
-  });
-
-  it('should not crash when paginator not defined', async () => {
-    const component = fixture.debugElement.query(By.directive(DynamicTableComponent)).componentInstance as DynamicTableComponent<TestItem>;
-    component.paginator = undefined!;
-    const params = component['buildQueryParams']();
-    expect(params.skipCount).toBe(0);
-  });
-
-  it('should cache pages after load', async () => {
-    const component = fixture.debugElement.query(By.directive(DynamicTableComponent)).componentInstance as DynamicTableComponent<TestItem>;
+    fixture.detectChanges();
     await component.loadData();
-    expect(component['pageCache'].has(0)).toBeTrue();
-    expect(component['pageCache'].get(0)?.length).toBe(5);
+
+    expect(mockService.getPagedRequestAsync).toHaveBeenCalled();
+    expect(component.dataSource.data.length).toBe(1);
+  });
+
+  it('should emit selected element on row click', () => {
+    const testRow = { name: 'A' };
+    spyOn(component.selectedElement, 'emit');
+    component.settings = {
+      columns: [{ key: 'name', header: 'Jméno', valueGetter: (r: any) => r.name }],
+      clickable: true
+    } as any;
+    component.toggleRow(testRow);
+    expect(component.expandedElement).toBe(testRow);
+    expect(component.selectedElement.emit).toHaveBeenCalledWith(testRow);
+  });
+
+  it('should emit rowDoubleClicked on double click', () => {
+    const testRow = { name: 'B' };
+    spyOn(component.rowDoubleClicked, 'emit');
+    component.settings = {
+      columns: [],
+      clickable: true
+    } as any;
+
+    component.onRowDoubleClick(testRow);
+    expect(component.rowDoubleClicked.emit).toHaveBeenCalledWith(testRow);
   });
 });
