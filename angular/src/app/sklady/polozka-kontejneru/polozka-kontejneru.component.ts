@@ -10,14 +10,12 @@ import {ToolbarButton} from '../../shared/context-toolbar/context-toolbar.interf
 import {BaseMaterialIcons} from '../../../styles/material.icons';
 import {PolozkaKontejneruDataService} from './data/polozka-kontejneru-data.service';
 import {
-  CONTAINER_ITEM_CREATE_FIELDS,
   CONTAINER_ITEM_FIELDS, ContainerItemCreateEditDto,
   ContainerItemDto
 } from "./data/polozka-kontejneru.interfaces";
 import {DialogType, DynamicDialogResult} from "../../shared/dialog/dialog.interfaces";
 import {CustomValidator} from "../../shared/forms/form.interfaces";
 import {populateDefaults} from "../../shared/forms/form-field.utils";
-import {LoadingService} from '../../shared/loading/loading.service';
 
 @Component({
   selector: 'app-polozka-kontejneru',
@@ -35,7 +33,6 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
     protected override router: Router,
     protected override dialogService: DialogService,
     protected override route: ActivatedRoute,
-    protected loadingService: LoadingService,
   ) {
     super(route, router,breadcrumbService, dialogService, dataService);
 
@@ -101,11 +98,11 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
   }
 
   async addNewItemContainer() {
-    const requiredFields = CONTAINER_ITEM_CREATE_FIELDS.filter(field =>
+    const requiredFields = CONTAINER_ITEM_FIELDS.filter(field =>
         field.validator?.some(v => v.validator === CustomValidator.REQUIRED)
     );
 
-    const optionalFields = CONTAINER_ITEM_CREATE_FIELDS.filter(field =>
+    const optionalFields = CONTAINER_ITEM_FIELDS.filter(field =>
         !field.validator?.some(v => v.validator === CustomValidator.REQUIRED)
     );
 
@@ -168,11 +165,11 @@ export class PolozkaKontejneruComponent extends BaseContentComponent<ContainerIt
   }
 
   async editItemContainer() {
-    let requiredFields = CONTAINER_ITEM_CREATE_FIELDS.filter(field =>
+    let requiredFields = CONTAINER_ITEM_FIELDS.filter(field =>
         field.validator?.some(v => v.validator === CustomValidator.REQUIRED)
     );
 
-    let optionalFields = CONTAINER_ITEM_CREATE_FIELDS.filter(field =>
+    let optionalFields = CONTAINER_ITEM_FIELDS.filter(field =>
         !field.validator?.some(v => v.validator === CustomValidator.REQUIRED)
     );
 

@@ -21,7 +21,7 @@ export const routes: Routes = [
         path: 'home',
         component: HomeComponent,
         canActivate: [SimpleAuthGuard],
-        data: { breadcrumb: "Home" }
+        data: { breadcrumb: "Domovská obrazovka" }
 
       },
       {

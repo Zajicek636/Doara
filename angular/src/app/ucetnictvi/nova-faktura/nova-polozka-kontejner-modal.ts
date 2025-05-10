@@ -152,7 +152,7 @@ export class NovaPolozkaKontejnerModal<T> extends DefaultDialogComponent impleme
     if (!containerId) {return}
 
     try {
-      const res = await this.polozkaKontejneruDataService.getAllWithDetail({extraParams: {ContainerId: containerId}})
+      const res = await this.polozkaKontejneruDataService.getAllWithDetail({ContainerId: containerId})
 
       this.containerItemsById = res.items.map(item => ({
         containerItemId: item.id,
@@ -198,7 +198,6 @@ export class NovaPolozkaKontejnerModal<T> extends DefaultDialogComponent impleme
 
   submit(): void {
     const formValue = this.formBase.value;
-
     const selectedItem = this.containerItemsById.find(
       item => item.containerItemId === formValue.containerItem?.value
     );

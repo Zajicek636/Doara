@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewChild} from '@angular/core';
 import {BaseContentComponent} from '../../shared/layout/base-component';
 import {SubjektyDataService} from '../subjekty/data/subjekty-data.service';
 import {BreadcrumbService} from '../../shared/breadcrumb/breadcrumb.service';
@@ -36,7 +36,7 @@ import {PolozkyFakturyDataService} from '../polozky-faktury/data/polozky-faktury
   templateUrl: './nova-faktura.component.html',
   styleUrl: './nova-faktura.component.scss'
 })
-export class NovaFakturaComponent extends BaseContentComponent<any,any> implements OnInit, OnDestroy {
+export class NovaFakturaComponent extends BaseContentComponent<any,any> implements OnInit {
   @ViewChild('drawerContent') drawerTemplate!: TemplateRef<any>;
   isNew = true;
   entity: InvoiceDto | null = null;
@@ -105,8 +105,8 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
       const mapped: InvoiceDto = {
         id: faktura.id,
         invoiceNumber: faktura.invoiceNumber!,
-        supplierId: supplierOption.value,
-        customerId: customerOption.value,
+        supplierId: supplierOption,
+        customerId: customerOption,
         issueDate: faktura.issueDate,
         taxDate: faktura.taxDate!,
         deliveryDate: faktura.deliveryDate!,
@@ -178,10 +178,11 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
       {
         id: 'saveFaktura',
         text: 'Uložit',
+        tooltip: "Uložit",
         icon: BaseMaterialIcons.SAVE,
         class: 'btn-primary',
         visible: true,
-        disabled: this.baseForm?.invalid ?? true,
+        disabled:  this.baseForm?.invalid || this.totalGrossAmountDoesntMatchItemsAmount(),
         action: () => this.saveFaktura()
       },
       {
@@ -189,6 +190,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         text: 'Položky faktury',
         icon: BaseMaterialIcons.RECEIPT,
         class: 'btn-secondary',
+        tooltip: "Zobrazit položky faktury",
         visible: true,
         disabled: this.isNew,
         action: () => {this.toggleDrawerWithContent()}
@@ -197,6 +199,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         id: 'cancelFaktura',
         text: 'Zrušit',
         icon: BaseMaterialIcons.CANCEL,
+        tooltip: "Zrušit",
         class: 'btn-secondary',
         visible: true,
         disabled: !this.baseForm?.dirty,
@@ -205,6 +208,13 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     ];
   }
 
+  totalGrossAmountDoesntMatchItemsAmount() {
+    const field = this.baseFormFields.find(x => x.formControlName == "totalGrossAmount")
+    if(field) {
+      return this.countSum() > this.baseForm.get(field.formControlName)?.value
+    }
+    return false
+  }
   resetFormToDefaults() {
     this.baseFormFields = populateDefaults(
       CREATE_EDIT_FAKTURA_FIELDS.map(f => {
@@ -241,9 +251,12 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         title: "Nová položka z kontejneru",
         type: DialogType.SUCCESS,
         containers: items,
+        items: this.invoiceItems,
     })
     if(!res) return
     this.invoiceItems.push(res)
+    this.baseForm.markAsDirty()
+    this.totalGrossAmountDoesntMatchItemsAmount()
   }
 
   onBaseFormReady(form: FormGroup) {
@@ -321,6 +334,36 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     return VatRateLabels[rate as VatRate];
   }
 
+  useSubscriptionsToCountSum(sectionId: string, form: FormGroup) {
+    if (sectionId !== 'main_section') return;
+
+    const unitCtrl = form.get('unitPrice');
+    const qtyCtrl = form.get('quantity');
+    const vatRateCtrl = form.get('vatRate');
+    const netCtrl = form.get('netAmount');
+    const vatCtrl = form.get('vatAmount');
+    const grossCtrl = form.get('grossAmount');
+
+    const recalculate = () => {
+      const unitPrice = parseFloat(unitCtrl?.value) || 0;
+      const quantity = parseFloat(qtyCtrl?.value) || 0;
+      const vatRate = vatRateCtrl?.value?.value as VatRate;
+      const vatPercent = VAT_RATE_PERCENT[vatRate] ?? 0;
+
+      const net = unitPrice * quantity;
+      const vat = net * vatPercent / 100;
+      const gross = net + vat;
+
+      netCtrl?.setValue(round(net, 2), { emitEvent: false });
+      vatCtrl?.setValue(round(vat, 2), { emitEvent: false });
+      grossCtrl?.setValue(round(gross, 2), { emitEvent: false });
+    };
+
+    unitCtrl?.valueChanges.subscribe(recalculate);
+    qtyCtrl?.valueChanges.subscribe(recalculate);
+    vatRateCtrl?.valueChanges.subscribe(recalculate);
+  }
+
   async addNewPolozkaFaktury() {
     const newItem = populateDefaults(CREATE_INVOICE_ITEM_FIELDS, {});
 
@@ -334,35 +377,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         sectionTitle: "Informace o položce"
       }],
       type: DialogType.SUCCESS
-    }, (sectionId, form) => {
-      if (sectionId !== 'main_section') return;
-
-      const unitCtrl = form.get('unitPrice');
-      const qtyCtrl = form.get('quantity');
-      const vatRateCtrl = form.get('vatRate');
-      const netCtrl = form.get('netAmount');
-      const vatCtrl = form.get('vatAmount');
-      const grossCtrl = form.get('grossAmount');
-
-      const recalculate = () => {
-        const unitPrice = parseFloat(unitCtrl?.value) || 0;
-        const quantity = parseFloat(qtyCtrl?.value) || 0;
-        const vatRate = vatRateCtrl?.value?.value as VatRate;
-        const vatPercent = VAT_RATE_PERCENT[vatRate] ?? 0;
-
-        const net = unitPrice * quantity;
-        const vat = net * vatPercent / 100;
-        const gross = net + vat;
-
-        netCtrl?.setValue(round(net, 2), { emitEvent: false });
-        vatCtrl?.setValue(round(vat, 2), { emitEvent: false });
-        grossCtrl?.setValue(round(gross, 2), { emitEvent: false });
-      };
-
-      unitCtrl?.valueChanges.subscribe(recalculate);
-      qtyCtrl?.valueChanges.subscribe(recalculate);
-      vatRateCtrl?.valueChanges.subscribe(recalculate);
-    });
+    }, (sectionId, form) => this.useSubscriptionsToCountSum(sectionId,form));
 
     const response = await responsePromise;
     if (!response) return;
@@ -370,6 +385,8 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     const newPolozka: InvoiceItemDto = this.mapToInvoiceItemCreateDto(response);
     newPolozka.id = newPolozka.id == '' ? undefined : newPolozka.id;
     this.invoiceItems.push(newPolozka as InvoiceItemDto);
+    this.totalGrossAmountDoesntMatchItemsAmount()
+
   }
 
   async editPolozka(item: InvoiceItemDto, index: number) {
@@ -385,12 +402,14 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
           sectionTitle: "Informace o položce"
         }],
       type: DialogType.SUCCESS
-    })
+    }, (sectionId, form) => this.useSubscriptionsToCountSum(sectionId,form))
 
     if(!response) return;
 
     const updatedItem = this.mapToInvoiceItemCreateDto(response)
     this.invoiceItems[index] = updatedItem as InvoiceItemDto;
+    this.baseForm.markAsDirty()
+    this.totalGrossAmountDoesntMatchItemsAmount()
   }
 
   countSum() {
@@ -514,4 +533,5 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
   protected readonly BaseMaterialIcons = BaseMaterialIcons;
   protected readonly VatRateLabels = VatRateLabels;
   protected readonly VatRate = VatRate;
+  protected readonly round = round;
 }

@@ -13,8 +13,8 @@
 
     <ng-template #drawerContent>
       <div class="drawer-content">
-        <h2 style="margin-bottom: 1rem;">Položky faktury ({{ invoiceItems.length }}) - {{ countSum() | number:'1.2-2' }} Kč</h2>
-
+        <h2 style="margin-bottom: 1rem;">Položky faktury ({{ invoiceItems.length }}) - {{ round(countSum(),2)}} Kč</h2>
+        <h4 *ngIf="this.totalGrossAmountDoesntMatchItemsAmount()" class="alert-warning">Nesrovnalost částek!</h4>
         <div class="toolbar-row">
           <ng-container *ngFor="let btn of invoiceItemSectionToolbarButtons">
             <app-toolbar-button [btn]="btn" />

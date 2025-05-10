@@ -139,22 +139,22 @@ export const CREATE_INVOICE_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     visible: true
   },
   {
-    formControlName: 'netAmount',
-    label: 'Částka bez DPH',
-    type: FormFieldTypes.NUMBER,
-    defaultValueGetter: (i: InvoiceItemDto) => i.netAmount,
-    validator: [{ validator: CustomValidator.MIN, params: 0 }],
-    visible: true
-  },
-  {
     formControlName: 'vatRate',
-    label: 'Sazba DPH (%)',
+    label: 'Sazba DPH',
     type: FormFieldTypes.LOOKUP,
     defaultValueGetter: (i: InvoiceItemDto) => i.vatRate,
     options: VAT_RATE_OPTIONS,
     validator: [
       { validator: CustomValidator.REQUIRED }
     ],
+    visible: true
+  },
+  {
+    formControlName: 'netAmount',
+    label: 'Částka bez DPH',
+    type: FormFieldTypes.NUMBER,
+    defaultValueGetter: (i: InvoiceItemDto) => i.netAmount,
+    validator: [{ validator: CustomValidator.MIN, params: 0 }],
     visible: true
   },
   {
