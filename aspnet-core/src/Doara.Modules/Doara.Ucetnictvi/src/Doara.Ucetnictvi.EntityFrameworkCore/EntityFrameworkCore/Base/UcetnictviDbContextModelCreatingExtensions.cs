@@ -107,6 +107,10 @@ public static class UcetnictviDbContextModelCreatingExtensions
             b.Property(s => s.IssueDate).IsRequired();
             b.Property(s => s.TaxDate);
             b.Property(s => s.DeliveryDate);
+            b.Property(s => s.InvoiceType).HasConversion(
+                    x => (char)x, 
+                    x => (InvoiceType)x)
+                .IsRequired();
             b.Property(s => s.TotalNetAmount).IsRequired();
             b.Property(s => s.TotalVatAmount).IsRequired();
             b.Property(s => s.TotalGrossAmount).IsRequired();

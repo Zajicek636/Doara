@@ -75,6 +75,7 @@ public static class RandomFakeEntityGenerator
             Id = Guid.NewGuid(),
             IsDeleted = false,
             TenantId = null,
+            InvoiceType = InvoiceType.DraftProposal,
             InvoiceNumber = RandomGenerator.RandomAlpNum(1, FakeInvoice.MaxInvoiceNumberLength),
             SupplierId = Guid.NewGuid(),
             CustomerId = Guid.NewGuid(),

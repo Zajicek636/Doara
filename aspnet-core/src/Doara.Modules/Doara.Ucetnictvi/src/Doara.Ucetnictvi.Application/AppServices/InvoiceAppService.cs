@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using Doara.Ucetnictvi.Dto.Invoice;
 using Doara.Ucetnictvi.Dto.InvoiceItem;
 using Doara.Ucetnictvi.Entities;
+using Doara.Ucetnictvi.Enums;
 using Doara.Ucetnictvi.IAppServices;
 using Doara.Ucetnictvi.Permissions;
 using Doara.Ucetnictvi.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
-using Volo.Abp.Domain.Entities;
 
 namespace Doara.Ucetnictvi.AppServices;
 
@@ -72,7 +72,7 @@ public class InvoiceAppService(IInvoiceRepository invoiceRepository, ISubjectRep
         }
         
         var guid = GuidGenerator.Create();
-        var invoice = new Invoice(guid, input.InvoiceNumber, input.SupplierId, input.CustomerId, 
+        var invoice = new Invoice(guid, InvoiceType.DraftProposal, input.InvoiceNumber, input.SupplierId, input.CustomerId, 
             input.IssueDate, input.TaxDate, input.DeliveryDate, input.TotalNetAmount, input.TotalVatAmount,
             input.TotalGrossAmount, input.PaymentTerms, input.VatRate, 
             input.VariableSymbol, input.ConstantSymbol, input.SpecificSymbol);
@@ -104,6 +104,7 @@ public class InvoiceAppService(IInvoiceRepository invoiceRepository, ISubjectRep
         }
         
         var invoice = await invoiceRepository.GetAsync(id);
+        invoice.EnsureNotCompleted();
         invoice.SetInvoiceNumber(input.InvoiceNumber).SetSupplier(input.SupplierId)
             .SetCustomer(input.CustomerId).SetIssueDate(input.IssueDate)
             .SetTaxDate(input.TaxDate).SetDeliveryDate(input.DeliveryDate)
@@ -116,11 +117,20 @@ public class InvoiceAppService(IInvoiceRepository invoiceRepository, ISubjectRep
         return ObjectMapper.Map<Invoice, InvoiceDetailDto>(res); 
     }
 
+    public async Task<InvoiceDetailDto> CompleteAsync(Guid id)
+    {
+        var invoice = await invoiceRepository.GetAsync(id);
+        invoice.SetInvoiceType(InvoiceType.FinalInvoice);
+        var res = await invoiceRepository.UpdateAsync(invoice);
+        return ObjectMapper.Map<Invoice, InvoiceDetailDto>(res); 
+    }
+
     [Authorize(UcetnictviPermissions.DeleteInvoicePermission)]
     public async Task DeleteAsync(Guid id)
     {
         var invoice = await invoiceRepository.GetAsync(id);
-
+        invoice.EnsureNotCompleted();
+        
         await invoiceItemAppService.ManageManyAsync(new InvoiceItemManageManyInputDto
         {
             InvoiceId = invoice.Id,

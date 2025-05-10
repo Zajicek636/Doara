@@ -64,6 +64,7 @@ public static class Comparator
         exShould.ShouldBe(entity.Id, data.Id);
         exShould.ShouldBe(entity.IsDeleted, data.IsDeleted);
         exShould.ShouldBe(entity.TenantId, data.TenantId);
+        exShould.ShouldBe(entity.InvoiceType, data.InvoiceType);
         exShould.ShouldBe(entity.InvoiceNumber, data.InvoiceNumber);
         exShould.ShouldBe(entity.SupplierId, data.SupplierId);
         exShould.ShouldBe(entity.CustomerId, data.CustomerId);

@@ -14,6 +14,7 @@ public class FakeInvoice : IFakeEntity<Invoice>
     public bool IsDeleted { get; set; }
     public Guid? TenantId { get; set; }
     public string InvoiceNumber { get; set; } = null!;
+    public InvoiceType InvoiceType { get; set; }
     public Guid SupplierId { get; set; }
     public Guid CustomerId { get; set; }
     public DateTime IssueDate { get; set; }// Datum vystavení faktury

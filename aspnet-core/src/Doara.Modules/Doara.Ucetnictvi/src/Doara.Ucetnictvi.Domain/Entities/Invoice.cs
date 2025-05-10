@@ -29,15 +29,17 @@ public class Invoice : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
     public virtual string? VariableSymbol { get; private set; }
     public virtual string? ConstantSymbol { get; private set; }
     public virtual string? SpecificSymbol { get; private set; }
+    public virtual InvoiceType InvoiceType { get; private set; }
     public virtual ICollection<InvoiceItem> Items { get; private set; }// Položky faktury
 
-    public Invoice(Guid id, string invoiceNumber, Guid supplierId, Guid customerId, DateTime issueDate, DateTime? taxDate, DateTime? deliveryDate, decimal totalNetAmount, decimal totalVatAmount, decimal totalGrossAmount, string? paymentTerms, VatRate? vatRate, string? variableSymbol, string? constantSymbol, string? specificSymbol) :
-        this(id, invoiceNumber, supplierId, customerId, issueDate, taxDate, deliveryDate, totalNetAmount, totalVatAmount, totalGrossAmount, paymentTerms, vatRate ?? VatRate.None, variableSymbol, constantSymbol, specificSymbol)
+    public Invoice(Guid id, InvoiceType invoiceType, string invoiceNumber, Guid supplierId, Guid customerId, DateTime issueDate, DateTime? taxDate, DateTime? deliveryDate, decimal totalNetAmount, decimal totalVatAmount, decimal totalGrossAmount, string? paymentTerms, VatRate? vatRate, string? variableSymbol, string? constantSymbol, string? specificSymbol) :
+        this(id, invoiceType, invoiceNumber, supplierId, customerId, issueDate, taxDate, deliveryDate, totalNetAmount, totalVatAmount, totalGrossAmount, paymentTerms, vatRate ?? VatRate.None, variableSymbol, constantSymbol, specificSymbol)
     {
     }
     
-    protected Invoice(Guid id, string invoiceNumber, Guid supplierId, Guid customerId, DateTime issueDate, DateTime? taxDate, DateTime? deliveryDate, decimal totalNetAmount, decimal totalVatAmount, decimal totalGrossAmount, string? paymentTerms, VatRate vatRate, string? variableSymbol, string? constantSymbol, string? specificSymbol) : base(id)
+    protected Invoice(Guid id, InvoiceType invoiceType, string invoiceNumber, Guid supplierId, Guid customerId, DateTime issueDate, DateTime? taxDate, DateTime? deliveryDate, decimal totalNetAmount, decimal totalVatAmount, decimal totalGrossAmount, string? paymentTerms, VatRate vatRate, string? variableSymbol, string? constantSymbol, string? specificSymbol) : base(id)
     {
+        EnsureNotCompleted();
         SetInvoiceNumber(invoiceNumber)
             .SetSupplier(supplierId)
             .SetCustomer(customerId)
@@ -51,102 +53,134 @@ public class Invoice : AuditedAggregateRoot<Guid>, ISoftDelete, IMultiTenant
             .SetVatRate(vatRate)
             .SetVariableSymbol(variableSymbol)
             .SetConstantSymbol(constantSymbol)
-            .SetSpecificSymbol(specificSymbol);
+            .SetSpecificSymbol(specificSymbol)
+            .SetInvoiceType(invoiceType);
         Items = new Collection<InvoiceItem>();
+    }
+
+    public void EnsureNotCompleted()
+    {
+        if (InvoiceType == InvoiceType.FinalInvoice)
+        {
+            throw new BusinessException(UcetnictviErrorCodes.InvoiceCompletedCannotModifyOrDelete);
+        }
+    }
+
+    public Invoice SetInvoiceType(InvoiceType invoiceType)
+    {
+        EnsureNotCompleted();
+        InvoiceType = invoiceType;
+        return this;
     }
 
     public Invoice SetInvoiceNumber(string invoiceNumber)
     {
+        EnsureNotCompleted();
         InvoiceNumber = Check.NotNullOrWhiteSpace(invoiceNumber, nameof(InvoiceNumber), InvoiceConstants.MaxInvoiceNumberLength);
         return this;
     }
     
     public Invoice SetSupplier(Guid supplierId)
     {
+        EnsureNotCompleted();
         SupplierId = Check.NotNull(supplierId, nameof(SupplierId));
         return this;
     }
     
     public Invoice SetSupplier(Subject supplier)
     {
+        EnsureNotCompleted();
         Supplier = supplier;
         return SetSupplier(supplier.Id);
     }
     
     public Invoice SetCustomer(Guid customerId)
     {
+        EnsureNotCompleted();
         CustomerId = Check.NotNull(customerId, nameof(CustomerId));
         return this;
     }
     
     public Invoice SetCustomer(Subject customer)
     {
+        EnsureNotCompleted();
         Customer = customer;
         return SetCustomer(customer.Id);
     }
     
     public Invoice SetIssueDate(DateTime issueDate)
     {
+        EnsureNotCompleted();
         IssueDate = Check.NotNull(issueDate, nameof(IssueDate));
         return this;
     }
     
     public Invoice SetTaxDate(DateTime? taxDate)
     {
+        EnsureNotCompleted();
         TaxDate = taxDate;
         return this;
     }
     
     public Invoice SetDeliveryDate(DateTime? deliveryDate)
     {
+        EnsureNotCompleted();
         DeliveryDate = deliveryDate;
         return this;
     }
     
     public Invoice SetTotalNetAmount(decimal totalNetAmount)
     {
+        EnsureNotCompleted();
         TotalNetAmount = Check.NotNull(totalNetAmount, nameof(TotalNetAmount));
         return this;
     }
     
     public Invoice SetTotalVatAmount(decimal totalVatAmount)
     {
+        EnsureNotCompleted();
         TotalVatAmount = Check.NotNull(totalVatAmount, nameof(TotalVatAmount));
         return this;
     }
     
     public Invoice SetTotalGrossAmount(decimal totalGrossAmount)
     {
+        EnsureNotCompleted();
         TotalGrossAmount = Check.NotNull(totalGrossAmount, nameof(TotalGrossAmount));
         return this;
     }
     
     public Invoice SetPaymentTerms(string? paymentTerms)
     {
+        EnsureNotCompleted();
         PaymentTerms = Check.Length(paymentTerms, nameof(PaymentTerms), InvoiceConstants.MaxPaymentTermsLength);
         return this;
     }
     
     public Invoice SetVatRate(VatRate? vatRate)
     {
+        EnsureNotCompleted();
         VatRate = vatRate ?? VatRate.None;
         return this;
     }
     
     public Invoice SetVariableSymbol(string? variableSymbol)
     {
+        EnsureNotCompleted();
         VariableSymbol = Check.Length(variableSymbol, nameof(VariableSymbol), InvoiceConstants.MaxVariableSymbolLength);
         return this;
     }
     
     public Invoice SetConstantSymbol(string? constantSymbol)
     {
+        EnsureNotCompleted();
         ConstantSymbol = Check.Length(constantSymbol, nameof(ConstantSymbol), InvoiceConstants.MaxConstantSymbolLength);
         return this;
     }
     
     public Invoice SetSpecificSymbol(string? specificSymbol)
     {
+        EnsureNotCompleted();
         SpecificSymbol = Check.Length(specificSymbol, nameof(SpecificSymbol), InvoiceConstants.MaxSpecificSymbolLength);
         return this;
     }

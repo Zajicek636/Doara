@@ -9,6 +9,7 @@ public class InvoiceDto : EntityDto<Guid>
     public string InvoiceNumber { get; set; } = null!;
     public Guid SupplierId { get; set; }
     public Guid CustomerId { get; set; }
+    public InvoiceType InvoiceType { get; set; }
     public DateTime IssueDate { get; set; }// Datum vystavení faktury
     public DateTime? TaxDate { get; set; }// Datum uskutečnění plnění (nebo datum přijetí platby)
     public DateTime? DeliveryDate { get; set; }// Datum zdanitelného plnění (pokud se liší)
