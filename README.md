@@ -99,7 +99,9 @@ Frontend běží na: [http://localhost:4200](http://localhost:4200)
 
 ## ✅ Hotovo!
 
-Frontend i backend jsou nyní propojené a připravené pro vývoj/testování.
+Před použitím aplikace je nutné prostřednictvím rozhraní Swagger ručně přidat záznamy zemí (Country), protože se předpokládá, že je nastaví administrátor.
+
+Frontend a backend jsou nyní úspěšně propojeny a připraveny k dalšímu vývoji nebo testování.
 
 ---
 
