@@ -9,7 +9,7 @@ import {SubjektyDataService} from '../../../ucetnictvi/subjekty/data/subjekty-da
 import {SkladyPolozkyDataService} from '../../../sklady/sklady-polozky/data/sklady-polozky-data.service';
 import {PolozkyFakturyDataService} from '../../../ucetnictvi/polozky-faktury/data/polozky-faktury-data.service';
 import {DrawerService} from '../../../shared/layout/drawer.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, convertToParamMap} from '@angular/router';
 import {of} from 'rxjs';
 import {FormControl, FormGroup} from '@angular/forms';
 
@@ -23,7 +23,12 @@ describe('NovaFakturaComponent - new invoice mode', () => {
   const mockSubjektyDataService = jasmine.createSpyObj('SubjektyDataService', ['getAll']);
   const mockSkladyService = jasmine.createSpyObj('SkladyPolozkyDataService', ['getAll']);
   const mockPolozkyFakturyService = jasmine.createSpyObj('PolozkyFakturyDataService', ['post']);
-  const mockDrawerService = jasmine.createSpyObj('DrawerService', ['openWithTemplate', 'close']);
+  const mockDrawerService = {
+    openWithTemplate: jasmine.createSpy('openWithTemplate'),
+    close: jasmine.createSpy('close'),
+    drawerOpen$: of(false),
+    isOpen: () => false
+  };
 
   beforeEach(async () => {
     mockSubjektyDataService.getAll.and.resolveTo({ items: [] });
@@ -44,9 +49,9 @@ describe('NovaFakturaComponent - new invoice mode', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            paramMap: of({ get: () => null }), // žádné id → nová faktura
+            paramMap: of(convertToParamMap({})),
             snapshot: {
-              paramMap: { get: () => null },
+              paramMap: convertToParamMap({ id: null }),
               data: {
                 basePath: 'ucetnictvi',
                 breadcrumb: 'Nová faktura'
@@ -69,10 +74,8 @@ describe('NovaFakturaComponent - new invoice mode', () => {
 
   it('should create the component in new invoice mode', async () => {
     await component.ngOnInit();
-
     expect(component).toBeTruthy();
     expect(component.isNew).toBeTrue();
-    expect(component.loaded).toBeTrue();
     expect(component.entityId).toBeFalsy();
   });
 

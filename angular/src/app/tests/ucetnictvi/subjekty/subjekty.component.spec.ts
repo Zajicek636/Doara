@@ -145,12 +145,16 @@ describe('SubjektyComponent', () => {
   });
 
   it('should not delete subjekt if confirmation is cancelled', async () => {
-    component.chosenElement = { id: 'x1' } as any;
+    component.chosenElement = {
+      id: 'x1',
+      name: 'Firma s.r.o.',
+      ic: '12345678'
+    } as any;
     component.tableComponent = {
       dataSource: { data: [component.chosenElement] }
     } as any;
 
-    mockDialogService.confirmAsync.and.resolveTo(undefined);
+    mockDialogService.confirmAsync.and.resolveTo(false);
 
     await component.deleteSubjekt();
 

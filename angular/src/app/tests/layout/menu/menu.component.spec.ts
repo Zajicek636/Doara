@@ -42,7 +42,7 @@ describe('MenuComponent', () => {
 
     // Nyní hledej podřízené položky
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('Seznam faktur');
+    expect(compiled.textContent).toContain('Seznam dokladů');
     expect(compiled.textContent).toContain('Subjekty');
   });
 

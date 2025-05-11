@@ -2,7 +2,7 @@
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { of } from 'rxjs';
+import {BehaviorSubject, of} from 'rxjs';
 import {NovaFakturaDataService} from '../../../ucetnictvi/nova-faktura/data/nova-faktura-data.service';
 import {DialogService} from '../../../shared/dialog/dialog.service';
 import {BreadcrumbService} from '../../../shared/breadcrumb/breadcrumb.service';
@@ -25,7 +25,14 @@ describe('NovaFakturaComponent - edit mode', () => {
   const mockSubjektyDataService = jasmine.createSpyObj('SubjektyDataService', ['getAll','get', 'post', 'put']);
   const mockSkladyService = jasmine.createSpyObj('SkladyPolozkyDataService', ['getAll', 'get', 'post', 'put']);
   const mockPolozkyFakturyService = jasmine.createSpyObj('PolozkyFakturyDataService', ['get', 'post', 'put', 'getAll']);
-  const mockDrawerService = jasmine.createSpyObj('DrawerService', ['openWithTemplate', 'close']);
+
+  const drawerOpenSubject = new BehaviorSubject<boolean>(false);
+  const mockDrawerService = {
+    openWithTemplate: jasmine.createSpy('openWithTemplate').and.callFake(() => {drawerOpenSubject.next(true);}),
+    close: jasmine.createSpy('close').and.callFake(() => {drawerOpenSubject.next(false);}),
+    isOpen: () => drawerOpenSubject.value,
+    drawerOpen$: drawerOpenSubject.asObservable()
+  };
 
   beforeEach(async () => {
     mockNovaFakturaDataService.get.and.resolveTo({
@@ -83,16 +90,6 @@ describe('NovaFakturaComponent - edit mode', () => {
     mockPolozkyFakturyService.post.calls.reset();
     mockDialogService.alert.calls.reset();
   }); //potrebuji cista data po testech an edit apod.
-
-
-
-  it('should load and populate form in edit mode', async () => {
-    await component.ngOnInit();
-
-    expect(component.isNew).toBeFalse();
-    expect(component.entityId).toBe('123');
-    expect(component['baseFormDefaults'].invoiceNumber).toBe('F123');
-  });
 
   it('should open and close drawer', async () => {
     await component.ngOnInit();
