@@ -4,7 +4,6 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
 import {ColumnSetting, TableSettings} from './table.settings';
-import {CacheService} from '../../cache/cache.service';
 import {DialogService} from '../../dialog/dialog.service';
 import {DialogType} from '../../dialog/dialog.interfaces';
 import {fieldsToColumns} from '../../forms/form-field.utils';
@@ -168,15 +167,6 @@ export class DynamicTableComponent<T> implements OnInit, AfterViewInit {
       })
       this.dataSource.data = [];
       this.totalCount = 0;
-
-      // Nepovinně: zobrazit dialog s chybou
-      /*
-      await this.dialogService.alert({
-        title: 'Chyba',
-        dialogType: DialogType.ERROR,
-        message: 'Chyba při načítání dat z externího zdroje'
-      });
-      */
     }
   }
 

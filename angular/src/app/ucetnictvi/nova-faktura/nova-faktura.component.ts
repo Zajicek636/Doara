@@ -460,8 +460,8 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
   async editPolozka(item: InvoiceItemDto, index: number) {
     const newItem = populateDefaults(CREATE_INVOICE_ITEM_FIELDS, item)
     const response = await this.dialogService.form({
-      headerIcon: BaseMaterialIcons.PLUS,
-      title: `Nová položka faktury`,
+      headerIcon: BaseMaterialIcons.EDIT,
+      title: `Editace položky faktury`,
       sections: [
         {
           sectionId: "main_section",
@@ -498,6 +498,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
       this.invoiceItemsForDelete.push(existringItem.id!);
     }
     this.invoiceItems.splice(index, 1);
+    this.refreshToolbarButtons();
   }
 
   private mapToInvoiceItemCreateDto(response: DynamicDialogResult): InvoiceItemDto {
@@ -565,7 +566,14 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         items: this.invoiceItems,
         itemsForDelete: this.invoiceItemsForDelete
       }
-      await this.polozkyFakturyDataService.post('', invoiceItems, {useSuffix: true})
+      const res: any = await this.polozkyFakturyDataService.post('', invoiceItems, {useSuffix: true})
+      if(res?.hasErrors) {
+        await this.dialogService.alert({
+          title: "Chyba",
+          message: res.errors.join('\n') ?? 'Došlo k neznámé chybě při ukládání faktury.',
+          dialogType: DialogType.ERROR,
+        });
+      }
       this.invoiceItemsDefault = [...this.invoiceItems];
       this.setFormCleanAndRefresh();
     }
