@@ -17,13 +17,8 @@ export class BreadcrumbService {
     this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
       .subscribe(() => {
-        // 1) Vezmi dříve uložené crumby (pokud existují)
         const history: IBreadCrumb[] = window.history.state.previousBreadcrumbs ?? [];
-
-        // 2) Vygeneruj nové podle URL & data.breadcrumb
         const generated = this.buildBreadcrumbs(this.activatedRoute.root);
-
-        // 3) Sloučíme obojí
         this._breadcrumbs.next([ ...history, ...generated ]);
       });
   }

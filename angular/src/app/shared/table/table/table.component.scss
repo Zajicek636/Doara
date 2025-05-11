@@ -38,3 +38,19 @@ tr:active {
   bottom: 0;
   z-index: 2;
 }
+
+.link-cell {
+  color: #1976d2;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+
+  mat-icon {
+    font-size: 20px;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

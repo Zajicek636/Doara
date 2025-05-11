@@ -6,5 +6,6 @@
     [dataService]="this.dataService"
     (selectedElement)="this.clickedElement($event)"
     (rowDoubleClicked)="this.handleDoubleClick($event)"
+    (linkClick)="handleNavigation($event)"
   />
 </div>

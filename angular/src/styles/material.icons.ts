@@ -14,9 +14,9 @@
   DELETE = "delete",
   MOVEMENT = "move_down",
   HOME = "home",
-
-
-
+  WARNING = "warning",
+  CLOSE = "close",
+  INFO = "info",
 
   //---PAYMENT
   GRAPH_INCREASE = "data_thresholding",

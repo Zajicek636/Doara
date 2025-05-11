@@ -43,6 +43,7 @@ export interface InvoiceDto {
 export interface InvoiceDetailDto {
   id: string;
   invoiceNumber?: string;
+  invoiceType: number
   supplier: SubjektDetailDto;
   customer: SubjektDetailDto;
   issueDate: string;
@@ -57,6 +58,16 @@ export interface InvoiceDetailDto {
   constantSymbol?: string;
   specificSymbol?: string;
   items: InvoiceItemDto[];
+}
+
+export enum InvoiceType {
+  DraftProposal = 79,
+  FinalInvoice = 70,
+}
+
+export const InvoiceLabels: Record<InvoiceType, string> = {
+  [InvoiceType.FinalInvoice]: 'Zpracována',
+  [InvoiceType.DraftProposal]: 'Návrh/Objednávka',
 }
 
 export enum VatRate {
@@ -139,6 +150,14 @@ export const CREATE_INVOICE_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     visible: true
   },
   {
+    formControlName: 'netAmount',
+    label: 'Částka bez DPH',
+    type: FormFieldTypes.NUMBER,
+    defaultValueGetter: (i: InvoiceItemDto) => i.netAmount,
+    validator: [{ validator: CustomValidator.MIN, params: 0 }],
+    visible: true
+  },
+  {
     formControlName: 'vatRate',
     label: 'Sazba DPH',
     type: FormFieldTypes.LOOKUP,
@@ -147,14 +166,6 @@ export const CREATE_INVOICE_ITEM_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     validator: [
       { validator: CustomValidator.REQUIRED }
     ],
-    visible: true
-  },
-  {
-    formControlName: 'netAmount',
-    label: 'Částka bez DPH',
-    type: FormFieldTypes.NUMBER,
-    defaultValueGetter: (i: InvoiceItemDto) => i.netAmount,
-    validator: [{ validator: CustomValidator.MIN, params: 0 }],
     visible: true
   },
   {
@@ -239,6 +250,15 @@ export const CREATE_EDIT_FAKTURA_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     visible: true
   },
   {
+    formControlName: 'vatRate',
+    label: 'Sazba DPH',
+    type: FormFieldTypes.LOOKUP,
+    defaultValueGetter: (s: InvoiceDto) => s.vatRate,
+    options: VAT_RATE_OPTIONS,
+    validator: [{ validator: CustomValidator.REQUIRED},{ validator: CustomValidator.MIN, params:0 }],
+    visible: true
+  },
+  {
     formControlName: 'totalVatAmount',
     label: 'DPH',
     type: FormFieldTypes.NUMBER,
@@ -260,15 +280,6 @@ export const CREATE_EDIT_FAKTURA_FIELDS: Omit<FormField, 'defaultValue'>[] = [
     type: FormFieldTypes.TEXT,
     defaultValueGetter: (s: InvoiceDto) => s.paymentTerms,
     validator: [],
-    visible: true
-  },
-  {
-    formControlName: 'vatRate',
-    label: 'Sazba DPH',
-    type: FormFieldTypes.LOOKUP,
-    defaultValueGetter: (s: InvoiceDto) => s.vatRate,
-    options: VAT_RATE_OPTIONS,
-    validator: [{ validator: CustomValidator.REQUIRED},{ validator: CustomValidator.MIN, params:0 }],
     visible: true
   },
   {

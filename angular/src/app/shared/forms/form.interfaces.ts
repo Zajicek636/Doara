@@ -47,4 +47,6 @@ export interface  FormField {
   visible?: boolean;
   //helpingy pro default values z dto pro table a mapovani a asynchronni operace
   defaultValueGetter: (dto: any) => any;
+  isReference?: boolean; // nově
+  referenceLabel?: string | ((dto: any) => string);
 }

@@ -12,6 +12,7 @@ export class SeznamFakturCrudSettings implements CrudSettings<string, InvoiceDto
   postUrl?: string;
   getAllSuffix?: string = "GetAll";
   queryParam?: string;
+  postSuffix: string = "Complete";
 
   idGetter(entity: any): string {
     return entity.id;

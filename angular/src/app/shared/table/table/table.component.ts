@@ -23,6 +23,7 @@ export class DynamicTableComponent<T> implements OnInit, AfterViewInit {
 
   @Output() rowDoubleClicked = new EventEmitter<T>();
   @Output() selectedElement = new EventEmitter<T>();
+  @Output() linkClick = new EventEmitter<T>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -94,6 +95,11 @@ export class DynamicTableComponent<T> implements OnInit, AfterViewInit {
       this.pageCache.clear();
       this.loadData();
     });
+  }
+
+  onLinkClick(row: T, event: Event) {
+    event.preventDefault();
+    this.linkClick.emit(row);
   }
 
   applyFilter(event: Event): void {

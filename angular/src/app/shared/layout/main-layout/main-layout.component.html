@@ -1,20 +1,21 @@
-  <app-header (toggleLeft)="onLeftDrawerClick($event)"></app-header>
-  <app-loading></app-loading>
+<app-header (toggleLeft)="onLeftDrawerClick($event)"></app-header>
+<app-loading></app-loading>
 
-  <div class="main-container">
-    <mat-sidenav-container class="mat-drawer-container">
-      <mat-sidenav class="menu" [opened]="true" #leftDrawer position="start" mode="side">
-        <app-menu></app-menu>
-      </mat-sidenav>
+<div class="main-container">
+  <mat-sidenav-container class="mat-drawer-container">
+    <mat-sidenav class="menu" [opened]="true" #leftDrawer position="start" mode="side">
+      <app-menu></app-menu>
+    </mat-sidenav>
 
 
-      <mat-sidenav class="drawer-second" [opened]="false" #drawer position="end" mode="side">
-        <ng-template #drawerOutlet></ng-template>
-      </mat-sidenav>
+    <mat-sidenav class="drawer-second" [opened]="false" #drawer position="end" mode="side" (closedStart)="onDrawerClosed()">
+      <button mat-icon-button (click)="drawer.close()"><mat-icon>{{BaseMaterialIcons.CLOSE}}</mat-icon></button>
+      <ng-template #drawerOutlet></ng-template>
+    </mat-sidenav>
 
-      <mat-sidenav-content class="content">
-        <app-breadcrumb></app-breadcrumb>
-          <router-outlet></router-outlet>
-      </mat-sidenav-content>
-    </mat-sidenav-container>
-  </div>
+    <mat-sidenav-content class="content">
+      <app-breadcrumb></app-breadcrumb>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

@@ -2,6 +2,7 @@
 import {InvoiceDto, VatRate, VatRateLabels} from '../../../ucetnictvi/nova-faktura/data/nova-faktura.interfaces';
 import {CustomValidator, FormField, FormFieldTypes} from '../../../shared/forms/form.interfaces';
 import {ContainerItemCreateEditDto} from '../../polozka-kontejneru/data/polozka-kontejneru.interfaces';
+import {BaseMaterialIcons} from '../../../../styles/material.icons';
 
 export interface MovementDto {
   id?: string;
@@ -28,7 +29,7 @@ export const MovementCategoryLabels: Record<MovementCategory, string> = {
 export const MOVEMENT_COLUMNS: ColumnSetting<MovementDto>[] = [
   { key: 'movementCategory', header: 'Typ pohybu', valueGetter: r => MovementCategoryLabels[r.movementCategory as MovementCategory] },
   { key: 'quantity', header: 'Množství', valueGetter: r => r.quantity.toString() },
-  { key: 'relatedDocument', header: 'Číslo dokladu', valueGetter: r => r.relatedDocumentId ?? '' },
+  { key: 'relatedDocument', header: 'Číslo dokladu', valueGetter: r => r.relatedDocumentId ?? '', referenceLabelGetter:() =>"Doklad", isReference: true,},
 ];
 
 export const ADD_NEW_ITEMS_TO_CONTAINER: Omit<FormField, 'defaultValue'>[] = [

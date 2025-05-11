@@ -43,6 +43,10 @@ export class SkladyPohybyPolozkyComponent extends BaseContentComponent<MovementD
     this.loadData()
   }
 
+  handleLink(item: MovementDto) {
+    this.router.navigate(['ucetnictvi/doklad', item.relatedDocumentId], {state: { previousBreadcrumbs: this.breadcrumbService.breadcrumbsValue }});
+  }
+
   protected override buildToolbarButtons(): ToolbarButton<MovementDto>[] {
     return [
       {
@@ -149,7 +153,6 @@ export class SkladyPohybyPolozkyComponent extends BaseContentComponent<MovementD
   }
 
   clickedElement(element: MovementDto) {
-    console.log("clickedElement", element);
     this.chosenElement = element
   }
 }

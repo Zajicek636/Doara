@@ -18,4 +18,8 @@ export interface ColumnSetting<T> {
   prop?: string;
   header?: string;
   valueGetter: (row: T) => string;
+  isReference?: boolean;
+  referenceLabelGetter?: (row: T) => string;
+  referenceAsIcon?: boolean;
+  referenceIcon?: string;
 }

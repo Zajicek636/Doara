@@ -52,7 +52,7 @@ describe('SeznamFakturComponent', () => {
     component.basePath = '';
     component.onAdd();
     expect(mockRouter.navigate).toHaveBeenCalledWith(
-      ['', 'faktura'],
+      ['', 'doklad'],
       { state: { previousBreadcrumbs: mockBreadcrumbService.breadcrumbsValue } }
     );
   });
@@ -62,7 +62,7 @@ describe('SeznamFakturComponent', () => {
     component.basePath = '';
     component.onEdit();
     expect(mockRouter.navigate).toHaveBeenCalledWith(
-      ['', 'faktura', '123'],
+      ['', 'doklad', '123'],
       { state: { previousBreadcrumbs: mockBreadcrumbService.breadcrumbsValue } }
     );
   });

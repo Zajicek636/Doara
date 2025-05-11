@@ -25,7 +25,8 @@
 }
 
 .drawer-second {
-  width: 30vw;
+  min-width: 300px;
+  width: 30%;
   background-color: $baseWhite;
   border-top-left-radius: unset!important;
   border-left: solid 1px $baseGreen !important;

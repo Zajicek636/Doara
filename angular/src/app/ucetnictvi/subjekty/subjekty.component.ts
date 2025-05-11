@@ -218,7 +218,6 @@ export class SubjektyComponent  extends BaseContentComponent<SubjektDetailDto, S
   }
 
   public clickedElement(row: SubjektDetailDto) {
-    console.log('clickedElement', row);
     this.chosenElement = row;
   }
 
