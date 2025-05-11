@@ -1,10 +1,14 @@
-﻿
-import {ColumnSetting} from '../../../shared/table/table/table.settings';
-import {InvoiceDto, VatRate, VatRateLabels} from '../../nova-faktura/data/nova-faktura.interfaces';
+﻿import {ColumnSetting} from '../../../shared/table/table/table.settings';
+import {
+  InvoiceDto, InvoiceLabels, InvoiceType,
+  VatRate,
+  VatRateLabels
+} from '../../nova-faktura/data/nova-faktura.interfaces';
 import {BaseMaterialIcons} from '../../../../styles/material.icons';
 
 export const INVOICE_COLUMNS: ColumnSetting<InvoiceDto>[] = [
   { key: 'invoiceNumber', header: 'Doklad', isReference: true, referenceAsIcon: true, referenceIcon: BaseMaterialIcons.NEW_QUOTE, valueGetter: r => r.invoiceNumber },
+  { key: 'invoiceType', header: 'Stav dokladu', valueGetter: r => InvoiceLabels[r.invoiceType as InvoiceType] },
   { key: 'issueDate', header: 'Datum vystavení', valueGetter: r => r.issueDate ? new Date(r.issueDate).toLocaleDateString() : '' },
   { key: 'taxDate', header: 'Datum DPH', valueGetter: r => r.taxDate ? new Date(r.taxDate).toLocaleDateString() : '' },
   { key: 'deliveryDate', header: 'Datum dodání', valueGetter: r => r.deliveryDate ? new Date(r.deliveryDate).toLocaleDateString() : '' },

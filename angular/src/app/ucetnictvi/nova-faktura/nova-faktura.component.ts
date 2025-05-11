@@ -15,7 +15,7 @@ import {
   CREATE_INVOICE_ITEM_FIELDS,
   InvoiceCreateEditDto,
   InvoiceDetailDto,
-  InvoiceDto,
+  InvoiceDto, InvoiceLabels,
   InvoiceType,
   VAT_RATE_PERCENT,
   VatRate,
@@ -25,7 +25,6 @@ import {SubjektDetailDto} from '../subjekty/data/subjekty.interfaces';
 import {FormGroup} from '@angular/forms';
 import {FormField} from '../../shared/forms/form.interfaces';
 import {InvoiceItemCreateManyDto, InvoiceItemDto} from '../polozky-faktury/data/polozky-faktury.interfaces';
-import {PolozkaKontejneruDataService} from '../../sklady/polozka-kontejneru/data/polozka-kontejneru-data.service';
 import {DialogType, DynamicDialogResult} from '../../shared/dialog/dialog.interfaces';
 import {NovaPolozkaKontejnerModal} from './nova-polozka-kontejner-modal';
 import {SkladyPolozkyDataService} from '../../sklady/sklady-polozky/data/sklady-polozky-data.service';
@@ -43,6 +42,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
   @ViewChild('drawerContent') drawerTemplate!: TemplateRef<any>;
   isNew = true;
   entity: InvoiceDto | null = null;
+  isNoEditableEntity: boolean = false;
 
   baseForm!: FormGroup;
   baseFormFields: FormField[] = [];
@@ -71,7 +71,6 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     protected override router: Router,
     protected override dialogService: DialogService,
     protected override route: ActivatedRoute,
-    private containerItemsDataService: PolozkaKontejneruDataService,
     private skladyPolozkyDataService: SkladyPolozkyDataService,
     private polozkyFakturyDataService: PolozkyFakturyDataService,
     private drawerService: DrawerService
@@ -91,6 +90,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
       this.drawerOpen = open;
     });
     this.loadData()
+    this.refreshToolbarButtons()
   }
 
   async loadData(): Promise<void> {
@@ -100,6 +100,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     await this.initSubjectsForm();
     await this.initInvocieItemsForm();
     await this.handleNewItem()
+    this.isNoEditableEntity = this.dokladState == InvoiceType.FinalInvoice
     this.loaded = true;
   }
 
@@ -178,7 +179,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         class: 'btn-primary',
         visible: !this.isNew,
         tooltip: "Vytvořit položku",
-        disabled: false,
+        disabled: this.isNoEditableEntity,
         action: () => this.addNewPolozkaFaktury()
       },
       {
@@ -188,7 +189,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         class: 'btn-primary',
         tooltip: "Přidat položku ze skladu",
         visible: !this.isNew,
-        disabled: false,
+        disabled: this.isNoEditableEntity,
         action: () => this.addNewPolozkaFromContainer()
       }
     ];
@@ -201,7 +202,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         icon: BaseMaterialIcons.SAVE,
         class: 'btn-primary',
         visible: true,
-        disabled: this.getSaveButtonDiasbledState,
+        disabled: this.getSaveButtonDiasbledState ||  this.isNoEditableEntity,
         action: () => this.saveFaktura()
       },
       {
@@ -221,7 +222,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         tooltip: "Zrušit",
         class: 'btn-secondary',
         visible: true,
-        disabled: !this.baseForm?.dirty,
+        disabled: !(this.baseForm?.dirty || this.isInvoiceItemsModified) || this.isNoEditableEntity,
         action: () => {this.resetFormToDefaults()}
       },
       {
@@ -231,19 +232,49 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         tooltip: "Doklad bude oznčen jako dokončený a nepůjde jej editovat",
         class: 'btn-secondary',
         visible: !this.isNew,
-        disabled: this.dokladState == InvoiceType.FinalInvoice || this.isNew || this.baseForm?.dirty,
-        action: () => {this.resetFormToDefaults()}
+        disabled: this.isNoEditableEntity || this.isNew || this.baseForm?.dirty,
+        action: () => {this.completeDoklad()}
       }
     ];
   }
 
-  get getCompleteFakturaDisableState() {
-    const st = this.dokladState == InvoiceType.DraftProposal;
-    const typ = !this.isNew
-    return st && typ
+  get isInvoiceItemsModified(): boolean {
+    return JSON.stringify(this.invoiceItems) !== JSON.stringify(this.invoiceItemsDefault);
   }
+
+  async completeDoklad() {
+    try {
+      const res = await this.dataService.post(this.entityId!,{} as any, {useSuffix: true})
+      if(res){
+        await this.reloadComponentState()
+      }
+    } catch (e: any) {
+      await this.dialogService.alert({
+        title: "Chyba",
+        message: e?.error?.error?.message ?? 'Došlo k neznámé chybě při ukládání faktury.',
+        dialogType: DialogType.ERROR,
+      });
+    }
+  }
+
+  async reloadComponentState(): Promise<void> {
+    this.loaded = false;
+    this.baseFormDefaults = {};
+    this.invoiceItems = [];
+    this.invoiceItemsDefault = [];
+    this.formReady = false;
+
+    await this.loadData();
+
+    setTimeout(() => {
+      this.formReady = true;
+      this.refreshToolbarButtons();
+    }, 0);
+  }
+
   get getSaveButtonDiasbledState() {
-    if(this.loaded) return (!this.sumOfItemsIsLowerThanDokladGrossAmount() || (this.baseForm?.invalid))
+    if(this.loaded)
+      return (!this.sumOfItemsIsLowerThanDokladGrossAmount() || (this.baseForm?.invalid))
     return false
   }
   sumOfItemsIsLowerThanDokladGrossAmount() {
@@ -252,7 +283,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
       if(field) {
         const val = this.baseForm?.get(field.formControlName)?.value ?? 0
         const sum = this.countSum()
-        return sum < val
+        return sum <= val
       }
     }
     return false
@@ -512,6 +543,11 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
     this.refreshToolbarButtons();
   }
 
+  private setFormCleanAndRefresh(): void {
+    this.baseForm.markAsPristine();
+    this.refreshToolbarButtons();
+  }
+
   async saveFaktura() {
     if(this.entityId == '' && this.isNew) {
       await this.postNewFaktura()
@@ -530,6 +566,8 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
         itemsForDelete: this.invoiceItemsForDelete
       }
       await this.polozkyFakturyDataService.post('', invoiceItems, {useSuffix: true})
+      this.invoiceItemsDefault = [...this.invoiceItems];
+      this.setFormCleanAndRefresh();
     }
     catch (e: any) {
       await this.dialogService.alert({
@@ -543,6 +581,7 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
   async postNewFaktura() {
     const newFaktura = this.mapToInvoiceDtoFromForm()
     const res = await this.dataService.post('',newFaktura, {useSuffix: false})
+    this.setFormCleanAndRefresh();
     await this.router.navigate(['ucetnictvi', 'doklad', res.id],{state: { previousBreadcrumbs: this.breadcrumbService.breadcrumbsValue }});
   }
 
@@ -569,4 +608,6 @@ export class NovaFakturaComponent extends BaseContentComponent<any,any> implemen
   protected readonly VatRateLabels = VatRateLabels;
   protected readonly VatRate = VatRate;
   protected readonly round = round;
+  protected readonly InvoiceType = InvoiceType;
+  protected readonly InvoiceLabels = InvoiceLabels;
 }

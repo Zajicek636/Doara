@@ -25,6 +25,7 @@ export interface InvoiceCreateEditDto {
 export interface InvoiceDto {
   id?: string;
   invoiceNumber: string;
+  invoiceType?: number;
   supplierId: string;
   customerId: string;
   issueDate: string;
@@ -66,7 +67,7 @@ export enum InvoiceType {
 }
 
 export const InvoiceLabels: Record<InvoiceType, string> = {
-  [InvoiceType.FinalInvoice]: 'Zpracována',
+  [InvoiceType.FinalInvoice]: 'Zpracován',
   [InvoiceType.DraftProposal]: 'Návrh/Objednávka',
 }
 

@@ -9,7 +9,7 @@ export class NovaFakturaCrudSettings implements CrudSettings<string, InvoiceCrea
   baseUrl: string = '/api/Ucetnictvi/Invoice';
   postUrl?: string;
   queryParam?: string;
-
+  postSuffix?: string = "Complete";
   idGetter(entity: any): string {
     return entity.id;
   }

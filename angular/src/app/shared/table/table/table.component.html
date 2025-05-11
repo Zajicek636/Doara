@@ -43,13 +43,6 @@
       (click)="settings.clickable ? toggleRow(row) : null"
       (dblclick)="settings.clickable ? onRowDoubleClick(row) : null"
     ></tr>
-
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" [attr.colspan]="columnKeys.length">
-        Žádná data, která by vyhověla zadanému filtru „{{ currentFilter }}“
-      </td>
-    </tr>
-
   </table>
 
   <mat-paginator *ngIf="this.settings.showPaginator"

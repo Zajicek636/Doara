@@ -17,6 +17,8 @@
   WARNING = "warning",
   CLOSE = "close",
   INFO = "info",
+  TASK_SUCCESS = "task",
+  SAD = "sentiment_dissatisfied",
 
   //---PAYMENT
   GRAPH_INCREASE = "data_thresholding",

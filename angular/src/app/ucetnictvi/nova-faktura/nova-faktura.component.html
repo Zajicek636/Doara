@@ -1,15 +1,20 @@
 <app-context-toolbar [buttons]="toolbarButtons"></app-context-toolbar>
 
-<div class="content-scroll-wrapper" *ngIf="loaded">
+<div class="content-scroll-wrapper" *ngIf="loaded && formReady">
   <div class="forms-row" style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; justify-content: center">
     <div *ngIf="!sumOfItemsIsLowerThanDokladGrossAmount() && !this.isNew" class="alert-badge warning">
       <mat-icon class="alert-icon">{{ BaseMaterialIcons.WARNING }}</mat-icon>
       <span class="alert-text">Součet částek položek je menší než celková částka faktury.</span>
     </div>
 
-    <div *ngIf="this.dokladState" class="alert-badge alert">
+    <div *ngIf="this.dokladState == InvoiceType.DraftProposal" class="alert-badge alert">
       <mat-icon class="alert-icon">{{ BaseMaterialIcons.INFO }}</mat-icon>
-      <span class="alert-text">Tento doklad je ve stavu {{this.dokladState}} a nebyl ještě zpracován</span>
+      <span class="alert-text">Tento doklad je ve stavu <strong>{{InvoiceLabels[this.dokladState]}}</strong> a nebyl ještě zpracován</span>
+    </div>
+
+    <div *ngIf="this.dokladState == InvoiceType.FinalInvoice" class="alert-badge success">
+      <mat-icon class="alert-icon">{{ BaseMaterialIcons.TASK_SUCCESS }}</mat-icon>
+      <span class="alert-text">Tento doklad je úspešeně zpracován a již nelze editovat</span>
     </div>
 
     <div style="width: 75%; padding:10px 60px; border: 1px solid black; border-radius: 5px">
@@ -45,10 +50,10 @@
               <div class="item-detail">Celkem: {{ item.grossAmount | number:'1.2-2' }} Kč</div>
             </div>
             <div class="item-actions">
-              <button mat-icon-button color="primary" (click)="editPolozka(item, i)">
+              <button mat-icon-button color="primary" [disabled]="this.isNoEditableEntity" (click)="editPolozka(item, i)">
                 <mat-icon>{{ BaseMaterialIcons.EDIT }}</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="removePolozka(item, i)">
+              <button mat-icon-button color="warn" [disabled]="this.isNoEditableEntity" (click)="removePolozka(item, i)">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>

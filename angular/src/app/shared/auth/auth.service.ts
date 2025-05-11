@@ -11,7 +11,7 @@ export const authConfig: AuthConfig = {
   responseType: 'code',
   scope: 'Doara',
   oidc: true,
-  useSilentRefresh: false,
+  useSilentRefresh: true,
   silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
   sessionChecksEnabled: false,
 };
@@ -23,7 +23,7 @@ export class AuthService {
       switch (event.type) {
         case 'token_expires':
           console.warn('Token expired');
-          this.oauthService.initLoginFlow();
+          this.trySilentRefreshOrLogout();
           break;
         case 'token_received':
           console.log('New token recieved');
@@ -35,6 +35,19 @@ export class AuthService {
     });
   }
 
+  private async trySilentRefreshOrLogout() {
+    try {
+      await this.oauthService.silentRefresh();
+      console.log('Silent refresh successful');
+    } catch (e) {
+      console.warn('Silent refresh failed', e);
+      localStorage.clear();
+      sessionStorage.clear();
+      this.cookieService.deleteAll('/', '.localhost');
+      this.oauthService.initLoginFlow();
+    }
+  }
+
   public async auth() {
     await this.oauthService.loadDiscoveryDocument();
     const loginResult = await this.oauthService.tryLogin({
@@ -44,7 +57,6 @@ export class AuthService {
       }
     });
 
-    // detekuj chybné uložení tokenů (případ kdy localStorage obsahuje bordel)
     const hasToken = this.oauthService.hasValidAccessToken();
 
     if (hasToken) {

@@ -107,7 +107,7 @@ public class InvoiceAppService(IInvoiceRepository invoiceRepository, ISubjectRep
         
         var invoice = await invoiceRepository.GetAsync(id);
         invoice.EnsureNotCompleted();
-        invoice.SetInvoiceNumber(input.InvoiceNumber).SetSupplier(input.SupplierId)
+            invoice.SetInvoiceNumber(input.InvoiceNumber).SetSupplier(input.SupplierId)
             .SetCustomer(input.CustomerId).SetIssueDate(input.IssueDate)
             .SetTaxDate(input.TaxDate).SetDeliveryDate(input.DeliveryDate)
             .SetTotalNetAmount(input.TotalNetAmount).SetTotalVatAmount(input.TotalVatAmount)

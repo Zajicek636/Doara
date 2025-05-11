@@ -9,6 +9,7 @@ import {DialogService} from '../../dialog/dialog.service';
 import {DialogType} from '../../dialog/dialog.interfaces';
 import {fieldsToColumns} from '../../forms/form-field.utils';
 import {PagedList, PagedRequest} from "../../crud/base-crud-service";
+import {BaseMaterialIcons} from '../../../../styles/material.icons';
 
 @Component({
   selector: 'app-dynamic-table',
@@ -35,7 +36,6 @@ export class DynamicTableComponent<T> implements OnInit, AfterViewInit {
   totalCount = 0;
 
   private pageCache = new Map<number, T[]>();
-  private isLoading = false;
 
   private filterSubject = new Subject<string>();
   currentFilter = '';
@@ -141,21 +141,18 @@ export class DynamicTableComponent<T> implements OnInit, AfterViewInit {
     const pageIndex = this.paginator?.pageIndex ?? 0;
     const pageSize = this.paginator?.pageSize ?? this.settings.defaultPageSize ?? 10;
 
-    // ✅ Pokud máš pevně daná data přes @Input
     if (this.data) {
       this.dataSource.data = this.data.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
       this.totalCount = this.data.length;
       return;
     }
 
-    // ✅ Pokud už je stránka v cache – použij ji
     if (this.pageCache.has(pageIndex)) {
       this.dataSource.data = this.pageCache.get(pageIndex)!;
       return;
     }
 
     try {
-      this.isLoading = true;
       const params = this.buildQueryParams();
       const result = await this.dataService.getPagedRequestAsync(params);
 
@@ -163,14 +160,12 @@ export class DynamicTableComponent<T> implements OnInit, AfterViewInit {
       this.dataSource.data = result.items;
       this.totalCount = result.totalCount;
 
-      this.isLoading = false;
     } catch (error: any) {
       await this.dialogService.alert({
         title: "Chyba",
         message: error.error.error.message,
         dialogType: DialogType.ERROR
       })
-      this.isLoading = false;
       this.dataSource.data = [];
       this.totalCount = 0;
 
@@ -193,4 +188,6 @@ export class DynamicTableComponent<T> implements OnInit, AfterViewInit {
     this.expandedElement = row;
     this.selectedElement.emit(row);
   }
+
+  protected readonly BaseMaterialIcons = BaseMaterialIcons;
 }
