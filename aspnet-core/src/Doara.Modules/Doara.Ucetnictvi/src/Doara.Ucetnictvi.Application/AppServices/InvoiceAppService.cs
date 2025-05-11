@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Doara.Sklady.Repositories;
 using Doara.Ucetnictvi.Dto.Invoice;
 using Doara.Ucetnictvi.Dto.InvoiceItem;
 using Doara.Ucetnictvi.Entities;
@@ -15,7 +16,8 @@ using Volo.Abp.Application.Dtos;
 
 namespace Doara.Ucetnictvi.AppServices;
 
-public class InvoiceAppService(IInvoiceRepository invoiceRepository, ISubjectRepository subjectRepository, IInvoiceItemAppService invoiceItemAppService) : UcetnictviAppService, IInvoiceAppService
+public class InvoiceAppService(IInvoiceRepository invoiceRepository, ISubjectRepository subjectRepository, 
+    IInvoiceItemAppService invoiceItemAppService, IContainerItemRepository containerItemRepository) : UcetnictviAppService, IInvoiceAppService
 {
     [Authorize(UcetnictviPermissions.ReadInvoicePermission)]
     public async Task<InvoiceDetailDto> GetAsync(Guid id)
@@ -121,6 +123,14 @@ public class InvoiceAppService(IInvoiceRepository invoiceRepository, ISubjectRep
     {
         var invoice = await invoiceRepository.GetAsync(id);
         invoice.SetInvoiceType(InvoiceType.FinalInvoice);
+        var data = invoice.Items.Where(x => x.ContainerItemId != null)
+            .Select(x => new {ContainerItemId = (Guid)x.ContainerItemId!, MovementId = (Guid)x.StockMovementId!}).ToList();
+        var items = await containerItemRepository.GetByIdsAsync(data.Select(x => x.ContainerItemId));
+        foreach (var item in items)
+        {
+            var guid = GuidGenerator.Create();
+            item.Use(data.First(x => x.ContainerItemId == item.Id).MovementId, guid);
+        }
         var res = await invoiceRepository.UpdateAsync(invoice);
         return ObjectMapper.Map<Invoice, InvoiceDetailDto>(res); 
     }

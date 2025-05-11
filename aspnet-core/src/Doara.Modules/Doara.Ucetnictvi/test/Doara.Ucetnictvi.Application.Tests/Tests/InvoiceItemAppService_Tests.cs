@@ -303,10 +303,14 @@ public class InvoiceItemAppService_Tests : UcetnictviApplicationTestBase<Ucetnic
         containerItem11.Movements[0].Quantity.ShouldBe(100);
         containerItem11.Movements[0].MovementCategory.ShouldBe(MovementCategory.Unused);
         
-        containerItem12.Movements.Count.ShouldBe(1);
+        containerItem12.Movements.Count.ShouldBe(2);
         containerItem12.Movements[0].RelatedDocumentId.ShouldBeNull();
         containerItem12.Movements[0].Quantity.ShouldBe(100);
         containerItem12.Movements[0].MovementCategory.ShouldBe(MovementCategory.Unused);
+        
+        containerItem12.Movements[1].RelatedDocumentId.ShouldNotBeNull();
+        containerItem12.Movements[1].Quantity.ShouldBe(100);
+        containerItem12.Movements[1].MovementCategory.ShouldBe(MovementCategory.Reserved);
     }
 
     [Fact]
@@ -340,9 +344,17 @@ public class InvoiceItemAppService_Tests : UcetnictviApplicationTestBase<Ucetnic
         containerItem11.Movements[0].Quantity.ShouldBe(100);
         containerItem11.Movements[0].MovementCategory.ShouldBe(MovementCategory.Unused);
         
-        containerItem12.Movements.Count.ShouldBe(2);
+        containerItem12.Movements.Count.ShouldBe(3);
         containerItem12.Movements[0].RelatedDocumentId.ShouldBeNull();
         containerItem12.Movements[0].Quantity.ShouldBe(100);
         containerItem12.Movements[0].MovementCategory.ShouldBe(MovementCategory.Unused);
+        
+        containerItem12.Movements[1].RelatedDocumentId.ShouldBe(TestData.SkInvoiceId3);
+        containerItem12.Movements[1].Quantity.ShouldBe(100);
+        containerItem12.Movements[1].MovementCategory.ShouldBe(MovementCategory.Reserved2Used);
+        
+        containerItem12.Movements[2].RelatedDocumentId.ShouldBe(TestData.SkInvoiceId3);
+        containerItem12.Movements[2].Quantity.ShouldBe(100);
+        containerItem12.Movements[2].MovementCategory.ShouldBe(MovementCategory.Used);
     }
 }

@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Doara.Sklady;
 using Doara.Sklady.Dto.StockMovement;
+using Doara.Sklady.Entities;
+using Doara.Sklady.Enums;
 using Doara.Sklady.Repositories;
 using Doara.Ucetnictvi.Dto.InvoiceItem;
 using Doara.Ucetnictvi.Entities;
@@ -14,6 +17,7 @@ using Doara.Ucetnictvi.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 
 namespace Doara.Ucetnictvi.AppServices;
@@ -78,6 +82,61 @@ public class InvoiceItemAppService(IInvoiceItemRepository invoiceItemRepository,
         return ObjectMapper.Map<InvoiceItemManageReport, InvoiceItemManageReportDto>(report);
     }
 
+    private void CheckManageManyMovements(List<ContainerItem> containerItems, List<StockMovementCreateInput> movementsForCreate, List<StockMovementUpdateInput> movementsForUpdate, List<StockMovementDeleteInput> movementsForDelete)
+    {
+        var ci = containerItems.ToDictionary(x => x.Id, x => x.Movements.ToList());
+        foreach (var m in movementsForDelete)
+        {
+            ci[m.ContainerItemId].RemoveAll(x => x.Id == m.StockMovementId);
+        }
+
+        var (delete, change) = SplitList(movementsForUpdate, x => x.ContainerItemId == null);
+        foreach (var m in delete)
+        {
+            if (m.OldContainerItemId != null)
+            {
+                ci[(Guid)m.OldContainerItemId].RemoveAll(x => x.Id == (Guid)m.OldStockMovementId!);
+            }
+        }
+        
+        foreach (var m in change)
+        {
+            if (m.OldContainerItemId != null)
+            {
+                ci[(Guid)m.OldContainerItemId].RemoveAll(x => x.Id == (Guid)m.OldStockMovementId!);
+            }
+
+            var guid = GuidGenerator.Create();
+            ci[(Guid)m.ContainerItemId!].Add(new StockMovement(guid, (Guid)m.ContainerItemId!, 
+                m.Quantity, MovementCategory.Reserved, m.RelatedDocumentId));
+        }
+
+        foreach (var m in movementsForCreate)
+        {
+            var guid = GuidGenerator.Create();
+            ci[m.ContainerItemId].Add(new StockMovement(guid, m.ContainerItemId!, 
+                m.Quantity, MovementCategory.Reserved, m.RelatedDocumentId));
+        }
+        
+        foreach (var (key, value) in ci)
+        {
+            var onHand = value.Where(m => m.MovementCategory == MovementCategory.Unused)
+                .Sum(m => m.Quantity) - value
+                .Where(m => m.MovementCategory == MovementCategory.Used)
+                .Sum(m => m.Quantity);
+            var reserved = value
+                .Where(m => m.MovementCategory == MovementCategory.Reserved)
+                .Sum(m => m.Quantity);
+            
+            if (onHand < reserved)
+            {
+                throw new BusinessException(SkladyErrorCodes.LackOfAvailableResources)
+                    .WithData("Quantity", onHand)
+                    .WithData("Id", key);
+            }
+        }
+    }
+
     private async Task ManageManyMovementsAsync(List<StockMovementCreateInput> movementsForCreate, List<StockMovementUpdateInput> movementsForUpdate, List<StockMovementDeleteInput> movementsForDelete)
     {
         var ids = movementsForUpdate.Where(x => x.ContainerItemId != null)
@@ -85,7 +144,7 @@ public class InvoiceItemAppService(IInvoiceItemRepository invoiceItemRepository,
         ids.AddRange(movementsForCreate.Select(x => x.ContainerItemId));
         ids.AddRange(movementsForDelete.Select(x => x.ContainerItemId));
         var containerItems = await containerItemRepository.GetByIdsAsync(ids);
-
+        CheckManageManyMovements(containerItems, movementsForCreate, movementsForUpdate, movementsForDelete);
         foreach (var m in movementsForDelete)
         {
             containerItems.First(x => x.Id == m.ContainerItemId).RemoveMovement(m.StockMovementId);
@@ -105,11 +164,13 @@ public class InvoiceItemAppService(IInvoiceItemRepository invoiceItemRepository,
         {
             if (m.OldContainerItemId != null)
             {
-                containerItems.First(x => x.Id == m.OldContainerItemId).RemoveMovement((Guid)m.OldStockMovementId!);
+                containerItems.First(x => x.Id == m.OldContainerItemId)
+                    .RemoveMovement((Guid)m.OldStockMovementId!);
             }
 
             var guid = GuidGenerator.Create();
-            containerItems.First(x => x.Id == m.ContainerItemId).Reserve(m.Quantity, guid, m.RelatedDocumentId);
+            containerItems.First(x => x.Id == m.ContainerItemId)
+                .Reserve(m.Quantity, guid, m.RelatedDocumentId);
             m.SetStockMovementId(guid);
         }
 
