@@ -64,7 +64,7 @@ export enum QuantityType {
 
 export const QuantityTypeLabels: Record<QuantityType, string> = {
     [QuantityType.Unknown]: 'Neznámé',
-    [QuantityType.None]: 'Žádné',
+    [QuantityType.None]: 'Kusy',
     [QuantityType.Milligrams]: 'Miligramy',
     [QuantityType.Grams]: 'Gramy',
     [QuantityType.Kilograms]: 'Kilogramy',

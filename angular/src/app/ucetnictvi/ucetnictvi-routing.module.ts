@@ -15,16 +15,16 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'seznam-faktur',
+        redirectTo: 'seznam-dokladu',
         pathMatch: 'full'
       },
       {
-        path: 'seznam-faktur',
+        path: 'seznam-dokladu',
         component: SeznamFakturComponent,
-        data: { basePath: 'ucetnictvi', breadcrumb: 'Seznam faktur' },
+        data: { basePath: 'ucetnictvi', breadcrumb: 'Seznam dokladů' },
       },
       {
-        path: 'faktura',
+        path: 'doklad',
         children: [
           { path: '', component: NovaFakturaComponent, data: { breadcrumb: 'Nová faktura' } },
           { path: ':id', component: NovaFakturaComponent, data: { breadcrumb: 'Úprava faktury' } }

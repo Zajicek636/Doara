@@ -1,7 +1,22 @@
 <app-context-toolbar [buttons]="toolbarButtons"></app-context-toolbar>
 
-<div class="content-scroll-wrapper" *ngIf="loaded">
+<div class="content-scroll-wrapper" *ngIf="loaded && formReady">
   <div class="forms-row" style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; justify-content: center">
+    <div *ngIf="!sumOfItemsIsLowerThanDokladGrossAmount() && !this.isNew" class="alert-badge warning">
+      <mat-icon class="alert-icon">{{ BaseMaterialIcons.WARNING }}</mat-icon>
+      <span class="alert-text">Součet částek položek je menší než celková částka faktury.</span>
+    </div>
+
+    <div *ngIf="this.dokladState == InvoiceType.DraftProposal" class="alert-badge alert">
+      <mat-icon class="alert-icon">{{ BaseMaterialIcons.INFO }}</mat-icon>
+      <span class="alert-text">Tento doklad je ve stavu <strong>{{InvoiceLabels[this.dokladState]}}</strong> a nebyl ještě zpracován</span>
+    </div>
+
+    <div *ngIf="this.dokladState == InvoiceType.FinalInvoice" class="alert-badge success">
+      <mat-icon class="alert-icon">{{ BaseMaterialIcons.TASK_SUCCESS }}</mat-icon>
+      <span class="alert-text">Tento doklad je úspešeně zpracován a již nelze editovat</span>
+    </div>
+
     <div style="width: 75%; padding:10px 60px; border: 1px solid black; border-radius: 5px">
       <app-any-form
         *ngIf="formReady"
@@ -13,34 +28,39 @@
 
     <ng-template #drawerContent>
       <div class="drawer-content">
-        <h2 style="margin-bottom: 1rem;">Položky faktury ({{ invoiceItems.length }}) - {{ round(countSum(),2)}} Kč</h2>
-        <h4 *ngIf="this.totalGrossAmountDoesntMatchItemsAmount()" class="alert-warning">Nesrovnalost částek!</h4>
         <div class="toolbar-row">
           <ng-container *ngFor="let btn of invoiceItemSectionToolbarButtons">
             <app-toolbar-button [btn]="btn" />
           </ng-container>
         </div>
 
+        <div style="margin-bottom: 0.5rem">
+          <div *ngIf="!sumOfItemsIsLowerThanDokladGrossAmount()" class="alert-badge warning">
+            <mat-icon class="alert-icon">{{ BaseMaterialIcons.WARNING }}</mat-icon>
+            <span class="alert-text">Součet částek položek je menší než celková částka faktury.</span>
+          </div>
+        </div>
         <div class="invoice-items-list">
           <div class="item-card" *ngFor="let item of invoiceItems; let i = index">
             <div class="item-info">
-              <div class="item-description">{{ item.description }}</div>
-              <div class="item-detail">Množství: {{ item.quantity }}</div>
+              <div class="item-description">{{ item.description }}</div><div class="item-detail">Množství: {{ item.quantity }}</div>
               <div class="item-detail">Jednotková cena: {{ item.unitPrice | number:'1.2-2' }} Kč</div>
               <div class="item-detail">Cena bez DPH: {{ item.netAmount | number:'1.2-2' }} Kč</div>
               <div class="item-detail">DPH: {{ getVatRateLabel(item.vatRate)}}</div>
               <div class="item-detail">Celkem: {{ item.grossAmount | number:'1.2-2' }} Kč</div>
             </div>
             <div class="item-actions">
-              <button mat-icon-button color="primary" (click)="editPolozka(item, i)">
+              <button mat-icon-button color="primary" [disabled]="this.isNoEditableEntity" (click)="editPolozka(item, i)">
                 <mat-icon>{{ BaseMaterialIcons.EDIT }}</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="removePolozka(item, i)">
+              <button mat-icon-button color="warn" [disabled]="this.isNoEditableEntity" (click)="removePolozka(item, i)">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
           </div>
         </div>
+
+        <p style="font-weight: bold">Součet částek položek ({{ invoiceItems.length }}) - {{ round(countSum(),2)}} Kč</p>
       </div>
     </ng-template>
 

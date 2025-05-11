@@ -4,7 +4,7 @@
   [color]="btn.class || 'primary'"
   (click)="btn.action(contextItem)"
   [disabled]="btn.disabled"
-  [matTooltip]="btn.tooltip ?? ''"
+  [matTooltip]="btn.tooltip ?? btn.text"
   [style.width]="btn.width ? btn.width+'px' : ''"
   [style.visibility]="btn.visible ? 'visible' : 'hidden'"
   type="button"

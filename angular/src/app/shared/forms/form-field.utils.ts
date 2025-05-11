@@ -43,16 +43,25 @@ export function fieldsToColumns<T>(fields: FormField[]): ColumnSetting<T>[] {
   return fields.map(f => ({
     key: f.formControlName,
     header: f.label,
+    isReference: f.isReference,
     valueGetter: (row: any) => {
-      // nejdřív zavoláme defaultValueGetter, pokud je
       const raw = f.defaultValueGetter
         ? f.defaultValueGetter(row)
         : row[f.formControlName];
 
-      // pokud to je FormSelect objekt, vypíšeme displayValue
-      if (raw && typeof raw === 'object' && 'displayValue' in raw) {
-        return (raw as {displayValue: string}).displayValue;
+      if (f.isReference && typeof f.referenceLabel === 'function') {
+        return f.referenceLabel(row);
       }
+
+      if (f.isReference && typeof f.referenceLabel === 'string') {
+        return row[f.referenceLabel] ?? '';
+      }
+
+      // pokud je to FormSelect objekt
+      if (raw && typeof raw === 'object' && 'displayValue' in raw) {
+        return (raw as { displayValue: string }).displayValue;
+      }
+
       return raw != null ? raw : '';
     }
   }));

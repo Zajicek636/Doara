@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {MatDrawer, MatDrawerContainer, MatSidenav} from '@angular/material/sidenav';
 import {DrawerService} from '../drawer.service';
+import {BaseMaterialIcons} from '../../../../styles/material.icons';
 
 @Component({
   selector: 'app-main-layout',
@@ -28,11 +29,15 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
     this.leftMenuCollapsed = !this.leftMenuCollapsed
   }
 
+  onDrawerClosed() {
+    this.drawerService.close();
+  }
+
   ngAfterViewInit(): void {
     this.drawerService.setDrawer(this.drawer);
     this.drawerService.setContainerRef(this.outlet);
   }
 
 
-
+  protected readonly BaseMaterialIcons = BaseMaterialIcons;
 }

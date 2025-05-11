@@ -25,8 +25,8 @@ export class MenuComponent implements OnInit {
     },
     { name: 'Účetnictví', link: 'ucetnictvi', icon: BaseMaterialIcons.PAYMENTS, items:
         [
-          { name: 'Fakura', link: 'faktura', icon: BaseMaterialIcons.NEW_QUOTE },
-          { name: 'Seznam faktur', link: 'seznam-faktur', icon: BaseMaterialIcons.LIST_ICON},
+          { name: 'Doklad', link: 'doklad', icon: BaseMaterialIcons.NEW_QUOTE },
+          { name: 'Seznam dokladů', link: 'seznam-dokladu', icon: BaseMaterialIcons.LIST_ICON},
           { name: 'Subjekty', link: 'subjekty', icon: BaseMaterialIcons.GROUPS_PEOPLE},
         ]
     },

@@ -60,15 +60,6 @@ export class SeznamFakturComponent extends BaseContentComponent<InvoiceDto, Sezn
         action: () => this.onAdd()
       },
       {
-        id: 'edit',
-        text: 'Upravit',
-        icon: 'edit',
-        class: 'btn-secondary',
-        disabled: !this.chosenElement,
-        visible: true,
-        action: () => this.onEdit()
-      },
-      {
         id: 'delete',
         text: 'Smazat',
         icon: 'delete',
@@ -89,11 +80,11 @@ export class SeznamFakturComponent extends BaseContentComponent<InvoiceDto, Sezn
 
   onAdd(): void {
     const prev: IBreadCrumb[] = this.breadcrumbService.breadcrumbsValue;
-    this.router.navigate([this.basePath,'faktura'], {state: { previousBreadcrumbs: prev }});
+    this.router.navigate([this.basePath,'doklad'], {state: { previousBreadcrumbs: prev }});
   }
 
   onEdit(): void {
-    this.router.navigate([this.basePath,'faktura', this.chosenElement?.id], {state: { previousBreadcrumbs: this.breadcrumbService.breadcrumbsValue }});
+    this.router.navigate([this.basePath,'doklad', this.chosenElement?.id], {state: { previousBreadcrumbs: this.breadcrumbService.breadcrumbsValue }});
   }
 
   async onDelete(): Promise<void> {
@@ -124,8 +115,10 @@ export class SeznamFakturComponent extends BaseContentComponent<InvoiceDto, Sezn
   }
 
   clickedElement(element: InvoiceDto) {
-    console.log("clickedElement", element);
     this.chosenElement = element
   }
 
+  handleNavigation(element: InvoiceDto): void {
+    this.router.navigate([this.basePath,'doklad',element.id], {state: { previousBreadcrumbs: this.breadcrumbService.breadcrumbsValue }});
+  }
 }

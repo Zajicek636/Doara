@@ -1,6 +1,6 @@
 ﻿import {Component, OnInit} from '@angular/core';
 import {BreadcrumbService, IBreadCrumb} from './breadcrumb.service';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {NgForOf, NgIf} from '@angular/common';
 
 @Component({
@@ -9,17 +9,29 @@ import {NgForOf, NgIf} from '@angular/common';
   styleUrls: ['./breadcrumb.component.scss'],
   standalone: true,
   imports: [
-    RouterLink,
     NgIf,
     NgForOf
   ]
 })
 export class BreadcrumbComponent implements OnInit {
   breadcrumbs: IBreadCrumb[] = [];
-
-  constructor(private bcService: BreadcrumbService) {}
-
+  constructor(private bcService: BreadcrumbService, private router: Router) {}
   ngOnInit(): void {
     this.bcService.breadcrumbs$.subscribe(b => this.breadcrumbs = b);
+  }
+
+  navigateTo(breadcrumb: IBreadCrumb, event: MouseEvent): void {
+    event.preventDefault();
+
+    const index = this.breadcrumbs.findIndex(b => b.url === breadcrumb.url);
+    if (index === -1) {
+      this.router.navigateByUrl(breadcrumb.url);
+      return;
+    }
+
+    const preserved = this.breadcrumbs.slice(0, index);
+    this.router.navigateByUrl(breadcrumb.url, {
+      state: { previousBreadcrumbs: preserved }
+    });
   }
 }
