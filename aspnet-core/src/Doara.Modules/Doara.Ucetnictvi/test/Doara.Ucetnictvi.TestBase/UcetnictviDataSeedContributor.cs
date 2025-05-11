@@ -124,6 +124,7 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
     {
         await _invoiceRepository.CreateAsync(new Invoice(
                 TestData.CzInvoiceId,
+                InvoiceType.DraftProposal,
                 "2025-1001",
                 TestData.CzSubjectId,
                 TestData.SkSubjectId,
@@ -143,6 +144,7 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
 
         await _invoiceRepository.CreateAsync(new Invoice(
             TestData.SkInvoiceId1,
+            InvoiceType.DraftProposal,
             "2025-2001",
             TestData.SkSubjectId,
             TestData.CzSubjectId,
@@ -161,6 +163,7 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
 
         await _invoiceRepository.CreateAsync(new Invoice(
             TestData.SkInvoiceId2,
+            InvoiceType.DraftProposal,
             "2025-2002",
             TestData.SkSubjectId,
             TestData.CzSubjectId,
@@ -179,6 +182,7 @@ public class UcetnictviDataSeedContributor : IDataSeedContributor, ITransientDep
 
         await _invoiceRepository.CreateAsync(new Invoice(
             TestData.SkInvoiceId3,
+            InvoiceType.DraftProposal,
             "2025-2003",
             TestData.SkSubjectId,
             TestData.CzSubjectId,

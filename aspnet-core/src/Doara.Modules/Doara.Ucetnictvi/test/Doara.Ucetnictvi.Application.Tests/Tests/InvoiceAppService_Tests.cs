@@ -40,6 +40,7 @@ public class InvoiceAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         czInvoice.VariableSymbol.ShouldBe("10012025");
         czInvoice.ConstantSymbol.ShouldBe("0308");
         czInvoice.SpecificSymbol.ShouldBe("0555");
+        czInvoice.InvoiceType.ShouldBe(InvoiceType.DraftProposal);
         
         czInvoice.Supplier.Id.ShouldBe(TestData.CzSubjectId);
         czInvoice.Supplier.Name.ShouldBe("Alza.cz a.s.");
@@ -104,6 +105,7 @@ public class InvoiceAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         invoice.VariableSymbol.ShouldBe(input.VariableSymbol);
         invoice.ConstantSymbol.ShouldBe(input.ConstantSymbol);
         invoice.SpecificSymbol.ShouldBe(input.SpecificSymbol);
+        invoice.InvoiceType.ShouldBe(InvoiceType.DraftProposal);
         
         invoice.Supplier.Id.ShouldBe(TestData.CzSubjectId);
         invoice.Supplier.Name.ShouldBe("Alza.cz a.s.");
@@ -272,6 +274,20 @@ public class InvoiceAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
     }
     
     [Fact]
+    public async Task Should_Throw_Update_Complete_Invoice()
+    {
+        var invoice = await _invoiceAppService.GetAsync(TestData.CzInvoiceId);
+        await _invoiceAppService.CompleteAsync(invoice.Id);
+        invoice.InvoiceNumber = Converter.DefaultInvoiceInvoiceNumber;
+
+        var exception = await Should.ThrowAsync<BusinessException>(async () =>
+        {
+            await _invoiceAppService.UpdateAsync(invoice.Id, Converter.Convert2UpdateInput(invoice));
+        });
+        exception.Code.ShouldBe(UcetnictviErrorCodes.InvoiceCompletedCannotModifyOrDelete);
+    }
+    
+    [Fact]
     public async Task Should_Throw_Update_Invoice_Non_Existing_Supplier()
     {
         var id = _guidGenerator.Create();
@@ -376,6 +392,17 @@ public class InvoiceAppService_Tests : UcetnictviApplicationTestBase<UcetnictviA
         });
         exception.Message.ShouldContain(nameof(Entities.Invoice));
         exception.Message.ShouldContain(id.ToString());
+    }
+    
+    [Fact]
+    public async Task Should_Throw_Delete_Complete_Invoice()
+    {
+        await _invoiceAppService.CompleteAsync(TestData.CzInvoiceId);
+        var exception = await Should.ThrowAsync<BusinessException>(async () =>
+        {
+            await _invoiceAppService.DeleteAsync(TestData.CzInvoiceId);
+        });
+        exception.Code.ShouldBe(UcetnictviErrorCodes.InvoiceCompletedCannotModifyOrDelete);
     }
 
     [Fact]

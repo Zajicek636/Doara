@@ -55,6 +55,7 @@ public class InvoiceItemAppService(IInvoiceItemRepository invoiceItemRepository,
             return ObjectMapper.Map<InvoiceItemManageReport, InvoiceItemManageReportDto>(report);
         }
         var invoice = await invoiceRepository.GetAsync(input.InvoiceId);
+        invoice.EnsureNotCompleted();
         var (itemsForCreate, itemsForUpdate, movementsForCreate, movementsForUpdate) = ProcessCreateAndUpdate(
             input.Items.Where(x => x.Id == null || !input.ItemsForDelete.Contains((Guid)x.Id)), invoice, report);
 

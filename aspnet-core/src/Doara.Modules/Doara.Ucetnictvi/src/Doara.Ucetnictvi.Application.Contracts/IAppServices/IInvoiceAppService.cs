@@ -12,5 +12,6 @@ public interface IInvoiceAppService
     Task<PagedResultDto<InvoiceDetailDto>> GetAllWithDetailAsync(PagedAndSortedResultRequestDto input);
     Task<InvoiceDetailDto> CreateAsync(InvoiceCreateInputDto input);
     Task<InvoiceDetailDto> UpdateAsync(Guid id, InvoiceUpdateInputDto input);
+    Task<InvoiceDetailDto> CompleteAsync(Guid id);
     Task DeleteAsync(Guid id);
 }

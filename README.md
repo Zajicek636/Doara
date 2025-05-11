@@ -123,7 +123,23 @@ Testy jsou rozděleny dle modulů:
 - `Doara.Ucetnictvi.Tests`
 - `Doara.Sklady.Tests`
 
+
 ---
+
+## 🧪 Testování frontendu (Angular)
+
+Pro spuštění unit testů frontendu použij příkaz:
+
+```bash
+cd angular
+ng test
+```
+
+Testy se otevřou v prohlížeči (výchozí je Karma + Jasmine). Výsledky se zobrazí živě a aktualizují se při každé změně souboru.
+
+> Před spuštěním testů se ujisti, že máš nainstalované závislosti (`npm install`).
+---
+
 ---
 
 ### 🔐 Přihlášení do Swaggeru

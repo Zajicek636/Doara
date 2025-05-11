@@ -32,7 +32,7 @@ public static partial class Converter
     
     public static Invoice CreateOriginalEntity(this FakeInvoice data, bool checkIfNotThrow = true)
     {
-        return data.DoActionWithNotThrowCheck(() => new Invoice(data.Id, data.InvoiceNumber, data.SupplierId, 
+        return data.DoActionWithNotThrowCheck(() => new Invoice(data.Id, data.InvoiceType, data.InvoiceNumber, data.SupplierId, 
             data.CustomerId, data.IssueDate, data.TaxDate, data.DeliveryDate, data.TotalNetAmount,
             data.TotalVatAmount, data.TotalGrossAmount, data.PaymentTerms, data.VatRate,
             data.VariableSymbol, data.ConstantSymbol, data.SpecificSymbol), checkIfNotThrow);

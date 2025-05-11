@@ -1,8 +1,10 @@
 ﻿using System;
+using Doara.Ucetnictvi.Entities;
 using Doara.Ucetnictvi.Enums;
 using Doara.Ucetnictvi.FakeEntities;
 using Doara.Ucetnictvi.Generators;
 using TestHelper.Utils;
+using Volo.Abp;
 using Xunit;
 
 namespace Doara.Ucetnictvi.Tests;
@@ -244,6 +246,24 @@ public class Invoice_Tests : UcetnictviDomainModule
         var entity = _data.CreateOriginalEntity(false)
             .SetVatRate(null);
         _data.VatRate = VatRate.None;
+        _data.CheckIfSame(entity);
+    }
+
+    [Fact]
+    public void Test_Invoice_InvoiceType_Complete()
+    {
+        var entity = _data.CreateOriginalEntity(false)
+            .SetInvoiceType(InvoiceType.FinalInvoice);
+        var exShould = new ExtendedShould<Invoice>(_data);
+        var err = exShould.Throw<BusinessException>(() => entity.SetTotalGrossAmount(10));
+        exShould.ShouldBe(err.Code, UcetnictviErrorCodes.InvoiceCompletedCannotModifyOrDelete);
+    }
+    
+    [Fact]
+    public void Test_Invoice_InvoiceType_Complete_Create()
+    {
+        _data.InvoiceType = InvoiceType.FinalInvoice;
+        var entity = _data.CreateOriginalEntity();
         _data.CheckIfSame(entity);
     }
 }

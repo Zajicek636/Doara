@@ -5,9 +5,12 @@
     "SamplePageMessage": "Ukázková stránka pro modul Ucetnictvi",
     "Ucetnictvi:010000": "Odběratel s id={Id} neexistuje.",
     "Ucetnictvi:010001": "Dodavatel s id={Id} neexistuje.",
+    "Ucetnictvi:010002": "Dodavatel a odběratel nemohou být totožní.",
     
     "Ucetnictvi:020000": "Položku se nepodařilo vytvořit.",
     "Ucetnictvi:020001": "Položku s id={0} se nepodařilo zpracovat.",
-    "Ucetnictvi:020002": "Položka s id={0} neexistuje na faktuře s id={1}."
+    "Ucetnictvi:020002": "Položka s id={0} neexistuje na faktuře s id={1}.",
+
+    "Ucetnictvi:030000": "Fakturu ve stavu Dokončeno nelze upravovat ani smazat."
   }
 }

@@ -44,6 +44,13 @@ public class InvoiceController(IInvoiceAppService invoiceAppService) : Ucetnictv
         return await invoiceAppService.CreateAsync(input);
     }
     
+    [HttpPost("Complete")]
+    [Authorize(UcetnictviPermissions.UpdateInvoicePermission)]
+    public async Task<InvoiceDetailDto> CompleteAsync([Required] Guid id)
+    {
+        return await invoiceAppService.CompleteAsync(id);
+    }
+    
     [HttpPut]
     [Authorize(UcetnictviPermissions.UpdateInvoicePermission)]
     public async Task<InvoiceDetailDto> UpdateAsync([Required] Guid id, InvoiceUpdateInputDto input)

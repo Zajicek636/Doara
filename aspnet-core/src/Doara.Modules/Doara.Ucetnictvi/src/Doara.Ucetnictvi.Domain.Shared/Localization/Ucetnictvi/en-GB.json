@@ -5,8 +5,10 @@
     "SamplePageMessage": "A sample page for the Ucetnictvi module",
     "Ucetnictvi:010000": "Customer with id={Id} does not exist.",
     "Ucetnictvi:010001": "Supplier with id={Id} does not exist.",
+    "Ucetnictvi:010002": "The supplier and the customer must not be the same.",
     "Ucetnictvi:020000": "Failed to create the item.",
     "Ucetnictvi:020001": "Failed to process the item with id={0}.",
-    "Ucetnictvi:020002": "Item with id={0} does not exist on invoice with id={1}."
+    "Ucetnictvi:020002": "Item with id={0} does not exist on invoice with id={1}.",
+    "Ucetnictvi:030000": "An invoice in the Completed status cannot be edited or deleted."
   }
 }
